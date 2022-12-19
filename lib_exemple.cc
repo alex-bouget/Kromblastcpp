@@ -6,7 +6,7 @@ class lib1 : public KromblastLib::KromLib
 {
 private:
     struct KromblastLib::kromblast_function functions[1] = {
-        {(char*)"libtest.increment", 0}};
+        {(char*)"libtest.increment", 1}};
 
 public:
     struct KromblastLib::kromblast_function *library_callback(int *nb_function)
@@ -15,24 +15,34 @@ public:
         return functions;
     }
 
-    char *increment()
+    char *increment(int nb)
     {
-        static int count = 0;
         char *result = new char[100];
-        sprintf(result, "{\"count\": %d}", ++count);
+        sprintf(result, "{\"count\": %d}", ++nb);
         int len = strlen(result);
         char *result2 = new char[len + 1];
         strcpy(result2, result);
         return result2;
     }
 
-    char *call_function(char *function_name, char *args)
+    char *call_function(char *function_name, char **args, int nb_a)
     {
         if (strcmp(function_name, (char *)"libtest.increment") == 0)
         {
-            return increment();
+            int nb = 0;
+            sscanf(args[0], "%d", &nb);
+            return increment(nb);
         }
         return nullptr;
+    }
+
+    bool has_function(char *function_name)
+    {
+        if (strcmp(function_name, (char *)"libtest.increment") == 0)
+        {
+            return true;
+        }
+        return false;
     }
 };
 

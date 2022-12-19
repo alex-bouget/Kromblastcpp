@@ -24,13 +24,12 @@ std::string kromblast_callback(std::string req)
     std::cout << "Args: " << args << std::endl;
     if (args.length() <= 2)
     {
-        char *result = kromblast_lib[0]->call_function(function_called.name, nullptr);
+        char *result = kromblast_lib[0]->call_function(function_called.name, nullptr, 0);
         std::string result_str = result;
         return result_str;
     }
-    int args_nb = 0;
-    std::string *args_data = new std::string[0];
-    args_nb = 1;
+    int args_nb = 1;
+    std::string *args_data = new std::string[1];
     for (int i = 0; i < args.length(); i++)
     {
         if (args[i] == ',')
@@ -43,8 +42,28 @@ std::string kromblast_callback(std::string req)
     int step = 0;
     for (int i = 0; i < args_nb; i++)
     {
-        args_data[i] = args.substr(args.find_first_of("\"", step) + 1, args.find_first_of("\"", step + 1) - args.find_first_of("\"", step) - 1);
+        int start = args.find_first_of("\"", step);
+        int end = args.find_first_of("\"", start + 1);
+        args_data[i] = args.substr(start + 1, end - start - 1);
+        step = end + 1;
     }
+    function_called.args_nb = args_nb;
+    function_called.args = new char *[args_nb];
+    for (int i = 0; i < args_nb; i++)
+    {
+        function_called.args[i] = new char[args_data[i].length() + 1];
+        strcpy(function_called.args[i], args_data[i].c_str());
+    }
+    for (int i = 0; i < kromblast_lib_nb; i++)
+    {
+        if (kromblast_lib[i]->has_function(function_called.name))
+        {
+            char *result = kromblast_lib[i]->call_function(function_called.name, function_called.args, function_called.args_nb);
+            std::string result_str = result;
+            return result_str;
+        }
+    }
+    return "{\"Error\": \"Function not found\"}";
 }
 
 typedef KromblastLib::KromLib *(*create_lib_t)();
@@ -91,16 +110,19 @@ webview::webview create_kromblast_window(std::string title, int width, int heigh
                 w.eval(js.c_str());
             }
             std::string args = "";
+            std::string args_array = "";
             for (int k = 0; k < functions[j].args_nb; k++)
             {
                 if (k > 0)
                 {
                     args += ", ";
+                    args_array += ", ";
                 }
                 args += "arg" + std::to_string(k);
+                args_array += "String(arg" + std::to_string(k)+")";
             }
 
-            std::string js = "window." + function_name + " = function(" + args + ") { return kromblast(\"" + function_name + "\", [" + args + "] ) }";
+            std::string js = "window." + function_name + " = function(" + args + ") { return kromblast(\"" + function_name + "\", [" + args_array + "] ) }";
             w.init(js.c_str());
             w.eval(js.c_str());
         }

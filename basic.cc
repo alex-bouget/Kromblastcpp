@@ -11,7 +11,7 @@ constexpr const auto html =
     document.querySelectorAll("#increment, #count");
   document.addEventListener("DOMContentLoaded", () => {
     incrementElement.addEventListener("click", () => {
-      window.libtest.increment().then(result => {
+      window.libtest.increment(countElement.textContent).then(result => {
         countElement.textContent = result.count;
       });
     });

@@ -22,7 +22,8 @@ namespace KromblastLib
     {
     public:
         virtual struct kromblast_function* library_callback(int *nb_function) = 0;
-        virtual char *call_function(char *function_name, char *args) = 0;
+        virtual char *call_function(char *function_name, char **args, int nb_a) = 0;
+        virtual bool has_function(char *function_name) = 0;
     };
 }
 #endif
