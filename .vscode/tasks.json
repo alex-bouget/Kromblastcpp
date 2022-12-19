@@ -5,6 +5,9 @@
             "label": "C/C++: g++ générer l'app",
             "command": "/usr/bin/g++",
             "args": [
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
                 "basic.cc",
                 "-Ilibs",
                 "-Ilibs/webview",
@@ -50,6 +53,7 @@
                 "-ljavascriptcoregtk-4.0",
                 "-lgobject-2.0",
                 "-lglib-2.0",
+                "-ldl",
                 "-o",
                 "build/basic"
             ],
