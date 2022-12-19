@@ -1,24 +1,42 @@
 #include "krom_lib.h"
 #include <string.h>
+#include <stdio.h>
 
+class lib1 : public KromblastLib::KromLib
+{
+private:
+    struct KromblastLib::kromblast_function functions[1] = {
+        {(char*)"libtest.increment", 0}};
 
-class lib1 : public KromblastLib::KromLib {
 public:
-    char **library_callback(int *nb_function) {
-        char **functions = new char*[1];
-        functions[0] = (char*)"test";
+    struct KromblastLib::kromblast_function *library_callback(int *nb_function)
+    {
         *nb_function = 1;
         return functions;
     }
 
-    char* call_function(char* function_name, char* args) {
-        if (strcmp(function_name, (char*)"test") == 0) {
-            return (char*)"test";
+    char *increment()
+    {
+        static int count = 0;
+        char *result = new char[100];
+        sprintf(result, "{\"count\": %d}", ++count);
+        int len = strlen(result);
+        char *result2 = new char[len + 1];
+        strcpy(result2, result);
+        return result2;
+    }
+
+    char *call_function(char *function_name, char *args)
+    {
+        if (strcmp(function_name, (char *)"libtest.increment") == 0)
+        {
+            return increment();
         }
-        return (char*)"";
+        return nullptr;
     }
 };
 
-extern "C" KromblastLib::KromLib* create_kromblast_lib() {
+extern "C" KromblastLib::KromLib *create_kromblast_lib()
+{
     return new lib1();
 }
