@@ -1,9 +1,10 @@
-#include "webview.h"
+#include "kromblast.h"
+#include <iostream>
 
-int main() {
-  webview::webview w(false, nullptr);
-  w.set_title("Basic Example");
-  w.set_size(480, 320, WEBVIEW_HINT_NONE);
-  w.run();
-  return 0;
+int main(int argc, char** argv) {
+    std::cout << "Kromblast" << std::endl;
+    kromblast::kromblast app("Kromblast", 800, 600, 0, true);
+    app.navigate("http://github/Github/Kromblastcpp/test/");
+    app.run();
+    return 0;
 }

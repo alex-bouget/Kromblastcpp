@@ -2,10 +2,11 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: g++ générer le fichier actif",
+            "label": "C/C++: g++ générer l'app",
             "command": "/usr/bin/g++",
             "args": [
                 "basic.cc",
+                "-Ilibs",
                 "-Ilibs/webview",
                 "-pthread",
                 "-I/usr/include/webkitgtk-4.0",
