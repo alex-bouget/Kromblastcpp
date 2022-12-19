@@ -9,7 +9,7 @@
                 "-Wextra",
                 "-Wpedantic",
                 "basic.cc",
-                "-Ilibs",
+                "-Ilibs/kromblast",
                 "-Ilibs/webview",
                 "-pthread",
                 "-I/usr/include/webkitgtk-4.0",
