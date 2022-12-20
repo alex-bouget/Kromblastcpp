@@ -63,7 +63,7 @@ namespace KromblastLib
          * @param function_name Name of the function to check
          * @return Return true if the function exists
         */
-        virtual bool has_function(char *function_name) = 0;
+        virtual bool has_function(const struct kromblast_function) = 0;
         
         /**
          * @brief Destructor

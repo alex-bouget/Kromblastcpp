@@ -1,1 +1,1 @@
-g++ -fPIC -shared lib_exemple.cc -o build/myclass.so -Ilibs
+g++ -fPIC -shared lib_exemple.cc -o build/myclass.so -Ilibs/kromblast/lib
