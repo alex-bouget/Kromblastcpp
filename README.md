@@ -1,2 +1,3 @@
 # Kromblastcpp
-trying something for kromblast
+
+Use native functions of operating system in a website.
