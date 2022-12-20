@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +8,21 @@
     <title>Document</title>
     <!--<script src="kromblast.js"></script>-->
 </head>
+
 <body>
-    <p>test</p>
+    <button id="increment">Tap me</button>
+    <div>You tapped <span id="count">0</span> time(s).</div>
+    <script>
+        const [incrementElement, countElement] =
+            document.querySelectorAll("#increment, #count");
+        document.addEventListener("DOMContentLoaded", () => {
+            incrementElement.addEventListener("click", () => {
+                window.libtest.secondexemple.increment(countElement.textContent).then(result => {
+                    countElement.textContent = result.count;
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
