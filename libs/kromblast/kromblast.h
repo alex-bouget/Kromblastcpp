@@ -2,7 +2,7 @@
 #define KROMBLAST_H
 
 #include "webview.h"
-#include "kromblast_library.h"
+#include "./lib/kromblast_library.h"
 
 /**
  * @brief Namespace of kromblast. The application for transforming a web application into a desktop application
@@ -36,6 +36,11 @@ namespace Kromblast
              * @brief Webview
             */
             webview::webview *kromblast_window;
+
+            /**
+             * @brief Debug mode
+            */
+            bool debug;
         public:
 
             /**
@@ -78,6 +83,11 @@ namespace Kromblast
              * @brief Run the webview
             */
             void run();
+
+            /**
+             * @brief Get the debug mode
+            */
+            bool is_debug();
     };
 }
 
