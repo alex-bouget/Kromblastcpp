@@ -45,15 +45,19 @@ void create_js_link(KromblastLib::kromblast_function function, webview::webview 
 
 /**
  * @brief Load the libraries
- * @param lib_name List of the libraries
+ * @param nb_functions Number of functions returned
+ * @param lib_name List of the libraries name
  * @param lib_nb Number of libraries
  * @param w Webview
  * @param debug Debug mode
  * @return Return the list of the libraries
  */
-KromblastLib::KromLib **kromblast_load_library(std::string lib_name[], int lib_nb, webview::webview w, bool debug)
+KromblastLib::kromblast_function **kromblast_load_library(int* nb_functions, std::string lib_name[], int lib_nb, webview::webview w, bool debug)
 {
-    KromblastLib::KromLib **kromblast_lib = new KromblastLib::KromLib *[lib_nb];
+    // create the list of the number of functions in each library
+    int *kromblast_function_nb = new int[lib_nb];
+    // create the list of the functions in each library
+    KromblastLib::kromblast_function **kromblast_function_lib = new KromblastLib::kromblast_function *[lib_nb];
     for (int i = 0; i < lib_nb; i++)
     {
         // open the library
@@ -67,25 +71,49 @@ KromblastLib::KromLib **kromblast_load_library(std::string lib_name[], int lib_n
         }
 
         // get the function
-        KromblastLib::create_lib_t create_lib = (KromblastLib::create_lib_t)dlsym(handle, "create_kromblast_lib");
+        if (debug)
+            std::cout << "Loading symbol: get_kromblast_callback" << std::endl;
+        KromblastLib::get_kromblast_callback_t kromblast_callback = (KromblastLib::get_kromblast_callback_t)dlsym(handle, "get_kromblast_callback");
         const char *dlsym_error = dlerror();
         if (dlsym_error)
         {
-            std::cerr << "Cannot load symbol 'create_lib': " << dlsym_error << '\n';
+            std::cerr << "Cannot load symbol 'get_kromblast_callback': " << dlsym_error << '\n';
             dlclose(handle);
             return nullptr;
         }
 
         // create the library and add the functions to the webview
-        kromblast_lib[i] = create_lib();
-        int functions_nb = -1;
-        KromblastLib::kromblast_function *functions = kromblast_lib[i]->library_callback(&functions_nb);
-        for (int j = 0; j < functions_nb; j++)
+        if (debug)
+            std::cout << "Loading functions" << std::endl;
+        kromblast_function_nb[i] = -1;
+        kromblast_function_lib[i] = (*kromblast_callback)(&kromblast_function_nb[i]); // get the functions
+        for (int j = 0; j < kromblast_function_nb[i]; j++)
         {
-            create_js_link(functions[j], w, debug);
+            create_js_link(kromblast_function_lib[i][j], w, debug);
         }
     }
-    return kromblast_lib;
+    int functions_nb = 0;
+    for (int i = 0; i < lib_nb; i++)
+    {
+        // get the number of all functions
+        functions_nb += kromblast_function_nb[i];
+    }
+
+    // create the list of the functions
+    KromblastLib::kromblast_function **kromblast_function = new KromblastLib::kromblast_function*[functions_nb];
+    int k = 0;
+    for (int i = 0; i < lib_nb; i++)
+    {
+        for (int j = 0; j < kromblast_function_nb[i]; j++)
+        {
+            kromblast_function[k] = &kromblast_function_lib[i][j];
+            k++;
+        }
+    }
+    
+    // return the list of the functions and the number of functions
+    *nb_functions = functions_nb;
+    return kromblast_function;
 }
 
 /**
@@ -100,14 +128,13 @@ KromblastLib::KromLib **kromblast_load_library(std::string lib_name[], int lib_n
  */
 Kromblast::Kromblast::Kromblast(std::string title, int width, int height, bool debug, std::string lib_name[], int lib_nb)
 {
-    kromblast_lib_nb = lib_nb;
     kromblast_window = new webview::webview(debug, nullptr);
     this->debug = debug;
     debug ? kromblast_window->set_title(title + " (debug)") : kromblast_window->set_title(title);
     kromblast_window->set_size(width, height, WEBVIEW_HINT_NONE);
     kromblast_window->bind("kromblast", [&](std::string arg) // Bind the kromblast function
                            { return kromblast_callback(arg); });
-    kromblast_lib = kromblast_load_library(lib_name, lib_nb, *kromblast_window, debug);
+    this->kromblast_function_lib = kromblast_load_library(&kromblast_function_nb, lib_name, lib_nb, *kromblast_window, debug);
 }
 
 /**
@@ -116,11 +143,6 @@ Kromblast::Kromblast::Kromblast(std::string title, int width, int height, bool d
 Kromblast::Kromblast::~Kromblast()
 {
     delete kromblast_window;
-    for (int i = 0; i < kromblast_lib_nb; i++)
-    {
-        delete kromblast_lib[i];
-    }
-    delete[] kromblast_lib;
 }
 
 /**
@@ -149,17 +171,15 @@ int count_args(std::string args)
  * @param debug Debug mode
  * @return Return the result of the function
  */
-char *call_function(struct KromblastLib::kromblast_function_called function_called, KromblastLib::KromLib **kromblast_lib, int kromblast_lib_nb, bool debug)
+char *call_function(struct KromblastLib::kromblast_function_called function_called, KromblastLib::kromblast_function **kromblast_functions, int kromblast_functions_nb, bool debug)
 {
-    for (int i = 0; i < kromblast_lib_nb; i++)
+    for (int i = 0; i < kromblast_functions_nb; i++)
     {
-        struct KromblastLib::kromblast_function this_function = {function_called.name, function_called.args_nb};
-        if (kromblast_lib[i]->has_function(this_function))
+        if (strcmp(function_called.name, kromblast_functions[i]->name) == 0 && function_called.args_nb == kromblast_functions[i]->args_nb)
         {
             if (debug)
-                std::cout << "Calling function: " << function_called.name << " from lib " << i << std::endl;
-            char *result = kromblast_lib[i]->call_function(function_called);
-            return result;
+                std::cout << "Calling function: " << function_called.name << std::endl;
+            return kromblast_functions[i]->callback(function_called);
         }
     }
     return (char *)"{\"Error\": \"Function not found\"}";
@@ -186,7 +206,7 @@ std::string Kromblast::Kromblast::kromblast_callback(std::string req)
     {
         function_called.args_nb = 0;
         function_called.args = nullptr;
-        char *result = call_function(function_called, kromblast_lib, kromblast_lib_nb, debug);
+        char *result = call_function(function_called, kromblast_function_lib, kromblast_function_nb, debug);
         std::string result_str = result;
         return result_str;
     }
@@ -211,7 +231,7 @@ std::string Kromblast::Kromblast::kromblast_callback(std::string req)
     }
 
     // call the function
-    char *result = call_function(function_called, kromblast_lib, kromblast_lib_nb, debug);
+    char *result = call_function(function_called, kromblast_function_lib, kromblast_function_nb, debug);
     std::string result_str = result;
     return result_str;
 }
@@ -235,5 +255,5 @@ void Kromblast::Kromblast::run() { kromblast_window->run(); }
 
 /**
  * @brief Get the debug mode
-*/
+ */
 bool Kromblast::Kromblast::is_debug() { return debug; }
