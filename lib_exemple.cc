@@ -1,64 +1,24 @@
 #include "kromblast_library.h"
-#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-class lib1 : public KromblastLib::KromLib
+
+char *increment(KromblastLib::kromblast_function_called parameters)
 {
-private:
-    int function_number = 1;
-    struct KromblastLib::kromblast_function functions[1] = {
-        {(char*)"libtest.secondexemple.increment", 1}};
+    int nb = atoi(parameters.args[0]);
+    char *result = new char[100];
+    sprintf(result, "{\"count\": %d}", ++nb);
+    return result;
+}
 
-public:
-    struct KromblastLib::kromblast_function *library_callback(int *nb_function)
-    {
-        *nb_function = function_number;
-        return functions;
-    }
+int function_number = 1;
+struct KromblastLib::kromblast_function functions[1] = {
+    {.name = (char *)"libtest.secondexemple.increment",
+     .args_nb = 1,
+     .callback = (KromblastLib::kromblast_function_callback_t)&increment}};
 
-    char *increment(int nb)
-    {
-        char *result = new char[100];
-        sprintf(result, "{\"count\": %d}", ++nb);
-        int len = strlen(result);
-        char *result2 = new char[len + 1];
-        strcpy(result2, result);
-        return result2;
-    }
-
-    char *call_function(struct KromblastLib::kromblast_function_called function_called)
-    {
-        if (strcmp(function_called.name, (char*)functions[0].name) == 0)
-        {
-            int nb = 0;
-            sscanf(function_called.args[0], "%d", &nb);
-            return increment(nb);
-        }
-        return nullptr;
-    }
-
-    bool has_function(const struct KromblastLib::kromblast_function function)
-    {
-        for (int i = 0; i < function_number; i++)
-        {
-            if (strcmp(function.name, functions[i].name) == 0 && function.args_nb == functions[i].args_nb)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    ~lib1()
-    {
-        for (int i = 0; i < function_number; i++)
-        {
-            delete[] functions[i].name;
-        }
-    }
-};
-
-extern "C" KromblastLib::KromLib *create_kromblast_lib()
+extern "C" struct KromblastLib::kromblast_function *get_kromblast_callback(int *nb_function)
 {
-    return new lib1();
+    *nb_function = function_number;
+    return functions;
 }

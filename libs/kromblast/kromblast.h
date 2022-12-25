@@ -23,14 +23,14 @@ namespace Kromblast
     {
         private:
             /**
-             * @brief List of the libraries
+             * @brief List of the callback functions
             */
-            KromblastLib::KromLib **kromblast_lib;
+            KromblastLib::kromblast_function** kromblast_function_lib;
 
             /**
-             * @brief Number of libraries
+             * @brief Number of callback functions
             */
-            int kromblast_lib_nb = -1;
+            int kromblast_function_nb = -1;
 
             /**
              * @brief Webview
