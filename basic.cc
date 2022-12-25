@@ -123,11 +123,11 @@ struct ConfigKromblast load_config(std::string path)
     {
         mode_id = 0;
     }
-    else if (mode == "client")
+    else if (mode == "local")
     {
         mode_id = 1;
     }
-    else if (mode == "single")
+    else if (mode == "hosted")
     {
         mode_id = 2;
     }
@@ -195,15 +195,26 @@ int main()
         config.debug,
         config.lib_name,
         config.lib_count);
-    
+
     switch (config.mode)
     {
-    case 0:
+    case 0: // Server
         blast.navigate(config.host);
         break;
-    case 1:
-        break;
-    case 2:
+    case 1: // Local
+        if (std::experimental::filesystem::exists(cwd + "/" + config.host))
+        {
+            blast.navigate("file://" + cwd + "/" + config.host);
+            break;
+        }
+        if (std::experimental::filesystem::exists(config.host))
+        {
+            blast.navigate("file://" + config.host);
+            break;
+        }
+        std::cout << "Host not found" << std::endl;
+        return 1;
+    case 2: // Hosted
         break;
     }
     blast.run();
