@@ -75,12 +75,7 @@ namespace Kromblast
     public:
         /**
          * @brief Constructor
-         * @param title Title of the window
-         * @param width Width of the window
-         * @param height Height of the window
-         * @param debug Debug mode
-         * @param lib_name List of the libraries
-         * @param lib_nb Number of libraries
+         * @param config Config
          * @return Return a new instance of Kromblast
          */
         Kromblast(ConfigKromblast config);

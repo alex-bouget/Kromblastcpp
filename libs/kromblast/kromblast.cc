@@ -119,12 +119,7 @@ KromblastLib::kromblast_function **kromblast_load_library(int* nb_functions, std
 
 /**
  * @brief Construct a new Kromblast::Kromblast object
- * @param title Title of the window
- * @param width Width of the window
- * @param height Height of the window
- * @param debug Debug mode
- * @param lib_name List of the libraries
- * @param lib_nb Number of libraries
+ * @param config Configuration of the Kromblast object
  * @return Return the Kromblast object
  */
 Kromblast::Kromblast::Kromblast(ConfigKromblast config)
