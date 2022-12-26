@@ -15,6 +15,8 @@
  */
 Kromblast::Kromblast::Kromblast(ConfigKromblast config)
 {
+    if (config.debug) 
+        log("Kromblast::Constructor", "Starting Kromblast");
     kromblast_window = new webview::webview(config.debug, nullptr);
     this->debug = config.debug;
     debug ? kromblast_window->set_title(config.title + " (debug)") : kromblast_window->set_title(config.title);
@@ -22,6 +24,8 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
     {
         Display *display = XOpenDisplay(NULL);
         Screen *screen = DefaultScreenOfDisplay(display);
+        if (debug)
+            log("Kromblast::Constructor", ("Set fullscreen at" + std::to_string(screen->width) + "x" + std::to_string(screen->height)).c_str());
         kromblast_window->set_size(screen->width, screen->height, WEBVIEW_HINT_FIXED);
     }
     else
@@ -30,6 +34,8 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
     }
     if (config.fullscreen || config.frameless)
     {
+        if (debug)
+            log("Kromblast::Constructor", "Set frameless");
         GtkWindow *window = (GtkWindow *)kromblast_window->window();
         gtk_window_set_decorated(GTK_WINDOW(window), false);
         gtk_window_move(GTK_WINDOW(window), 0, 0);
@@ -125,4 +131,4 @@ bool Kromblast::Kromblast::is_debug() { return debug; }
  * @param lib Library
  * @param message Message
  */
-void Kromblast::Kromblast::log(const char *lib, const char *message) { std::cout << "[" << lib << "] " << message << std::endl; }
+void Kromblast::Kromblast::log(const char *lib, const char *message) { std::cout << "{" << __TIME__ << "} [" << lib << "] " << message << std::endl; }

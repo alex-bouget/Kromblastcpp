@@ -27,7 +27,10 @@ namespace KromblastCore
             virtual void set_kromblast(KromblastCore::KromblastInterface *kromblast) = 0;
         };
 
-        typedef KromLib* (*kromblast_lib_get_class_t)(void);
+        /**
+         * @brief define entry point of a kromblast library
+         */
+        typedef KromLib *(*kromblast_lib_get_class_t)(void);
     }
 }
 

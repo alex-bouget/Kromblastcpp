@@ -65,7 +65,7 @@ KromblastCore::kromblast_callback **Kromblast::Utils::Library::kromblast_load_li
     {
         // open the library
         if (debug)
-            std::cout << "Loading library: " << lib_name[i] << std::endl;
+            kromblast_interface->log("LibLoader", ("Loading library: " + lib_name[i]).c_str());
         void *handle = dlopen(lib_name[i].c_str(), RTLD_LAZY);
         if (!handle)
         {
@@ -75,7 +75,7 @@ KromblastCore::kromblast_callback **Kromblast::Utils::Library::kromblast_load_li
 
         // get the function
         if (debug)
-            std::cout << "Loading symbol: kromblast_lib_get_type" << std::endl;
+            kromblast_interface->log("LibLoader", "Loading symbol: kromblast_lib_get_type");
         KromblastCore::kromblast_lib_get_type_t lib_type = (KromblastCore::kromblast_lib_get_type_t)dlsym(handle, "kromblast_lib_get_type");
         const char *dlsym_error = dlerror();
         if (dlsym_error)
@@ -86,14 +86,14 @@ KromblastCore::kromblast_callback **Kromblast::Utils::Library::kromblast_load_li
         }
         kromblast_function_nb[i] = -1;
         if (debug)
-            std::cout << "Loading functions" << std::endl;
+            kromblast_interface->log("LibLoader", "Loading functions");
         KromblastCore::KromLibType type = lib_type();
         switch (type)
         {
         case KromblastCore::KromLibType::KB_LIB_CLASS:
         {
             if (debug)
-                std::cout << "Loading symbol: kromblast_lib_get_class" << std::endl;
+                kromblast_interface->log("LibLoader", "Loading symbol: kromblast_lib_get_class");
             KromblastCore::Class::kromblast_lib_get_class_t class_callback = (KromblastCore::Class::kromblast_lib_get_class_t)dlsym(handle, "kromblast_lib_get_class");
             dlsym_error = dlerror();
             if (dlsym_error)
@@ -110,7 +110,7 @@ KromblastCore::kromblast_callback **Kromblast::Utils::Library::kromblast_load_li
         case KromblastCore::KromLibType::KB_LIB_STRUCT:
         {
             if (debug)
-                std::cout << "Loading symbol: kromblast_lib_get_struct" << std::endl;
+                kromblast_interface->log("LibLoader", "Loading symbol: kromblast_lib_get_struct");
             KromblastCore::Struct::kromblast_lib_struct_get_function_t struct_callback = (KromblastCore::Struct::kromblast_lib_struct_get_function_t)dlsym(handle, "kromblast_lib_struct_get_function");
             dlsym_error = dlerror();
             if (dlsym_error)
@@ -145,6 +145,8 @@ KromblastCore::kromblast_callback **Kromblast::Utils::Library::kromblast_load_li
         for (int j = 0; j < kromblast_function_nb[i]; j++)
         {
             kromblast_function[k] = &kromblast_function_lib[i][j];
+            if (debug)
+                kromblast_interface->log("LibLoader", ("Creating function: " + std::string(kromblast_function[k]->name)).c_str());
             create_js_link(*kromblast_function[k], w, debug);
             k++;
         }

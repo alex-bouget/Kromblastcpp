@@ -111,6 +111,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
 
     if (debug)
     {
+        std::cout << "------------------------------" << std::endl;
         std::cout << "Title: " << title << std::endl;
         std::cout << "Width: " << width << std::endl;
         std::cout << "Height: " << height << std::endl;
@@ -126,6 +127,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         std::cout << "Mode: " << mode << std::endl;
         std::cout << "Mode ID: " << mode_id << std::endl;
         std::cout << "Host: " << host << std::endl;
+        std::cout << "------------------------------" << std::endl << std::endl;
     }
     struct Kromblast::ConfigKromblast result = {
         title,
