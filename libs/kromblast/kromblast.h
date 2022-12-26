@@ -2,7 +2,8 @@
 #define KROMBLAST_H
 
 #include "webview.h"
-#include "./lib/kromblast_library.h"
+#include "./core/kb_lib_core.h"
+#include "./core/kb_lib_kromblast.h"
 
 /**
  * @brief Namespace of kromblast. The application for transforming a web application into a desktop application
@@ -49,13 +50,13 @@ namespace Kromblast
      * @property kromblast_lib_nb Number of libraries
      * @property kromblast_window Webview
      */
-    class Kromblast
+    class Kromblast: public KromblastCore::KromblastInterface
     {
     private:
         /**
          * @brief List of the callback functions
          */
-        KromblastLib::kromblast_function **kromblast_function_lib;
+        KromblastCore::kromblast_callback **kromblast_function_lib;
 
         /**
          * @brief Number of callback functions
@@ -90,19 +91,19 @@ namespace Kromblast
          * @param req Request
          * @return Return the result of the function
          */
-        std::string kromblast_callback(std::string req);
+        const char *kromblast_callback(const char *req);
 
         /**
          * @brief Set the html of the webview
          * @param html Html
          */
-        void set_html(const std::string &html);
+        void set_html(const char *html);
 
         /**
          * @brief Navigate to a url
          * @param url Url
          */
-        void navigate(const std::string &url);
+        void navigate(const char *url);
 
         /**
          * @brief Run the webview
@@ -113,6 +114,13 @@ namespace Kromblast
          * @brief Get the debug mode
          */
         bool is_debug();
+
+        /**
+         * @brief Log a message
+         * @param lib Library
+         * @param message Message
+         */
+        void log(const char *lib, const char *message);
     };
 }
 
