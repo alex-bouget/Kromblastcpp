@@ -4,41 +4,11 @@
 #include "Mini.h"
 
 /**
- * @brief structure to store the config
- * @param title Window title
- * @param width Window width
- * @param height Window height
- * @param fullscreen Window fullscreen
- * @param frameless Window frameless
- * @param debug Debug mode
- * @param lib_path Path to the libraries
- * @param lib_count Number of libraries
- * @param lib_name List of the libraries
- * @param mode Mode of the libraries
- * @param host Host of the libraries
- * @note The config is loaded from the ini file
- */
-struct ConfigKromblast
-{
-    std::string title;
-    int width;
-    int height;
-    bool fullscreen;
-    bool frameless;
-    bool debug;
-    std::string lib_path;
-    int lib_count;
-    std::string *lib_name;
-    int mode;
-    std::string host;
-};
-
-/**
  * @brief Load the config from the ini file
  * @param path Path to the ini file
  * @return Return the config
  */
-struct ConfigKromblast load_config(std::string path)
+struct Kromblast::ConfigKromblast load_config(std::string path)
 {
     mINI::INIFile file(path);
     mINI::INIStructure ini;
@@ -156,7 +126,7 @@ struct ConfigKromblast load_config(std::string path)
         std::cout << "Mode ID: " << mode_id << std::endl;
         std::cout << "Host: " << host << std::endl;
     }
-    struct ConfigKromblast result = {
+    struct Kromblast::ConfigKromblast result = {
         title,
         width,
         height,
@@ -186,15 +156,9 @@ int main()
         std::cout << "kromblast.ini not found" << std::endl;
         return 1;
     }
-    struct ConfigKromblast config = load_config(cwd + "/kromblast.ini");
+    struct Kromblast::ConfigKromblast config = load_config(cwd + "/kromblast.ini");
 
-    Kromblast::Kromblast blast(
-        config.title,
-        config.width,
-        config.height,
-        config.debug,
-        config.lib_name,
-        config.lib_count);
+    Kromblast::Kromblast blast(config);
 
     switch (config.mode)
     {

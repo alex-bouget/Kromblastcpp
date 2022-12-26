@@ -1,6 +1,7 @@
 #include "kromblast.h"
 #include "dlfcn.h"
 #include <iostream>
+#include "X11/Xlib.h"
 
 /**
  * @brief Create a js link between a function and a function webview
@@ -126,15 +127,27 @@ KromblastLib::kromblast_function **kromblast_load_library(int* nb_functions, std
  * @param lib_nb Number of libraries
  * @return Return the Kromblast object
  */
-Kromblast::Kromblast::Kromblast(std::string title, int width, int height, bool debug, std::string lib_name[], int lib_nb)
+Kromblast::Kromblast::Kromblast(ConfigKromblast config)
 {
     kromblast_window = new webview::webview(debug, nullptr);
     this->debug = debug;
-    debug ? kromblast_window->set_title(title + " (debug)") : kromblast_window->set_title(title);
-    kromblast_window->set_size(width, height, WEBVIEW_HINT_NONE);
+    debug ? kromblast_window->set_title(config.title + " (debug)") : kromblast_window->set_title(config.title);
+    if (config.fullscreen) {
+        Display *display = XOpenDisplay(NULL);
+        Screen *screen = DefaultScreenOfDisplay(display);
+        kromblast_window->set_size(screen->width, screen->height, WEBVIEW_HINT_FIXED);
+    } else {
+        kromblast_window->set_size(config.width, config.height, WEBVIEW_HINT_NONE);
+    }
+    if (config.fullscreen || config.frameless) {
+        GtkWindow *window = (GtkWindow *)kromblast_window->window();
+        gtk_window_set_decorated(GTK_WINDOW(window), false);
+        gtk_window_move(GTK_WINDOW(window), 0, 0);
+        
+    }
     kromblast_window->bind("kromblast", [&](std::string arg) // Bind the kromblast function
                            { return kromblast_callback(arg); });
-    this->kromblast_function_lib = kromblast_load_library(&kromblast_function_nb, lib_name, lib_nb, *kromblast_window, debug);
+    this->kromblast_function_lib = kromblast_load_library(&kromblast_function_nb, config.lib_name, config.lib_count, *kromblast_window, debug);
 }
 
 /**
