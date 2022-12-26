@@ -41,6 +41,7 @@
                 "-I/usr/include/glib-2.0",
                 "-I/usr/lib/x86_64-linux-gnu/glib-2.0/include",
                 "-lwebkit2gtk-4.0",
+                "-I/usr/X11/lib",
                 "-lgtk-3",
                 "-lgdk-3",
                 "-lpangocairo-1.0",
@@ -56,6 +57,7 @@
                 "-lgobject-2.0",
                 "-lglib-2.0",
                 "-ldl",
+                "-lX11",
                 "-lstdc++fs",
                 "-o",
                 "build/basic"
