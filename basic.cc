@@ -73,6 +73,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
 
     for (const auto &f : std::experimental::filesystem::directory_iterator(cwd + "/" + lib_path + "/"))
     {
+        f.path();
         // Count the number of libraries
         lib_count++;
     }
@@ -110,6 +111,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
 
     if (debug)
     {
+        std::cout << "------------------------------" << std::endl;
         std::cout << "Title: " << title << std::endl;
         std::cout << "Width: " << width << std::endl;
         std::cout << "Height: " << height << std::endl;
@@ -125,6 +127,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         std::cout << "Mode: " << mode << std::endl;
         std::cout << "Mode ID: " << mode_id << std::endl;
         std::cout << "Host: " << host << std::endl;
+        std::cout << "------------------------------" << std::endl << std::endl;
     }
     struct Kromblast::ConfigKromblast result = {
         title,
@@ -163,17 +166,17 @@ int main()
     switch (config.mode)
     {
     case 0: // Server
-        blast.navigate(config.host);
+        blast.navigate(config.host.c_str());
         break;
     case 1: // Local
         if (std::experimental::filesystem::exists(cwd + "/" + config.host))
         {
-            blast.navigate("file://" + cwd + "/" + config.host);
+            blast.navigate(("file://" + cwd + "/" + config.host).c_str());
             break;
         }
         if (std::experimental::filesystem::exists(config.host))
         {
-            blast.navigate("file://" + config.host);
+            blast.navigate(("file://" + config.host).c_str());
             break;
         }
         std::cout << "Host not found" << std::endl;

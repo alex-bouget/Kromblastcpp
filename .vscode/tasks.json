@@ -8,10 +8,10 @@
                 "-Wall",
                 "-Wextra",
                 "-Wpedantic",
+                "-export-dynamic",
                 "basic.cc",
                 "-Ilibs",
                 "-Ilibs/kromblast",
-                "-Ilibs/kromblast/lib",
                 "-Ilibs/webview",
                 "-pthread",
                 "-I/usr/include/webkitgtk-4.0",
@@ -60,10 +60,10 @@
                 "-lX11",
                 "-lstdc++fs",
                 "-o",
-                "build/basic"
+                "${workspaceFolder}/build/app"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
