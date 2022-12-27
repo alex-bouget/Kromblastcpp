@@ -7,8 +7,10 @@
 class Exemple : public KromblastCore::Class::KromLib
 {
 public:
+    static KromblastCore::KromblastInterface *kromblast;
     static char *increment(KromblastCore::kromblast_callback_called parameters)
     {
+        kromblast->log("Exemple", "Increment function called");
         int nb = atoi(parameters.args[0]);
         char *result = new char[100];
         sprintf(result, "{\"count\": %d}", ++nb);
@@ -30,6 +32,7 @@ public:
     void set_kromblast(KromblastCore::KromblastInterface *kromblast)
     {
         kromblast->log("Exemple", "Exemple library loaded");
+        Exemple::kromblast = kromblast;
     }
 };
 

@@ -25,7 +25,7 @@ namespace Kromblast
              * @param debug Debug mode
              * @return Return the result of the function
              */
-            char *call_function(struct KromblastCore::kromblast_callback_called function_called, KromblastCore::kromblast_callback **kromblast_functions, int kromblast_functions_nb, bool debug);
+            char *call_function(struct KromblastCore::kromblast_callback_called function_called, KromblastCore::kromblast_callback **kromblast_functions, int kromblast_functions_nb, KromblastCore::KromblastInterface *kromblast);
         }
     }
 }

@@ -25,17 +25,16 @@ int Kromblast::Utils::Function::count_args(std::string args)
  * @param function_called Function called
  * @param kromblast_lib List of the libraries
  * @param kromblast_lib_nb Number of libraries
- * @param debug Debug mode
+ * @param kromblast Kromblast instance
  * @return Return the result of the function
  */
-char *Kromblast::Utils::Function::call_function(struct KromblastCore::kromblast_callback_called function_called, KromblastCore::kromblast_callback **kromblast_functions, int kromblast_functions_nb, bool debug)
+char *Kromblast::Utils::Function::call_function(struct KromblastCore::kromblast_callback_called function_called, KromblastCore::kromblast_callback **kromblast_functions, int kromblast_functions_nb, KromblastCore::KromblastInterface *kromblast)
 {
     for (int i = 0; i < kromblast_functions_nb; i++)
     {
         if (strcmp(function_called.name, kromblast_functions[i]->name) == 0 && function_called.args_nb == kromblast_functions[i]->args_nb)
         {
-            if (debug)
-                std::cout << "Calling function: " << function_called.name << std::endl;
+            kromblast->log("Callback", ("Calling function: " + std::string(function_called.name)).c_str());
             return kromblast_functions[i]->callback(function_called);
         }
     }

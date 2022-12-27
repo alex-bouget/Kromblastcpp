@@ -19,7 +19,7 @@ namespace KromblastCore
      */
     class KromblastInterface
     {
-        public:
+    public:
         /**
          * @brief Function called for each function
          * @param req Request

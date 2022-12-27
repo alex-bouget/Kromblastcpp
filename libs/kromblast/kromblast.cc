@@ -6,6 +6,7 @@
 #include "./utils/function_call.h"
 #include "dlfcn.h"
 #include <iostream>
+#include <ctime>
 #include "X11/Xlib.h"
 
 /**
@@ -15,7 +16,7 @@
  */
 Kromblast::Kromblast::Kromblast(ConfigKromblast config)
 {
-    if (config.debug) 
+    if (config.debug)
         log("Kromblast::Constructor", "Starting Kromblast");
     kromblast_window = new webview::webview(config.debug, nullptr);
     this->debug = config.debug;
@@ -42,7 +43,7 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
     }
     kromblast_window->bind("kromblast", [&](std::string arg) // Bind the kromblast function
                            { return (std::string)(kromblast_callback(arg.c_str())); });
-    this->kromblast_function_lib = Utils::Library::kromblast_load_library(&kromblast_function_nb, config.lib_name, config.lib_count, this, *kromblast_window, debug);
+    this->kromblast_function_lib = Utils::Library::kromblast_load_library(&kromblast_function_nb, config.lib_name, config.lib_count, this, *kromblast_window);
 }
 
 /**
@@ -76,7 +77,7 @@ const char *Kromblast::Kromblast::kromblast_callback(const char *req)
     {
         function_called.args_nb = 0;
         function_called.args = nullptr;
-        char *result = Utils::Function::call_function(function_called, kromblast_function_lib, kromblast_function_nb, debug);
+        char *result = Utils::Function::call_function(function_called, kromblast_function_lib, kromblast_function_nb, this);
         return result;
     }
 
@@ -100,7 +101,7 @@ const char *Kromblast::Kromblast::kromblast_callback(const char *req)
     }
 
     // call the function
-    char *result = Utils::Function::call_function(function_called, kromblast_function_lib, kromblast_function_nb, debug);
+    char *result = Utils::Function::call_function(function_called, kromblast_function_lib, kromblast_function_nb, this);
     return result;
 }
 
@@ -131,4 +132,15 @@ bool Kromblast::Kromblast::is_debug() { return debug; }
  * @param lib Library
  * @param message Message
  */
-void Kromblast::Kromblast::log(const char *lib, const char *message) { std::cout << "{" << __TIME__ << "} [" << lib << "] " << message << std::endl; }
+void Kromblast::Kromblast::log(const char *lib, const char *message)
+{
+    if (!debug)
+        return;
+    time_t now = time(nullptr);
+
+    // Convert the time to a tm struct
+    tm *timeinfo = localtime(&now);
+    // Print the hour, minute, and second
+    std::cout << "{" << timeinfo->tm_hour << ":" << timeinfo->tm_min << ":" << timeinfo->tm_sec << "}";
+    std::cout << "[" << lib << "] " << message << std::endl;
+}
