@@ -28,7 +28,7 @@ lib="kromlib"
 ; required
 ; mode of webview file
 ; local | server | hosted
-; local: load the file from the local file system - NOT WORKING FOR THE MOMENT
+; local: load the file from the local file system
 ; server: load the file from a server
 ; hosted: open a server and open the index - NOT WORKING FOR THE MOMENT
 mode="server"
@@ -53,12 +53,12 @@ height=600
 
 ; optional
 ; default: false
-; if the window is in fullscreen - NOT WORKING FOR THE MOMENT
+; if the window is in fullscreen
 fullscreen=false
 
 ; optional
 ; default: false
-; if the window is frameless - NOT WORKING FOR THE MOMENT
+; if the window is frameless
 frameless=false
 ```
 
