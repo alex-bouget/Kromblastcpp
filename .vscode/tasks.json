@@ -9,7 +9,7 @@
                 "-Wextra",
                 "-Wpedantic",
                 "-export-dynamic",
-                "basic.cc",
+                "src/main.cpp",
                 "-Ilibs",
                 "-Ilibs/kromblast",
                 "-Ilibs/webview",

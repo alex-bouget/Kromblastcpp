@@ -1,4 +1,4 @@
-#include "kromblast.h"
+#include "kromblast.hpp"
 #include "./core/kb_lib_core.h"
 #include "./core/kb_lib_struct.h"
 #include "./core/kb_lib_class.h"

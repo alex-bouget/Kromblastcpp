@@ -124,6 +124,4 @@ namespace Kromblast
     };
 }
 
-#include "kromblast.cc"
-
 #endif
