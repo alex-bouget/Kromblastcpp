@@ -1,7 +1,8 @@
 #ifndef KROMBLAST_UTILS_FUNCTION_CALL_H
 #define KROMBLAST_UTILS_FUNCTION_CALL_H
 
-#include "./../core/kb_lib_core.h"
+#include "kb_lib_core.hpp"
+#include "kb_lib_kromblast.hpp"
 #include <iostream>
 
 namespace Kromblast
@@ -29,7 +30,5 @@ namespace Kromblast
         }
     }
 }
-
-#include "function_call.cc"
 
 #endif

@@ -7,17 +7,63 @@ project(
 
 # Extra Dependencies
 
+webview_lib = static_library(
+    'webview',
+    'src/libs/webview/webview.h',
+    dependencies : [
+        dependency('gtk+-3.0'),
+        dependency('webkit2gtk-4.0')
+    ]
+)
+
+webview_dep = declare_dependency(
+    link_with : webview_lib
+)
+
+mini_dep = declare_dependency(
+    include_directories : include_directories('src/libs/mini')
+)
+
+
 
 
 # Intra Dependencies
-Kromblast_dep = declare_dependency(
-    include_directories : include_directories('src/kromblast')
-    link_with : static_library('kromblast', 'src/kromblast/kromblast.cpp')
+kromblast_api_dep = declare_dependency(
+    include_directories : include_directories('src/include'),
+)
+
+
+utils_lib = static_library(
+    'utils',
+    'src/utils/load_lib.cpp',
+    'src/utils/function_call.cpp',
+    include_directories : 'src/utils',
+    dependencies : [
+        kromblast_api_dep,
+        webview_dep
+    ]
 )
 
 utils_dep = declare_dependency(
-    include_directories : include_directories('src/utils')
-    link_with : static_library('utils', 'src/utils/load_lib.cpp', 'src/utils/function_call.cpp')
+    include_directories : include_directories('src/utils'),
+    link_with : utils_lib
+)
+
+
+kromblast_lib = static_library(
+    'kromblast',
+    'src/kromblast/kromblast.cpp',
+    include_directories : 'src/kromblast',
+    dependencies : [
+        kromblast_api_dep,
+        utils_dep,
+        webview_dep
+    ]
+)
+
+kromblast_dep = declare_dependency(
+    include_directories : include_directories('src/kromblast'),
+    link_with : kromblast_lib
 )
 
 
@@ -26,5 +72,12 @@ utils_dep = declare_dependency(
 exe = executable(
     'Kromblast',
     'src/main.cpp',
-    install : true
+    install : true,
+    dependencies : [
+        kromblast_api_dep,
+        kromblast_dep,
+        utils_dep,
+        webview_dep,
+        mini_dep
+    ]
 )

@@ -1,4 +1,5 @@
-#include "function_call.h"
+#include "function_call.hpp"
+#include "kb_lib_kromblast.hpp"
 #include <iostream>
 #include <string.h>
 

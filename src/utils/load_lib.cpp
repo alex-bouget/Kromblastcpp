@@ -1,7 +1,7 @@
-#include "load_lib.h"
-#include "./../core/kb_lib_class.h"
-#include "./../core/kb_lib_core.h"
-#include "./../core/kb_lib_struct.h"
+#include "load_lib.hpp"
+#include "kb_lib_class.hpp"
+#include "kb_lib_core.hpp"
+#include "kb_lib_struct.hpp"
 #include <iostream>
 #include "dlfcn.h"
 
