@@ -5,18 +5,25 @@ project(
     default_options : ['warning_level=3']
 )
 
+cc = meson.get_compiler('cpp')
+
 # Extra Dependencies
 
-webview_lib = static_library(
+webview_depends = [
+    dependency('gtk+-3.0'),
+    dependency('webkit2gtk-4.0')
+]
+
+webview_lib = library(
     'webview',
     'src/libs/webview/webview.h',
-    dependencies : [
-        dependency('gtk+-3.0'),
-        dependency('webkit2gtk-4.0')
-    ]
+    dependencies : webview_depends,
+    install : true
 )
 
 webview_dep = declare_dependency(
+    include_directories : include_directories('src/libs/webview'),
+    dependencies : webview_depends,
     link_with : webview_lib
 )
 
@@ -33,14 +40,15 @@ kromblast_api_dep = declare_dependency(
 )
 
 
-utils_lib = static_library(
+utils_lib = library(
     'utils',
     'src/utils/load_lib.cpp',
     'src/utils/function_call.cpp',
     include_directories : 'src/utils',
     dependencies : [
         kromblast_api_dep,
-        webview_dep
+        webview_dep,
+        cc.find_library('dl')
     ]
 )
 
@@ -50,14 +58,15 @@ utils_dep = declare_dependency(
 )
 
 
-kromblast_lib = static_library(
+kromblast_lib = library(
     'kromblast',
     'src/kromblast/kromblast.cpp',
     include_directories : 'src/kromblast',
     dependencies : [
         kromblast_api_dep,
         utils_dep,
-        webview_dep
+        webview_dep,
+        cc.find_library('X11')
     ]
 )
 
@@ -78,6 +87,7 @@ exe = executable(
         kromblast_dep,
         utils_dep,
         webview_dep,
-        mini_dep
+        mini_dep,
+        cc.find_library('stdc++fs'),
     ]
 )
