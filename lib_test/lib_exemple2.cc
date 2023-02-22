@@ -1,6 +1,6 @@
-#include "kb_lib_class.h"
-#include "kb_lib_core.h"
-#include "kb_lib_kromblast.h"
+#include "kb_lib_class.hpp"
+#include "kb_lib_core.hpp"
+#include "kb_lib_kromblast.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,6 +8,7 @@ class Exemple : public KromblastCore::Class::KromLib
 {
 public:
     static KromblastCore::KromblastInterface *kromblast;
+    
     static char *increment(KromblastCore::kromblast_callback_called parameters)
     {
         kromblast->log("Exemple", "Increment function called");

@@ -1,5 +1,5 @@
-#include "kb_lib_core.h"
-#include "kb_lib_struct.h"
+#include "kb_lib_core.hpp"
+#include "kb_lib_struct.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,10 +12,10 @@ char *increment(KromblastCore::kromblast_callback_called parameters)
 }
 
 int function_number = 1;
-struct KromblastCore::kromblast_callback functions[1] = {
-    {.name = (char *)"libtest.secondexemple.increment",
-     .args_nb = 1,
-     .callback = (KromblastCore::kromblast_callback_t)&increment}};
+struct KromblastCore::kromblast_callback functions[1] = {{
+    .name = (char *)"libtest.secondexemple.increment",
+    .args_nb = 1,
+    .callback = (KromblastCore::kromblast_callback_t)&increment}};
 
 extern "C" KromblastCore::KromLibType kromblast_lib_get_type()
 {

@@ -91,3 +91,11 @@ exe = executable(
         cc.find_library('stdc++fs'),
     ]
 )
+
+lib1 = shared_library(
+    'lib_exemple',
+    'lib_test/lib_exemple2.cc',
+    dependencies : [
+        kromblast_api_dep
+    ]
+)
