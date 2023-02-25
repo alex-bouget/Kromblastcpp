@@ -21,6 +21,10 @@ namespace KromblastCore
      * @property navigate Navigate to a url
      * @property run Run the webview
      * @property is_debug Get the debug mode
+     * @property log Log a message
+     * @property get_version Get the kromblast version
+     * @property claim_callback Claim a callback
+     * @property get_functions Get the list of the callback functions
      */
     class KromblastInterface
     {

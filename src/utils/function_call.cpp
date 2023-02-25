@@ -28,17 +28,13 @@ int Kromblast::Utils::Function::count_args(std::string args)
 /**
  * @brief call a function in the libraries
  * @param function_called Function called
- * @param kromblast_lib List of the libraries
- * @param kromblast_lib_nb Number of libraries
- * @param kromblast Kromblast instance
+ * @param kromblast_function Kromblast functions
+ * @param kromblast Kromblast interface
  * @return Return the result of the function
  */
 std::string Kromblast::Utils::Function::call_function(
     struct KromblastCore::kromblast_callback_called function_called,
-    std::map<
-        std::string,
-        KromblastCore::kromblast_callback>
-        kromblast_function,
+    std::map<std::string, KromblastCore::kromblast_callback> kromblast_function,
     KromblastCore::KromblastInterface *kromblast)
 {
     kromblast->log("Function", "Function called: " + function_called.name);

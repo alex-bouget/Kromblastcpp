@@ -121,7 +121,7 @@ bool Kromblast::Kromblast::is_debug() { return debug; }
 
 /**
  * @brief Log a message
- * @param lib Library
+ * @param lib Library name
  * @param message Message
  */
 void Kromblast::Kromblast::log(const std::string lib, const std::string message)
@@ -137,19 +137,35 @@ void Kromblast::Kromblast::log(const std::string lib, const std::string message)
     std::cout << "[" << lib << "] " << message << std::endl;
 }
 
+/**
+ * @brief Get the list of the callback functions
+ * @return Return the list of the callback functions
+ */
 std::vector<KromblastCore::kromblast_callback> Kromblast::Kromblast::get_functions()
 {
     std::vector<KromblastCore::kromblast_callback> functions;
-    for(auto it = handle_callback_function.begin(); it != handle_callback_function.end(); ++it) {
+    for (auto it = handle_callback_function.begin(); it != handle_callback_function.end(); ++it)
+    {
         functions.push_back(it->second);
     }
     return functions;
 }
 
+/**
+ * @brief Get the kromblast version
+ * @return Return the kromblast version
+ */
 const std::string Kromblast::Kromblast::get_version() { return KROMBLAST_VERSION; }
 
-bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callback *callback) {
-    if (handle_callback_function.find(callback->name) != handle_callback_function.end()) {
+/**
+ * @brief Claim a function
+ * @param callback Callback function
+ * @return Return true if the function is claimed
+ */
+bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callback *callback)
+{
+    if (handle_callback_function.find(callback->name) != handle_callback_function.end())
+    {
         return false;
     }
     handle_callback_function[callback->name] = *callback;

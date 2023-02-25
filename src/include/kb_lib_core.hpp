@@ -17,7 +17,6 @@ namespace KromblastCore
      * @brief Structure used to call a function
      * @property name Function name
      * @property args Arguments
-     * @property args_nb Arguments number
      */
     struct kromblast_callback_called
     {

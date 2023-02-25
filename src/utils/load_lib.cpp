@@ -82,7 +82,6 @@ void *get_function(void *handle, std::string function_name, KromblastCore::Kromb
 
 /**
  * @brief Load a class library
- * @param nb_functions Number of functions
  * @param handle Handle of the library
  * @param kromblast_interface Kromblast interface
  */
@@ -117,11 +116,9 @@ void load_lib(std::string lib_name, KromblastCore::KromblastInterface *kromblast
 
 /**
  * @brief Load the libraries
- * @param nb_functions Number of functions returned
  * @param lib_name List of the libraries name
- * @param lib_nb Number of libraries
+ * @param kromblast Kromblast interface
  * @param w Webview
- * @param debug Debug mode
  * @return Return the list of the libraries
  */
 void Kromblast::Utils::Library::kromblast_load_library(std::vector<std::string> lib_name, KromblastCore::KromblastInterface *kromblast, webview::webview w)

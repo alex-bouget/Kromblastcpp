@@ -60,10 +60,7 @@ namespace Kromblast
         /**
          * @brief List of the callback functions
          */
-        std::map<
-            std::string,
-            KromblastCore::kromblast_callback>
-            handle_callback_function;
+        std::map<std::string, KromblastCore::kromblast_callback> handle_callback_function;
 
         /**
          * @brief Webview
@@ -119,7 +116,7 @@ namespace Kromblast
 
         /**
          * @brief Log a message
-         * @param lib Library
+         * @param lib Library name
          * @param message Message
          */
         void log(const std::string lib, const std::string message);
@@ -138,6 +135,8 @@ namespace Kromblast
 
         /**
          * @brief Claim a function
+         * @param callback Callback function
+         * @return Return true if the function is claimed
          */
         bool claim_callback(struct KromblastCore::kromblast_callback *callback);
     };
