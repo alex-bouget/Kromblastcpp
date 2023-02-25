@@ -1,7 +1,7 @@
 #ifndef KB_LIB_KROMBLAST_H
 #define KB_LIB_KROMBLAST_H
 
-#include "kb_lib_core.h"
+#include "kb_lib_core.hpp"
 
 /**
  * @brief Namespace of the kromblast library

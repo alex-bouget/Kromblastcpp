@@ -1,9 +1,9 @@
-#include "kromblast.h"
-#include "./core/kb_lib_core.h"
-#include "./core/kb_lib_struct.h"
-#include "./core/kb_lib_class.h"
-#include "./utils/load_lib.h"
-#include "./utils/function_call.h"
+#include "kromblast.hpp"
+#include "kb_lib_core.hpp"
+#include "kb_lib_struct.hpp"
+#include "kb_lib_class.hpp"
+#include "load_lib.hpp"
+#include "function_call.hpp"
 #include "dlfcn.h"
 #include <iostream>
 #include <ctime>

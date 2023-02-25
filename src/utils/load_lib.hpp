@@ -1,8 +1,8 @@
 #ifndef KROMBLAST_UTILS_LOAD_LIB_H
 #define KROMBLAST_UTILS_LOAD_LIB_H
 
-#include "./../core/kb_lib_core.h"
-#include "./../core/kb_lib_kromblast.h"
+#include "kb_lib_core.hpp"
+#include "kb_lib_kromblast.hpp"
 #include "webview.h"
 
 namespace Kromblast
@@ -16,7 +16,5 @@ namespace Kromblast
         }
     }
 }
-
-#include "load_lib.cc"
 
 #endif

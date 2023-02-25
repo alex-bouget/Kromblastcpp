@@ -2,8 +2,8 @@
 #define KROMBLAST_H
 
 #include "webview.h"
-#include "./core/kb_lib_core.h"
-#include "./core/kb_lib_kromblast.h"
+#include "kb_lib_core.hpp"
+#include "kb_lib_kromblast.hpp"
 
 /**
  * @brief Namespace of kromblast. The application for transforming a web application into a desktop application
@@ -123,7 +123,5 @@ namespace Kromblast
         void log(const char *lib, const char *message);
     };
 }
-
-#include "kromblast.cc"
 
 #endif
