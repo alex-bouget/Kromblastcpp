@@ -1,6 +1,5 @@
 #include "kromblast.hpp"
 #include "kb_lib_core.hpp"
-#include "kb_lib_struct.hpp"
 #include "kb_lib_class.hpp"
 #include "load_lib.hpp"
 #include "function_call.hpp"
@@ -26,7 +25,7 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
         Display *display = XOpenDisplay(NULL);
         Screen *screen = DefaultScreenOfDisplay(display);
         if (debug)
-            log("Kromblast::Constructor", ("Set fullscreen at" + std::to_string(screen->width) + "x" + std::to_string(screen->height)).c_str());
+            log("Kromblast::Constructor", "Set fullscreen at" + std::to_string(screen->width) + "x" + std::to_string(screen->height));
         kromblast_window->set_size(screen->width, screen->height, WEBVIEW_HINT_FIXED);
     }
     else
@@ -41,9 +40,12 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
         gtk_window_set_decorated(GTK_WINDOW(window), false);
         gtk_window_move(GTK_WINDOW(window), 0, 0);
     }
-    kromblast_window->bind("kromblast", [&](std::string arg) // Bind the kromblast function
-                           { return (std::string)(kromblast_callback(arg.c_str())); });
-    this->kromblast_function_lib = Utils::Library::kromblast_load_library(&kromblast_function_nb, config.lib_name, config.lib_count, this, *kromblast_window);
+    kromblast_window->bind(
+        "kromblast",
+        [&](std::string arg) { // Bind the kromblast function
+            return kromblast_callback(arg);
+        });
+    Utils::Library::kromblast_load_library(config.lib_name, this, *kromblast_window);
 }
 
 /**
@@ -59,49 +61,39 @@ Kromblast::Kromblast::~Kromblast()
  * @param req Request
  * @return Return the result of the function
  */
-const char *Kromblast::Kromblast::kromblast_callback(const char *req)
+const std::string Kromblast::Kromblast::kromblast_callback(const std::string req)
 {
     struct KromblastCore::kromblast_callback_called function_called;
 
-    std::string req_str = req;
-
     // get the function name
-    std::string function_name = req_str.substr(2, req_str.find_first_of(",") - 3);
-    function_called.name = new char[function_name.length() + 1];
-    strcpy(function_called.name, function_name.c_str());
+    std::string function_name = req.substr(2, req.find_first_of(",") - 3);
+    function_called.name = function_name;
 
-    std::string args = req_str.substr(req_str.find_first_of(",") + 1, req_str.length() - req_str.find_first_of(",") - 2);
+    std::string args = req.substr(req.find_first_of(",") + 1, req.length() - req.find_first_of(",") - 2);
 
     // if there is no arguments
     if (args.length() <= 2)
     {
-        function_called.args_nb = 0;
-        function_called.args = nullptr;
-        char *result = Utils::Function::call_function(function_called, kromblast_function_lib, kromblast_function_nb, this);
+        function_called.args = {};
+        std::string result = Utils::Function::call_function(function_called, handle_callback_function, this);
         return result;
     }
 
     // get the arguments
-    int args_nb = Utils::Function::count_args(args);
-    std::string *args_data = new std::string[args_nb];
+    std::vector<std::string> args_data;
     int step = 0;
+    int args_nb = Utils::Function::count_args(args);
     for (int i = 0; i < args_nb; i++)
     {
         int start = args.find_first_of("\"", step);
         int end = args.find_first_of("\"", start + 1);
-        args_data[i] = args.substr(start + 1, end - start - 1);
+        args_data.push_back(args.substr(start + 1, end - start - 1));
         step = end + 1;
     }
-    function_called.args_nb = args_nb;
-    function_called.args = new char *[args_nb];
-    for (int i = 0; i < args_nb; i++)
-    {
-        function_called.args[i] = new char[args_data[i].length() + 1];
-        strcpy(function_called.args[i], args_data[i].c_str());
-    }
+    function_called.args = args_data;
 
     // call the function
-    char *result = Utils::Function::call_function(function_called, kromblast_function_lib, kromblast_function_nb, this);
+    std::string result = Utils::Function::call_function(function_called, handle_callback_function, this);
     return result;
 }
 
@@ -109,13 +101,13 @@ const char *Kromblast::Kromblast::kromblast_callback(const char *req)
  * @brief Set the html of the window
  * @param html Html
  */
-void Kromblast::Kromblast::set_html(const char *html) { kromblast_window->set_html(html); }
+void Kromblast::Kromblast::set_html(const std::string html) { kromblast_window->set_html(html); }
 
 /**
  * @brief Navigate to an url
  * @param url Url
  */
-void Kromblast::Kromblast::navigate(const char *url) { kromblast_window->navigate(url); }
+void Kromblast::Kromblast::navigate(const std::string url) { kromblast_window->navigate(url); }
 
 /**
  * @brief Run the window
@@ -132,7 +124,7 @@ bool Kromblast::Kromblast::is_debug() { return debug; }
  * @param lib Library
  * @param message Message
  */
-void Kromblast::Kromblast::log(const char *lib, const char *message)
+void Kromblast::Kromblast::log(const std::string lib, const std::string message)
 {
     if (!debug)
         return;
@@ -143,4 +135,23 @@ void Kromblast::Kromblast::log(const char *lib, const char *message)
     // Print the hour, minute, and second
     std::cout << "{" << timeinfo->tm_hour << ":" << timeinfo->tm_min << ":" << timeinfo->tm_sec << "}";
     std::cout << "[" << lib << "] " << message << std::endl;
+}
+
+std::vector<KromblastCore::kromblast_callback> Kromblast::Kromblast::get_functions()
+{
+    std::vector<KromblastCore::kromblast_callback> functions;
+    for(auto it = handle_callback_function.begin(); it != handle_callback_function.end(); ++it) {
+        functions.push_back(it->second.second);
+    }
+    return functions;
+}
+
+const std::string Kromblast::Kromblast::get_version() { return KROMBLAST_VERSION; }
+
+bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callback *callback, std::function<std::string(struct KromblastCore::kromblast_callback_called *)> func) {
+    if (handle_callback_function.find(callback->name) != handle_callback_function.end()) {
+        return false;
+    }
+    handle_callback_function[callback->name] = std::make_pair(func, *callback);
+    return true;
 }

@@ -1,8 +1,8 @@
 #ifndef KB_LIB_CLASS_H
 #define KB_LIB_CLASS_H
 
-#include "kb_lib_core.hpp"
 #include "kb_lib_kromblast.hpp"
+#include "kb_lib_core.hpp"
 
 /**
  * @brief Namespace of the kromblast library
@@ -23,8 +23,8 @@ namespace KromblastCore
         class KromLib
         {
         public:
-            virtual KromblastCore::kromblast_callback *get_function(int *nb_function) = 0;
-            virtual void set_kromblast(KromblastCore::KromblastInterface *kromblast) = 0;
+            virtual void set_kromblast(void *kromblast) = 0;
+            virtual void load_functions() = 0;
         };
 
         /**
