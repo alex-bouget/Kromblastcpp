@@ -4,6 +4,7 @@
 #include "kb_lib_core.hpp"
 #include "kb_lib_kromblast.hpp"
 #include "webview.h"
+#include <vector>
 
 namespace Kromblast
 {
@@ -11,8 +12,26 @@ namespace Kromblast
     {
         namespace Library
         {
-            void create_js_link(KromblastCore::kromblast_callback function, webview::webview w, KromblastCore::KromblastInterface *kromblast);
-            KromblastCore::kromblast_callback **kromblast_load_library(int *nb_functions, std::string lib_name[], int lib_nb, KromblastCore::KromblastInterface *kromblast_interface, webview::webview w);
+            /**
+             * @brief create a link between the javascript and the C++ code
+             * @param function Function to link
+             * @param w Webview instance
+             * @param kromblast Kromblast instance
+             */
+            void create_js_link(
+                KromblastCore::kromblast_callback function,
+                webview::webview w,
+                KromblastCore::KromblastInterface *kromblast);
+            /**
+             * @brief Load the libraries
+             * @param lib_name List of the libraries name
+             * @param kromblast Kromblast interface
+             * @param w Webview
+             */
+            void kromblast_load_library(
+                std::vector<std::string> lib_name,
+                KromblastCore::KromblastInterface *kromblast,
+                webview::webview w);
         }
     }
 }

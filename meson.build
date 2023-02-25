@@ -36,9 +36,8 @@ mini_dep = declare_dependency(
 
 # Intra Dependencies
 kromblast_api_dep = declare_dependency(
-    include_directories : include_directories('src/include'),
+    include_directories : include_directories('src/include/'),
 )
-
 
 utils_lib = library(
     'utils',
@@ -56,7 +55,6 @@ utils_dep = declare_dependency(
     include_directories : include_directories('src/utils'),
     link_with : utils_lib
 )
-
 
 kromblast_lib = library(
     'kromblast',
@@ -94,7 +92,7 @@ exe = executable(
 
 lib1 = shared_library(
     'lib_exemple',
-    'lib_test/lib_exemple2.cc',
+    'lib_test/lib_exemple3.cpp',
     dependencies : [
         kromblast_api_dep
     ]

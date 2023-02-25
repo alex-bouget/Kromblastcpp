@@ -2,6 +2,10 @@
 #define KB_LIB_KROMBLAST_H
 
 #include "kb_lib_core.hpp"
+#include "kb_lib_class.hpp"
+#include <string>
+#include <functional>
+#include <vector>
 
 /**
  * @brief Namespace of the kromblast library
@@ -9,6 +13,7 @@
  */
 namespace KromblastCore
 {
+
     /**
      * @brief Interface of the kromblast library
      * @property kromblast_callback Callback of the library
@@ -16,6 +21,10 @@ namespace KromblastCore
      * @property navigate Navigate to a url
      * @property run Run the webview
      * @property is_debug Get the debug mode
+     * @property log Log a message
+     * @property get_version Get the kromblast version
+     * @property claim_callback Claim a callback
+     * @property get_functions Get the list of the callback functions
      */
     class KromblastInterface
     {
@@ -25,19 +34,19 @@ namespace KromblastCore
          * @param req Request
          * @return Return the result of the function
          */
-        virtual const char *kromblast_callback(const char *req) = 0;
+        virtual const std::string kromblast_callback(const std::string req) = 0;
 
         /**
          * @brief Set the html of the webview
          * @param html Html
          */
-        virtual void set_html(const char *html) = 0;
+        virtual void set_html(const std::string html) = 0;
 
         /**
          * @brief Navigate to a url
          * @param url Url
          */
-        virtual void navigate(const char *url) = 0;
+        virtual void navigate(const std::string url) = 0;
 
         /**
          * @brief Run the webview
@@ -52,7 +61,25 @@ namespace KromblastCore
         /**
          * @brief Log a message
          */
-        virtual void log(const char *lib, const char *message) = 0;
+        virtual void log(const std::string lib, const std::string message) = 0;
+
+        /**
+         * @brief Get the kromblast version
+         */
+        virtual const std::string get_version() = 0;
+
+        /**
+         * @brief Claim a callback
+         * @param callback Callback
+         * @return Return true if the callback is claimed
+         */
+        virtual bool claim_callback(struct KromblastCore::kromblast_callback *callback) = 0;
+
+        /**
+         * @brief Get the functions
+         * @return Return the functions
+         */
+        virtual std::vector<KromblastCore::kromblast_callback> get_functions() = 0;
     };
 }
 #endif

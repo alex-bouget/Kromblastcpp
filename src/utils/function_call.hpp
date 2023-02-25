@@ -3,7 +3,11 @@
 
 #include "kb_lib_core.hpp"
 #include "kb_lib_kromblast.hpp"
+#include "kb_lib_class.hpp"
 #include <iostream>
+#include <string>
+#include <map>
+#include <functional>
 
 namespace Kromblast
 {
@@ -21,12 +25,14 @@ namespace Kromblast
             /**
              * @brief call a function in the libraries
              * @param function_called Function called
-             * @param kromblast_lib List of the libraries
-             * @param kromblast_lib_nb Number of libraries
-             * @param debug Debug mode
+             * @param kromblast_function List of the libraries
+             * @param kromblast Kromblast instance
              * @return Return the result of the function
              */
-            char *call_function(struct KromblastCore::kromblast_callback_called function_called, KromblastCore::kromblast_callback **kromblast_functions, int kromblast_functions_nb, KromblastCore::KromblastInterface *kromblast);
+            std::string call_function(
+                struct KromblastCore::kromblast_callback_called function_called,
+                std::map<std::string, KromblastCore::kromblast_callback> kromblast_function,
+                KromblastCore::KromblastInterface *kromblast);
         }
     }
 }

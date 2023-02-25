@@ -1,7 +1,11 @@
 #include "function_call.hpp"
 #include "kb_lib_kromblast.hpp"
+#include "kb_lib_core.hpp"
+#include "kb_lib_class.hpp"
 #include <iostream>
 #include <string.h>
+#include <vector>
+#include <functional>
 
 /**
  * @brief count the number of arguments
@@ -24,20 +28,21 @@ int Kromblast::Utils::Function::count_args(std::string args)
 /**
  * @brief call a function in the libraries
  * @param function_called Function called
- * @param kromblast_lib List of the libraries
- * @param kromblast_lib_nb Number of libraries
- * @param kromblast Kromblast instance
+ * @param kromblast_function Kromblast functions
+ * @param kromblast Kromblast interface
  * @return Return the result of the function
  */
-char *Kromblast::Utils::Function::call_function(struct KromblastCore::kromblast_callback_called function_called, KromblastCore::kromblast_callback **kromblast_functions, int kromblast_functions_nb, KromblastCore::KromblastInterface *kromblast)
+std::string Kromblast::Utils::Function::call_function(
+    struct KromblastCore::kromblast_callback_called function_called,
+    std::map<std::string, KromblastCore::kromblast_callback> kromblast_function,
+    KromblastCore::KromblastInterface *kromblast)
 {
-    for (int i = 0; i < kromblast_functions_nb; i++)
+    kromblast->log("Function", "Function called: " + function_called.name);
+    if (kromblast_function.find(function_called.name) != kromblast_function.end())
     {
-        if (strcmp(function_called.name, kromblast_functions[i]->name) == 0 && function_called.args_nb == kromblast_functions[i]->args_nb)
-        {
-            kromblast->log("Callback", ("Calling function: " + std::string(function_called.name)).c_str());
-            return kromblast_functions[i]->callback(function_called);
-        }
+        struct KromblastCore::kromblast_callback func = kromblast_function[function_called.name];
+        kromblast->log("Function", "Function found");
+        return func.callback(&function_called);
     }
     return (char *)"{\"Error\": \"Function not found\"}";
 }

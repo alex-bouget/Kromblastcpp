@@ -68,20 +68,14 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
     bool debug = (ini["Kromblast"].has("debug") ? std::strcmp(ini["Kromblast"]["debug"].c_str(), "true") == 0 : false);
 
     std::string lib_path = ini["Kromblast"]["lib"].substr(1, ini["Kromblast"]["lib"].length() - 2);
-    int lib_count = 0;
     std::string cwd = std::string(getcwd(NULL, 0));
 
-    for (const auto &f : std::experimental::filesystem::directory_iterator(cwd + "/" + lib_path + "/"))
-    {
-        f.path();
-        // Count the number of libraries
-        lib_count++;
-    }
-    std::string *lib_name = new std::string[lib_count];
+    std::vector<std::string> lib_name;
     int i = 0;
     for (const auto &entry : std::experimental::filesystem::directory_iterator(cwd + "/" + lib_path + "/"))
     {
-        lib_name[i] = entry.path();
+        std::string name = entry.path();
+        lib_name.insert(lib_name.begin() + i, name);
         i++;
     }
     std::string mode = "server";
@@ -119,10 +113,10 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         std::cout << "Frameless: " << frameless << std::endl;
         std::cout << "Debug: " << debug << std::endl;
         std::cout << "Library Path: " << lib_path << std::endl;
-        std::cout << "Libraries: " << lib_count << std::endl;
-        for (int i = 0; i < lib_count; i++)
+        std::cout << "Libraries: " << lib_name.size() << std::endl;
+        for (int i = 0; i < (int)lib_name.size(); i++)
         {
-            std::cout << "    Library " << i << ": " << lib_name[i] << std::endl;
+            std::cout << "    Library " << i << ": " << lib_name.at(i) << std::endl;
         }
         std::cout << "Mode: " << mode << std::endl;
         std::cout << "Mode ID: " << mode_id << std::endl;
@@ -137,7 +131,6 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         frameless,
         debug,
         lib_path,
-        lib_count,
         lib_name,
         mode_id,
         host};

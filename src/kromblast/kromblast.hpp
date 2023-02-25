@@ -3,7 +3,12 @@
 
 #include "webview.h"
 #include "kb_lib_core.hpp"
+#include "kb_lib_class.hpp"
 #include "kb_lib_kromblast.hpp"
+#include <string>
+#include <map>
+
+#define KROMBLAST_VERSION "0.1.0"
 
 /**
  * @brief Namespace of kromblast. The application for transforming a web application into a desktop application
@@ -34,8 +39,7 @@ namespace Kromblast
         bool frameless;
         bool debug;
         std::string lib_path;
-        int lib_count;
-        std::string *lib_name;
+        std::vector<std::string> lib_name;
         int mode;
         std::string host;
     };
@@ -50,18 +54,13 @@ namespace Kromblast
      * @property kromblast_lib_nb Number of libraries
      * @property kromblast_window Webview
      */
-    class Kromblast: public KromblastCore::KromblastInterface
+    class Kromblast : public KromblastCore::KromblastInterface
     {
     private:
         /**
          * @brief List of the callback functions
          */
-        KromblastCore::kromblast_callback **kromblast_function_lib;
-
-        /**
-         * @brief Number of callback functions
-         */
-        int kromblast_function_nb = -1;
+        std::map<std::string, KromblastCore::kromblast_callback> handle_callback_function;
 
         /**
          * @brief Webview
@@ -91,19 +90,19 @@ namespace Kromblast
          * @param req Request
          * @return Return the result of the function
          */
-        const char *kromblast_callback(const char *req);
+        const std::string kromblast_callback(const std::string req);
 
         /**
          * @brief Set the html of the webview
          * @param html Html
          */
-        void set_html(const char *html);
+        void set_html(const std::string html);
 
         /**
          * @brief Navigate to a url
          * @param url Url
          */
-        void navigate(const char *url);
+        void navigate(const std::string url);
 
         /**
          * @brief Run the webview
@@ -117,10 +116,29 @@ namespace Kromblast
 
         /**
          * @brief Log a message
-         * @param lib Library
+         * @param lib Library name
          * @param message Message
          */
-        void log(const char *lib, const char *message);
+        void log(const std::string lib, const std::string message);
+
+        /**
+         * @brief Get the list of the callback functions
+         * @return Return the list of the callback functions
+         */
+        std::vector<KromblastCore::kromblast_callback> get_functions();
+
+        /**
+         * @brief Get the kromblast version
+         * @return Return the kromblast version
+         */
+        const std::string get_version();
+
+        /**
+         * @brief Claim a function
+         * @param callback Callback function
+         * @return Return true if the function is claimed
+         */
+        bool claim_callback(struct KromblastCore::kromblast_callback *callback);
     };
 }
 
