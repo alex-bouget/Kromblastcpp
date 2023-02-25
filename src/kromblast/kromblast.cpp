@@ -45,6 +45,10 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
         [&](std::string arg) { // Bind the kromblast function
             return kromblast_callback(arg);
         });
+    for (int i = 0; i < config.approved_registry.size(); i++)
+    {
+        this->approved_registry.push_back(config.approved_registry[i]);
+    }
     Utils::Library::kromblast_load_library(config.lib_name, this, *kromblast_window);
 }
 
@@ -63,6 +67,10 @@ Kromblast::Kromblast::~Kromblast()
  */
 const std::string Kromblast::Kromblast::kromblast_callback(const std::string req)
 {
+    if (debug)
+        log("Kromblast::kromblast_callback", "Request: " + req);
+    
+
     struct KromblastCore::kromblast_callback_called function_called;
 
     // get the function name

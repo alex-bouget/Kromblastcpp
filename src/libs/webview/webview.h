@@ -559,6 +559,7 @@ public:
   virtual ~gtk_webkit_engine() = default;
   void *window() { return (void *)m_window; }
   void run() { gtk_main(); }
+  void *get_webview() { return (void *)m_webview; }
   void terminate() { gtk_main_quit(); }
   void dispatch(std::function<void()> f) {
     g_idle_add_full(G_PRIORITY_HIGH_IDLE, (GSourceFunc)([](void *f) -> int {
