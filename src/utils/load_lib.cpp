@@ -88,7 +88,6 @@ void *get_function(void *handle, std::string function_name, KromblastCore::Kromb
  */
 void load_class_lib(void *handle, KromblastCore::KromblastInterface *kromblast)
 {
-    kromblast->log("LibLoader", "Loading symbol: kromblast_lib_get_class");
     KromblastCore::Class::kromblast_lib_get_class_t class_callback = (KromblastCore::Class::kromblast_lib_get_class_t)get_function(handle, "kromblast_lib_get_class", kromblast);
     if (class_callback == nullptr)
     {
@@ -107,7 +106,6 @@ void load_class_lib(void *handle, KromblastCore::KromblastInterface *kromblast)
  */
 void load_lib(std::string lib_name, KromblastCore::KromblastInterface *kromblast)
 {
-    kromblast->log("LibLoader", "Loading library: " + lib_name);
     void *handle = open_lib(lib_name, kromblast);
     if (handle == nullptr)
         return;

@@ -69,7 +69,7 @@ namespace KromblastCore
          * @param callback Callback
          * @return Return true if the callback is claimed
          */
-        virtual bool claim_callback(struct KromblastCore::kromblast_callback *callback, std::function<std::string(struct KromblastCore::kromblast_callback_called *)> func) = 0;
+        virtual bool claim_callback(struct KromblastCore::kromblast_callback *callback) = 0;
 
         /**
          * @brief Get the functions

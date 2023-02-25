@@ -34,9 +34,7 @@ namespace Kromblast
                 struct KromblastCore::kromblast_callback_called function_called,
                 std::map<
                     std::string,
-                    std::pair<
-                        std::function<std::string(struct KromblastCore::kromblast_callback_called *)>,
-                        KromblastCore::kromblast_callback>>
+                    KromblastCore::kromblast_callback>
                     kromblast_function,
                 KromblastCore::KromblastInterface *kromblast);
         }

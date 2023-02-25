@@ -62,9 +62,7 @@ namespace Kromblast
          */
         std::map<
             std::string,
-            std::pair<
-                std::function<std::string(struct KromblastCore::kromblast_callback_called *)>,
-                KromblastCore::kromblast_callback>>
+            KromblastCore::kromblast_callback>
             handle_callback_function;
 
         /**
@@ -141,7 +139,7 @@ namespace Kromblast
         /**
          * @brief Claim a function
          */
-        bool claim_callback(struct KromblastCore::kromblast_callback *callback, std::function<std::string(struct KromblastCore::kromblast_callback_called *)> func);
+        bool claim_callback(struct KromblastCore::kromblast_callback *callback);
     };
 }
 

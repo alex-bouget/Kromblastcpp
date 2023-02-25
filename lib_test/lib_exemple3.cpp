@@ -22,12 +22,12 @@ public:
 
     void load_functions() {
         kromblast->log("Exemple", "Load functions");
-        std::function<std::string(struct KromblastCore::kromblast_callback_called *)> func = std::bind(&Exemple::increment, this, std::placeholders::_1);
         struct KromblastCore::kromblast_callback callback = {
             "libtest.secondexemple.increment",
-            1
+            1,
+            std::bind(&Exemple::increment, this, std::placeholders::_1)
         };
-        kromblast->claim_callback(&callback, func);
+        kromblast->claim_callback(&callback);
 
     }
 };

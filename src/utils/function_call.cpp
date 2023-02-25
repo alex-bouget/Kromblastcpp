@@ -37,18 +37,16 @@ std::string Kromblast::Utils::Function::call_function(
     struct KromblastCore::kromblast_callback_called function_called,
     std::map<
         std::string,
-        std::pair<
-            std::function<std::string(struct KromblastCore::kromblast_callback_called *)>,
-            KromblastCore::kromblast_callback>>
+        KromblastCore::kromblast_callback>
         kromblast_function,
     KromblastCore::KromblastInterface *kromblast)
 {
     kromblast->log("Function", "Function called: " + function_called.name);
     if (kromblast_function.find(function_called.name) != kromblast_function.end())
     {
-        std::function<std::string(struct KromblastCore::kromblast_callback_called *)> func = kromblast_function[function_called.name].first;
+        struct KromblastCore::kromblast_callback func = kromblast_function[function_called.name];
         kromblast->log("Function", "Function found");
-        return func(&function_called);
+        return func.callback(&function_called);
     }
     return (char *)"{\"Error\": \"Function not found\"}";
 }

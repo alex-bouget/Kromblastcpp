@@ -141,17 +141,17 @@ std::vector<KromblastCore::kromblast_callback> Kromblast::Kromblast::get_functio
 {
     std::vector<KromblastCore::kromblast_callback> functions;
     for(auto it = handle_callback_function.begin(); it != handle_callback_function.end(); ++it) {
-        functions.push_back(it->second.second);
+        functions.push_back(it->second);
     }
     return functions;
 }
 
 const std::string Kromblast::Kromblast::get_version() { return KROMBLAST_VERSION; }
 
-bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callback *callback, std::function<std::string(struct KromblastCore::kromblast_callback_called *)> func) {
+bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callback *callback) {
     if (handle_callback_function.find(callback->name) != handle_callback_function.end()) {
         return false;
     }
-    handle_callback_function[callback->name] = std::make_pair(func, *callback);
+    handle_callback_function[callback->name] = *callback;
     return true;
 }

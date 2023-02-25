@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 /**
  * @brief Namespace of the kromblast library
@@ -34,6 +35,7 @@ namespace KromblastCore
     {
         std::string name;
         int args_nb;
+        std::function<std::string(struct KromblastCore::kromblast_callback_called *)> callback;
     };
 }
 #endif
