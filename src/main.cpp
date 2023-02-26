@@ -54,6 +54,12 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         std::cout << "Mode not found" << std::endl;
         exit(1);
     }
+    std::vector<std::string> approved_registry;
+    if (ini.has("Registry")) {
+        for (const auto &entry : ini["Registry"]) {
+            approved_registry.push_back(entry.second.substr(1, entry.second.length() - 2));
+        }
+    }
     std::string title = ini["Window"]["title"].substr(1, ini["Window"]["title"].length() - 2);
     int width = std::stoi(ini["Window"]["width"], nullptr, 10);
     int height = std::stoi(ini["Window"]["height"], nullptr, 10);
@@ -118,6 +124,11 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         {
             std::cout << "    Library " << i << ": " << lib_name.at(i) << std::endl;
         }
+        std::cout << "Registry: " << approved_registry.size() << std::endl;
+        for (int i = 0; i < (int)approved_registry.size(); i++)
+        {
+            std::cout << "    Registry " << i << ": " << approved_registry.at(i) << std::endl;
+        }
         std::cout << "Mode: " << mode << std::endl;
         std::cout << "Mode ID: " << mode_id << std::endl;
         std::cout << "Host: " << host << std::endl;
@@ -132,6 +143,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         debug,
         lib_path,
         lib_name,
+        approved_registry,
         mode_id,
         host};
     return result;
