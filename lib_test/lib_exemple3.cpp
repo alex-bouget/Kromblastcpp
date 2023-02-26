@@ -8,6 +8,10 @@ class Exemple : public KromblastCore::Class::KromLib
 public:
     KromblastCore::KromblastInterface *kromblast;
 
+    std::string get_version() {
+        return "0.1.0";
+    }
+
     void set_kromblast(void *kromblast) {
         this->kromblast = (KromblastCore::KromblastInterface *)kromblast;
     }

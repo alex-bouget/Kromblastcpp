@@ -109,7 +109,6 @@ void load_lib(std::string lib_name, KromblastCore::KromblastInterface *kromblast
     if (handle == nullptr)
         return;
     // get the function
-    kromblast->log("LibLoader", "Loading functions");
 
     load_class_lib(handle, kromblast);
 }

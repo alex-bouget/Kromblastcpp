@@ -5,6 +5,7 @@
 #include "function_call.hpp"
 #include "dlfcn.h"
 #include <iostream>
+#include <regex>
 #include <ctime>
 #include "X11/Xlib.h"
 
@@ -24,8 +25,8 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
     {
         Display *display = XOpenDisplay(NULL);
         Screen *screen = DefaultScreenOfDisplay(display);
-        if (debug)
-            log("Kromblast::Constructor", "Set fullscreen at" + std::to_string(screen->width) + "x" + std::to_string(screen->height));
+
+        log("Kromblast::Constructor", "Set fullscreen at" + std::to_string(screen->width) + "x" + std::to_string(screen->height));
         kromblast_window->set_size(screen->width, screen->height, WEBVIEW_HINT_FIXED);
     }
     else
@@ -34,8 +35,7 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
     }
     if (config.fullscreen || config.frameless)
     {
-        if (debug)
-            log("Kromblast::Constructor", "Set frameless");
+        log("Kromblast::Constructor", "Set frameless");
         GtkWindow *window = (GtkWindow *)kromblast_window->window();
         gtk_window_set_decorated(GTK_WINDOW(window), false);
         gtk_window_move(GTK_WINDOW(window), 0, 0);
@@ -45,9 +45,18 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
         [&](std::string arg) { // Bind the kromblast function
             return kromblast_callback(arg);
         });
-    for (int i = 0; i < config.approved_registry.size(); i++)
+    for (int i = 0; i < (int)config.approved_registry.size(); i++)
     {
-        this->approved_registry.push_back(config.approved_registry[i]);
+        std::string path = config.approved_registry[i];
+        std::string old_path = path;
+
+        path = std::regex_replace(path, std::regex("\\/"), "\\/");
+        path = std::regex_replace(path, std::regex("\\."), "\\.");
+        path = std::regex_replace(path, std::regex("\\*"), ".*");
+        path = "^" + path + "$";
+
+        log("Kromblast::Constructor", "regex path: " + old_path + " -> " + path);
+        this->approved_registry.push_back(std::regex(path, std::regex_constants::ECMAScript | std::regex_constants::icase));
     }
     Utils::Library::kromblast_load_library(config.lib_name, this, *kromblast_window);
 }
@@ -67,9 +76,24 @@ Kromblast::Kromblast::~Kromblast()
  */
 const std::string Kromblast::Kromblast::kromblast_callback(const std::string req)
 {
-    if (debug)
-        log("Kromblast::kromblast_callback", "Request: " + req);
-    
+    std::string uri = webkit_web_view_get_uri(WEBKIT_WEB_VIEW((GtkWidget *)this->kromblast_window->get_webview()));
+    bool find = false;
+    log("Kromblast::kromblast_callback", "URI: " + uri);
+    for (std::regex exp : approved_registry)
+    {
+        if (std::regex_match(uri, exp))
+        {
+            find = true;
+            break;
+        }
+    }
+    if (!find)
+    {
+        log("Kromblast::kromblast_callback", "Request not approved: " + req);
+        return "[\"Request not approved\"]";
+    }
+
+    log("Kromblast::kromblast_callback", "Request: " + req);
 
     struct KromblastCore::kromblast_callback_called function_called;
 

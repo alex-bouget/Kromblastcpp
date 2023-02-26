@@ -6,6 +6,8 @@
 #include "kb_lib_class.hpp"
 #include "kb_lib_kromblast.hpp"
 #include <string>
+#include <regex>
+#include <vector>
 #include <map>
 
 #define KROMBLAST_VERSION "0.1.0"
@@ -76,7 +78,7 @@ namespace Kromblast
         /**
          * @brief List of the regex of the approved registry
          */
-        std::vector<std::string> approved_registry;
+        std::vector<std::regex> approved_registry;
 
     public:
         /**

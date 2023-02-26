@@ -57,7 +57,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
     std::vector<std::string> approved_registry;
     if (ini.has("Registry")) {
         for (const auto &entry : ini["Registry"]) {
-            approved_registry.push_back(entry.second);
+            approved_registry.push_back(entry.second.substr(1, entry.second.length() - 2));
         }
     }
     std::string title = ini["Window"]["title"].substr(1, ini["Window"]["title"].length() - 2);
