@@ -2,6 +2,8 @@
 #include <iostream>
 #include <experimental/filesystem>
 #include "Mini.h"
+#include <httplib.h>
+#include <thread>
 
 /**
  * @brief Load the config from the ini file
@@ -55,8 +57,10 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         exit(1);
     }
     std::vector<std::string> approved_registry;
-    if (ini.has("Registry")) {
-        for (const auto &entry : ini["Registry"]) {
+    if (ini.has("Registry"))
+    {
+        for (const auto &entry : ini["Registry"])
+        {
             approved_registry.push_back(entry.second.substr(1, entry.second.length() - 2));
         }
     }
@@ -132,7 +136,8 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         std::cout << "Mode: " << mode << std::endl;
         std::cout << "Mode ID: " << mode_id << std::endl;
         std::cout << "Host: " << host << std::endl;
-        std::cout << "------------------------------" << std::endl << std::endl;
+        std::cout << "------------------------------" << std::endl
+                  << std::endl;
     }
     struct Kromblast::ConfigKromblast result = {
         title,
@@ -171,23 +176,42 @@ int main()
     switch (config.mode)
     {
     case 0: // Server
+        blast.log("MAIN", "Server mode");
+        blast.log("MAIN", "Navigating to " + config.host);
         blast.navigate(config.host.c_str());
         break;
     case 1: // Local
+        blast.log("MAIN", "Local mode");
         if (std::experimental::filesystem::exists(cwd + "/" + config.host))
         {
-            blast.navigate(("file://" + cwd + "/" + config.host).c_str());
+            blast.navigate("file://" + cwd + "/" + config.host);
             break;
         }
         if (std::experimental::filesystem::exists(config.host))
         {
-            blast.navigate(("file://" + config.host).c_str());
+            blast.navigate("file://" + config.host);
             break;
         }
         std::cout << "Host not found" << std::endl;
         return 1;
     case 2: // Hosted
-        break;
+        blast.log("MAIN", "Hosted mode");
+        std::string host = config.host;
+        if (std::experimental::filesystem::exists(cwd + "/" + config.host))
+        {
+            host = cwd + "/" + config.host;
+        }
+        httplib::Server srv;
+        srv.set_mount_point("/", config.host);
+        int port = srv.bind_to_any_port("localhost");
+        blast.log("MAIN", "Listening on port " + std::to_string(port));
+        std::thread server_thread([&srv]()
+                                  { srv.listen_after_bind(); });
+        blast.navigate("http://localhost:" + std::to_string(port));
+        blast.run();
+        srv.stop();
+        server_thread.join();
+        return 0;
     }
     blast.run();
     return 0;
