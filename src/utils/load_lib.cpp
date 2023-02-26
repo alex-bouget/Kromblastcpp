@@ -81,24 +81,6 @@ void *get_function(void *handle, std::string function_name, KromblastCore::Kromb
 }
 
 /**
- * @brief Load a class library
- * @param handle Handle of the library
- * @param kromblast_interface Kromblast interface
- */
-void load_class_lib(void *handle, KromblastCore::KromblastInterface *kromblast)
-{
-    KromblastCore::Class::kromblast_lib_get_class_t class_callback = (KromblastCore::Class::kromblast_lib_get_class_t)get_function(handle, "kromblast_lib_get_class", kromblast);
-    if (class_callback == nullptr)
-    {
-        dlclose(handle);
-        return;
-    }
-    KromblastCore::Class::KromLib *kromblast_lib = class_callback();
-    kromblast_lib->set_kromblast(kromblast);
-    kromblast_lib->load_functions();
-}
-
-/**
  * @brief Load a library
  * @param lib_name Name of the library
  * @param kromblast Kromblast interface
@@ -108,9 +90,15 @@ void load_lib(std::string lib_name, KromblastCore::KromblastInterface *kromblast
     void *handle = open_lib(lib_name, kromblast);
     if (handle == nullptr)
         return;
-    // get the function
-
-    load_class_lib(handle, kromblast);
+    KromblastCore::Class::kromblast_lib_get_class_t class_callback = (KromblastCore::Class::kromblast_lib_get_class_t)get_function(handle, "kromblast_lib_get_class", kromblast);
+    if (class_callback == nullptr)
+    {
+        dlclose(handle);
+        return;
+    }
+    KromblastCore::Class::KromLib *kromblast_lib = class_callback();
+    kromblast_lib->set_kromblast(kromblast);
+    kromblast_lib->load_functions();
 }
 
 /**

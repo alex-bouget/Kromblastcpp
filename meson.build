@@ -31,6 +31,8 @@ mini_dep = declare_dependency(
     include_directories : include_directories('src/libs/mini')
 )
 
+cpp_httplib_dep = subproject('cpp-httplib').get_variable('cpp_httplib_dep')
+
 
 
 
@@ -87,6 +89,7 @@ exe = executable(
         webview_dep,
         mini_dep,
         cc.find_library('stdc++fs'),
+        cpp_httplib_dep
     ]
 )
 
