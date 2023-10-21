@@ -46,7 +46,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: Linux_Kromblast
+        name: MacOs_Kromblast
         path: builddir/dist/
 
   macos:
