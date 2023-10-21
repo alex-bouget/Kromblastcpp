@@ -151,6 +151,6 @@ jobs:
           prerelease: false
           files: |
             LICENSE
-            dist/linux/Linux_Kromblast.tar.gz
-          # dist/macos/MacOs_Kromblast.tar.gz
-          # dist/windows/Windows_Kromblast.tar.gz
+            dist/linux/Linux_Kromblast.zip
+          # dist/macos/MacOs_Kromblast.zip
+          # dist/windows/Windows_Kromblast.zip
