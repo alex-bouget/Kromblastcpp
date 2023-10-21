@@ -144,7 +144,7 @@ jobs:
 
   make-releases:
     runs-on: ubuntu-latest
-    needs: [build-linux] #, macos, windows]
+    needs: [build-linux, build-linux-20] #, macos, windows]
     permissions:
       contents: write
     steps:
