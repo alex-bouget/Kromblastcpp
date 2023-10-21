@@ -2,21 +2,11 @@ name: Make artifact
 
 on:
   push:
-    branches:
-      - "main"
-  pull_request:
-    branches:
-      - main
-      - workflow-test
-    types:
-      - closed
+    tags:
+      - "v*"
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello Word"
-  # linux:
+  # build-linux:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v1
@@ -117,3 +107,47 @@ jobs:
   #     with:
   #       name: Windows_Meson_Testlog
   #       path: builddir/meson-logs/testlog.txt
+
+
+  make-releases:
+    runs-on: ubuntu-latest
+    needs: [build-linux] #, macos, windows]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download Linux artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: Linux_Kromblast
+          path: dist/linux
+          search_artifacts: true
+          skip_unpack: true
+      
+      # - name: Download MacOS artifact
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     name: MacOs_Kromblast
+      #     path: dist/macos
+      #     search_artifacts: true
+      #     skip_unpack: true
+
+      # - name: Download Windows artifact
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     name: Windows_Kromblast
+      #     path: dist/windows
+      #     search_artifacts: true
+
+      - name: Create Release
+        id: create_release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            LICENSE
+            dist/linux/Linux_Kromblast.tar.gz
+          # dist/macos/MacOs_Kromblast.tar.gz
+          # dist/windows/Windows_Kromblast.tar.gz
