@@ -49,63 +49,72 @@ jobs:
         name: Linux_Kromblast
         path: builddir/dist/
 
-  macos:
-    runs-on: macos-latest
-    steps:
-
-    - uses: actions/checkout@v1
-
-    - uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-
-    - run: brew install gcc gtk+3
-
-    - name: Install MacPorts
-      run: |
-        wget https://github.com/macports/macports-base/releases/download/v2.8.1/MacPorts-2.8.1-12-Monterey.pkg
-        sudo installer -pkg ./MacPorts-2.8.1-12-Monterey.pkg -target /
+  # macos:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       config:
+  #         - os: macos-11
+  #         - os: macos-12
+  #         - os: macos-13
+  #   runs-on: ${{ matrix.config.os }}
+  #   steps:
+  #   - uses: actions/checkout@v3
     
-    - name: Install dependencies
-      run: sudo port install webkit-gtk-2.0
-
-    - run: pip install meson ninja
-
-
-    - run: meson setup builddir/
-      env:
-        CC: gcc
-
-    - run: meson test -C builddir/ -v
-
-    - run: DESTDIR=./dist meson install -C builddir/
-
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: MacOS_Meson_Testlog
-        path: builddir/meson-logs/testlog.txt
+  #   - uses: actions/cache@v3
+  #     with:
+  #       path: ~/.macports-ci-ccache
+  #       key: ccache-${{ runner.os }}-${{ matrix.configuration }}-${{ github.sha }}
+  #       restore-keys: ccache-${{ runner.os }}-${{ matrix.configuration }}-
+  #   - name: Install
+  #     run: |
+  #       source ./.github/flow/macports-ci Install
     
-    - uses: actions/upload-artifact@v2
-      with:
-        name: MacOs_Kromblast
-        path: builddir/dist/
+  #   - uses: actions/setup-python@v1
+  #     with:
+  #       python-version: '3.x'
 
-  windows:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-    - run: pip install meson ninja
-    - run: meson setup builddir/
-      env:
-        CC: gcc
-    - run: meson test -C builddir/ -v
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: Windows_Meson_Testlog
-        path: builddir/meson-logs/testlog.txt
+  #   - run: brew install gcc gtk+3
+    
+  #   - name: Install dependencies
+  #     run: sudo port install webkit-gtk-2.0
+
+  #   - run: pip install meson ninja
+
+  #   - run: meson setup builddir/
+  #     env:
+  #       CC: gcc
+
+  #   - run: meson test -C builddir/ -v
+
+  #   - run: DESTDIR=./dist meson install -C builddir/
+
+  #   - uses: actions/upload-artifact@v2
+  #     if: failure()
+  #     with:
+  #       name: MacOS_Meson_Testlog
+  #       path: builddir/meson-logs/testlog.txt
+    
+  #   - uses: actions/upload-artifact@v2
+  #     with:
+  #       name: MacOs_Kromblast
+  #       path: builddir/dist/
+
+  # windows:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - uses: actions/setup-python@v1
+  #     with:
+  #       python-version: '3.x'
+  #   - run: pip install meson ninja
+  #   - run: meson setup builddir/
+  #     env:
+  #       CC: gcc
+  #   - run: meson test -C builddir/ -v
+  #   - uses: actions/upload-artifact@v2
+  #     if: failure()
+  #     with:
+  #       name: Windows_Meson_Testlog
+  #       path: builddir/meson-logs/testlog.txt
 
