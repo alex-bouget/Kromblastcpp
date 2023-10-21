@@ -50,7 +50,8 @@ utils_lib = library(
         kromblast_api_dep,
         webview_dep,
         cc.find_library('dl')
-    ]
+    ],
+    install : true
 )
 
 utils_dep = declare_dependency(
@@ -67,7 +68,8 @@ kromblast_lib = library(
         utils_dep,
         webview_dep,
         cc.find_library('X11')
-    ]
+    ],
+    install : true
 )
 
 kromblast_dep = declare_dependency(
