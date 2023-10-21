@@ -1,9 +1,6 @@
 name: Make artifact
 
 on:
-  push:
-    branches:
-      - workflow-test
   pull_request:
     branches:
       - main
