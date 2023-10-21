@@ -61,7 +61,13 @@ jobs:
 
     - run: brew install gcc gtk+3
 
-    - run: brew install webkitgtk
+    - name: Install MacPorts
+      run: |
+        wget https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg
+        sudo installer -pkg ./MacPorts-2.7.1-11-BigSur.pkg -target /
+    
+    - name: Install dependencies
+      run: sudo port install webkit-gtk-2.0
 
     - run: pip install meson ninja
 
