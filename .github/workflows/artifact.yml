@@ -3,7 +3,7 @@ name: Make artifact
 on:
   push:
     branches:
-      - "v1"
+      - "main"
   pull_request:
     branches:
       - main
@@ -15,7 +15,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello World"
+      - run: echo "Hello Word"
   # linux:
   #   runs-on: ubuntu-latest
   #   steps:
