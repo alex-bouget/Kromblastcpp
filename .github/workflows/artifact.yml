@@ -6,8 +6,9 @@ on:
       - "v*"
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
+
+  build-linux-20:
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
 
@@ -36,7 +37,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: Linux_Kromblast
+          name: Linux_Kromblast_20
           path: builddir/dist/
 
   # macos:
@@ -125,6 +126,14 @@ jobs:
           search_artifacts: true
           skip_unpack: true
       
+      - name: Download Linux artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: Linux_Kromblast_20
+          path: ./dist/linux
+          search_artifacts: true
+          skip_unpack: true
+      
       # - name: Download MacOS artifact
       #   uses: dawidd6/action-download-artifact@v2
       #   with:
@@ -152,5 +161,6 @@ jobs:
           files: |
             LICENSE
             dist/linux/Linux_Kromblast.zip
+            dist/linux/Linux_Kromblast_20.zip
           # dist/macos/MacOs_Kromblast.zip
           # dist/windows/Windows_Kromblast.zip
