@@ -59,7 +59,9 @@ jobs:
       with:
         python-version: '3.x'
 
-    - run: brew install gcc gtk+3 webkitgtk
+    - run: brew install gcc gtk+3
+
+    - run: brew install webkitgtk
 
     - run: pip install meson ninja
 
