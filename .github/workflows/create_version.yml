@@ -10,13 +10,9 @@ on:
 jobs:
   make_releases:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
-
-      - name: Get version name
-        run: |
-          export LATESTLOG=$(git log -1 --pretty=%B)
-          export SOURCEBRANCH=$(echo $LATESTLOG | awk -F '\\\\n' '{print $1}' |  awk -F '/' '{print $2}' | awk '{print $1}')
 
       - name: Create Release
         id: create_release
@@ -24,11 +20,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ env.SOURCEBRANCH }}
-          release_name: Release ${{ env.SOURCEBRANCH }}
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           body: |
-            Changes in this Release:
-            ${{ env.LATESTLOG }}
+            $(cat changelog/${{ github.ref }}.md)
 
           draft: false
           prerelease: false
