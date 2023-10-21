@@ -8,7 +8,7 @@ on:
       - completed
 
 jobs:
-  make_releases:
+  make-releases:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
