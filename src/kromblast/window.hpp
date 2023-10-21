@@ -2,6 +2,11 @@
 #define KROMBLAST_WINDOW_HPP
 
 #include "webview.h"
+#include "kb_os.hpp"
+
+#if KB_OS_NAME == KB_OS_LINUX
+    #include "X11/Xlib.h"
+#endif
 
 namespace Kromblast
 {
