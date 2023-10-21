@@ -10,7 +10,6 @@ on:
 jobs:
   make_releases:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
 
@@ -24,6 +23,5 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             $(cat changelog/${{ github.ref }}.md)
-
           draft: false
           prerelease: false
