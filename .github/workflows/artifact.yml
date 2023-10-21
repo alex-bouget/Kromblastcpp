@@ -3,7 +3,7 @@ name: Make artifact
 on:
   push:
     branches:
-      - "v1"
+      - "main"
   pull_request:
     branches:
       - main

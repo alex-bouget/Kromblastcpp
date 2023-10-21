@@ -19,9 +19,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.event.workflow_run.head_branch }}
+          release_name: Release ${{ github.event.workflow_run.head_branch }}
           body: |
-            $(cat changelog/${{ github.ref }}.md)
+            $(cat changelog/${{ github.event.workflow_run.head_branch }}.md)
           draft: false
           prerelease: false
