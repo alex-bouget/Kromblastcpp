@@ -1,7 +1,6 @@
 #ifndef KROMBLAST_H
 #define KROMBLAST_H
 
-#include "webview.h"
 #include "kb_lib_core.hpp"
 #include "kb_lib_class.hpp"
 #include "kb_lib_kromblast.hpp"
@@ -64,6 +63,8 @@ namespace Kromblast
          * @brief List of the callback functions
          */
         std::map<std::string, KromblastCore::kromblast_callback> handle_callback_function;
+
+        
 
         /**
          * @brief Webview
