@@ -14,6 +14,50 @@
 namespace KromblastCore
 {
 
+
+    /**
+     * @brief structure to store the config
+     * @param title Window title
+     * @param width Window width
+     * @param height Window height
+     * @param fullscreen Window fullscreen
+     * @param frameless Window frameless
+     * @param debug Debug mode
+     * @param lib_path Path to the libraries
+     * @param lib_name List of the libraries
+     * @param approved_registry List of the approved path
+     * @param mode Mode of the libraries
+     * @param host Host of the libraries
+     * @note The config is loaded from the ini file
+     */
+    struct ConfigKromblast
+    {
+        std::string title;
+        int width;
+        int height;
+        bool fullscreen;
+        bool frameless;
+        bool debug;
+        std::string lib_path;
+        std::vector<std::string> lib_name;
+        std::vector<std::string> approved_registry;
+        int mode;
+        std::string host;
+    };
+
+    class WindowInterface
+    {
+        public:
+            virtual ~WindowInterface() {};
+            virtual void set_fullscreen(bool fullscreen) = 0;
+            virtual void set_size(int width, int height) = 0;
+            virtual void set_frameless(bool frameless) = 0;
+            virtual void set_html(const std::string html) = 0;
+            virtual void navigate(const std::string url) = 0;
+            virtual void run() = 0;
+            virtual void inject(const std::string js) = 0;
+    };
+
     /**
      * @brief Interface of the kromblast library
      * @property kromblast_callback Callback of the library
@@ -35,23 +79,6 @@ namespace KromblastCore
          * @return Return the result of the function
          */
         virtual const std::string kromblast_callback(const std::string req) = 0;
-
-        /**
-         * @brief Set the html of the webview
-         * @param html Html
-         */
-        virtual void set_html(const std::string html) = 0;
-
-        /**
-         * @brief Navigate to a url
-         * @param url Url
-         */
-        virtual void navigate(const std::string url) = 0;
-
-        /**
-         * @brief Run the webview
-         */
-        virtual void run() = 0;
 
         /**
          * @brief Get the debug mode
@@ -80,6 +107,8 @@ namespace KromblastCore
          * @return Return the functions
          */
         virtual std::vector<KromblastCore::kromblast_callback> get_functions() = 0;
+
+        virtual WindowInterface *get_window() const = 0;
     };
 }
 #endif

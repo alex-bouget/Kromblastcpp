@@ -18,20 +18,18 @@ namespace Kromblast
              * @param w Webview instance
              * @param kromblast Kromblast instance
              */
-            void create_js_link(
-                KromblastCore::kromblast_callback function,
-                webview::webview w,
-                KromblastCore::KromblastInterface *kromblast);
+            void create_js_link(KromblastCore::kromblast_callback function,
+                                KromblastCore::WindowInterface *window,
+                                KromblastCore::KromblastInterface *kromblast);
             /**
              * @brief Load the libraries
              * @param lib_name List of the libraries name
              * @param kromblast Kromblast interface
              * @param w Webview
              */
-            void kromblast_load_library(
-                std::vector<std::string> lib_name,
-                KromblastCore::KromblastInterface *kromblast,
-                webview::webview w);
+            void kromblast_load_library(const std::vector<std::string>& lib_name,
+                                        KromblastCore::KromblastInterface *kromblast,
+                                        KromblastCore::WindowInterface *window);
         }
     }
 }
