@@ -10,7 +10,9 @@
  * @param w Webview
  * @param kromblast Kromblast interface
  */
-void Kromblast::Utils::Library::create_js_link(KromblastCore::kromblast_callback function, webview::webview w, KromblastCore::KromblastInterface *kromblast)
+void Kromblast::Utils::Library::create_js_link(KromblastCore::kromblast_callback function,
+                                               KromblastCore::WindowInterface *window,
+                                               KromblastCore::KromblastInterface *kromblast)
 {
     std::string function_name = std::string(function.name);
     kromblast->log("LibLinker", "Registering function: " + function_name);
@@ -21,8 +23,7 @@ void Kromblast::Utils::Library::create_js_link(KromblastCore::kromblast_callback
         {
             kromblast->log("LibLinker", "Creating namespace: " + function_name.substr(0, function_name.find(".", i)));
             std::string js = "if (window." + function_name.substr(0, function_name.find(".", i)) + " == undefined) { window." + function_name.substr(0, function_name.find(".", i)) + " = {}; }";
-            w.init(js);
-            w.eval(js);
+            window->inject(js);
             i = function_name.find(".", i) + 1;
         }
     }
@@ -39,8 +40,7 @@ void Kromblast::Utils::Library::create_js_link(KromblastCore::kromblast_callback
         args_array += "String(arg" + std::to_string(k) + ")";
     }
     std::string js = "window." + function_name + " = function(" + args + ") { return kromblast(\"" + function_name + "\", [" + args_array + "] ) }";
-    w.init(js);
-    w.eval(js);
+    window->inject(js);
 }
 
 /**
@@ -108,18 +108,20 @@ void load_lib(std::string lib_name, KromblastCore::KromblastInterface *kromblast
  * @param w Webview
  * @return Return the list of the libraries
  */
-void Kromblast::Utils::Library::kromblast_load_library(std::vector<std::string> lib_name, KromblastCore::KromblastInterface *kromblast, webview::webview w)
+void Kromblast::Utils::Library::kromblast_load_library(const std::vector<std::string>& lib_name,
+                                                       KromblastCore::KromblastInterface *kromblast,
+                                                       KromblastCore::WindowInterface *window)
 {
     // create the list of the functions in each library
-    for (std::string lib: lib_name)
+    for (std::string lib : lib_name)
     {
         load_lib(lib, kromblast);
         // open the library
     }
 
-    for (KromblastCore::kromblast_callback function: kromblast->get_functions())
+    for (KromblastCore::kromblast_callback function : kromblast->get_functions())
     {
         kromblast->log("LibLoader", "Creating function: " + std::string(function.name));
-        create_js_link(function, w, kromblast);
+        create_js_link(function, window, kromblast);
     }
 }

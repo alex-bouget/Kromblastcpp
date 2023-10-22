@@ -14,33 +14,12 @@
  * @param config Configuration of the Kromblast object
  * @return Return the Kromblast object
  */
-Kromblast::Kromblast::Kromblast(ConfigKromblast config)
+Kromblast::Kromblast::Kromblast(const KromblastCore::ConfigKromblast &config)
 {
-    if (config.debug)
-        log("Kromblast::Constructor", "Starting Kromblast");
-    kromblast_window = new webview::webview(config.debug, nullptr);
-    this->debug = config.debug;
-    debug ? kromblast_window->set_title(config.title + " (debug)") : kromblast_window->set_title(config.title);
-    if (config.fullscreen)
-    {
-        Display *display = XOpenDisplay(NULL);
-        Screen *screen = DefaultScreenOfDisplay(display);
-
-        log("Kromblast::Constructor", "Set fullscreen at" + std::to_string(screen->width) + "x" + std::to_string(screen->height));
-        kromblast_window->set_size(screen->width, screen->height, WEBVIEW_HINT_FIXED);
-    }
-    else
-    {
-        kromblast_window->set_size(config.width, config.height, WEBVIEW_HINT_NONE);
-    }
-    if (config.fullscreen || config.frameless)
-    {
-        log("Kromblast::Constructor", "Set frameless");
-        GtkWindow *window = (GtkWindow *)kromblast_window->window();
-        gtk_window_set_decorated(GTK_WINDOW(window), false);
-        gtk_window_move(GTK_WINDOW(window), 0, 0);
-    }
-    kromblast_window->bind(
+    kromblast_window = new Window(config);
+    debug = config.debug;
+    webview::webview *webview = kromblast_window->get_webview();
+    webview->bind(
         "kromblast",
         [&](std::string arg) { // Bind the kromblast function
             return kromblast_callback(arg);
@@ -57,8 +36,9 @@ Kromblast::Kromblast::Kromblast(ConfigKromblast config)
 
         log("Kromblast::Constructor", "regex path: " + old_path + " -> " + path);
         this->approved_registry.push_back(std::regex(path, std::regex_constants::ECMAScript | std::regex_constants::icase));
+        log("Kromblast::Constructor", "approved registry: " + config.approved_registry[i]);
     }
-    Utils::Library::kromblast_load_library(config.lib_name, this, *kromblast_window);
+    Utils::Library::kromblast_load_library(config.lib_name, this, kromblast_window);
 }
 
 /**
@@ -76,7 +56,7 @@ Kromblast::Kromblast::~Kromblast()
  */
 const std::string Kromblast::Kromblast::kromblast_callback(const std::string req)
 {
-    std::string uri = webkit_web_view_get_uri(WEBKIT_WEB_VIEW((GtkWidget *)this->kromblast_window->get_webview()));
+    std::string uri = kromblast_window->get_current_url();
     bool find = false;
     log("Kromblast::kromblast_callback", "URI: " + uri);
     for (std::regex exp : approved_registry)
@@ -130,23 +110,6 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
 }
 
 /**
- * @brief Set the html of the window
- * @param html Html
- */
-void Kromblast::Kromblast::set_html(const std::string html) { kromblast_window->set_html(html); }
-
-/**
- * @brief Navigate to an url
- * @param url Url
- */
-void Kromblast::Kromblast::navigate(const std::string url) { kromblast_window->navigate(url); }
-
-/**
- * @brief Run the window
- */
-void Kromblast::Kromblast::run() { kromblast_window->run(); }
-
-/**
  * @brief Get the debug mode
  */
 bool Kromblast::Kromblast::is_debug() { return debug; }
@@ -188,6 +151,17 @@ std::vector<KromblastCore::kromblast_callback> Kromblast::Kromblast::get_functio
  * @return Return the kromblast version
  */
 const std::string Kromblast::Kromblast::get_version() { return KROMBLAST_VERSION; }
+
+void Kromblast::Kromblast::run()
+{
+    kromblast_window->run();
+}
+
+
+KromblastCore::WindowInterface *Kromblast::Kromblast::get_window() const
+{
+    return kromblast_window;
+}
 
 /**
  * @brief Claim a function
