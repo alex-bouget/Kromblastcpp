@@ -2,7 +2,7 @@
 #define KROMBLAST_WINDOW_HPP
 
 #include "kromblast_api_window.hpp"
-#include "webview/webview.h"
+#include "webview.h"
 
 
 namespace Kromblast
@@ -41,6 +41,8 @@ namespace Kromblast
         std::string get_current_url();
 
         void run();
+
+        void init_inject(const std::string js);
 
         void inject(const std::string js);
     };

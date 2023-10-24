@@ -16,15 +16,18 @@ namespace Kromblast
     class Plugin : public Api::PluginInterface
     {
         private:
-            std::map<std::string, Kromblast::Core::kromblast_callback> handle_callback_function;
+            std::map<std::string, Core::kromblast_callback_t*> handle_callback_function;
             Utils::Library<Class::kromblast_lib_get_class_t> library_loader;
             Api::KromblastInterface *kromblast;
+
+            void create_js_function(const Core::kromblast_callback_t& function);
         
         public:
-            Plugin();
+            Plugin(Api::KromblastInterface *kromblast);
             ~Plugin();
-            bool claim_callback(const std::string& callback_name);
-            void start(Api::KromblastInterface *kromblast, std::vector<std::string> plugins);
+            bool claim_callback(Core::kromblast_callback_t* callback);
+            std::string call_function(const Core::kromblast_callback_called_t& function_called);
+            void start(std::vector<std::string> plugins);
             void stop();
 
     }

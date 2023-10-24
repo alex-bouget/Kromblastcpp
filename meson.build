@@ -44,11 +44,9 @@ kromblast_api_dep = declare_dependency(
 utils_lib = library(
     'utils',
     'src/utils/load_lib.cpp',
-    'src/utils/function_call.cpp',
     include_directories : 'src/utils',
     dependencies : [
         kromblast_api_dep,
-        webview_dep,
         cc.find_library('dl')
     ],
     install : true

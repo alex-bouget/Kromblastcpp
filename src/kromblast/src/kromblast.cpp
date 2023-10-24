@@ -1,8 +1,9 @@
 #include "kromblast.hpp"
-#include "kb_lib_core.hpp"
-#include "kb_lib_class.hpp"
-#include "load_lib.hpp"
-#include "function_call.hpp"
+#include "kromblast_api.hpp"
+#include "logger.hpp"
+#include "window.hpp"
+#include "dispatcher.hpp"
+#include "plugin.hpp"
 #include "dlfcn.h"
 #include <regex>
 #include "X11/Xlib.h"
@@ -12,17 +13,20 @@
  * @param config Configuration of the Kromblast object
  * @return Return the Kromblast object
  */
-Kromblast::Kromblast::Kromblast(const KromblastCore::ConfigKromblast &config)
+Kromblast::Kromblast::Kromblast(const Core::ConfigKromblast &config)
 {
-    kromblast_window = new Window(config);
+    window = new Window(config);
     dispatcher = new Dispatcher();
-    debug = config.debug;
-    webview::webview *webview = kromblast_window->get_webview();
+    plugin = new Plugin(this);
+    logger = new Logger(config.debug);
+
+    webview::webview *webview = window->get_webview();
     webview->bind(
         "kromblast",
         [&](std::string arg) { // Bind the kromblast function
             return kromblast_callback(arg);
         });
+
     for (int i = 0; i < (int)config.approved_registry.size(); i++)
     {
         std::string path = config.approved_registry[i];
@@ -37,7 +41,7 @@ Kromblast::Kromblast::Kromblast(const KromblastCore::ConfigKromblast &config)
         this->approved_registry.push_back(std::regex(path, std::regex_constants::ECMAScript | std::regex_constants::icase));
         log("Kromblast::Constructor", "approved registry: " + config.approved_registry[i]);
     }
-    Utils::Library::kromblast_load_library(config.lib_name, this, kromblast_window);
+    plugin->start(config.lib_path);
 }
 
 /**
@@ -55,7 +59,7 @@ Kromblast::Kromblast::~Kromblast()
  */
 const std::string Kromblast::Kromblast::kromblast_callback(const std::string req)
 {
-    std::string uri = kromblast_window->get_current_url();
+    std::string uri = window->get_we get_current_url();
     bool find = false;
     log("Kromblast::kromblast_callback", "URI: " + uri);
     for (std::regex exp : approved_registry)
@@ -93,7 +97,14 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
     // get the arguments
     std::vector<std::string> args_data;
     int step = 0;
-    int args_nb = Utils::Function::count_args(args);
+    int args_nb = 1;
+    for (int i = 0; i < (int)args.length(); i++)
+    {
+        if (args[i] == ',')
+        {
+            args_nb++;
+        }
+    }
     for (int i = 0; i < args_nb; i++)
     {
         int start = args.find_first_of("\"", step);
@@ -176,7 +187,7 @@ bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callba
     return true;
 }
 
-KromblastCore::Signal::Dispatcher *Kromblast::Kromblast::get_dispatcher() const
+Kromblast::Api::Dispatcher *Kromblast::Kromblast::get_dispatcher() const
 {
     return dispatcher;
 }

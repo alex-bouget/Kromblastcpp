@@ -1,9 +1,6 @@
 #ifndef KB_LIB_KROMBLAST_H
 #define KB_LIB_KROMBLAST_H
 
-#include "kb_lib_core.hpp"
-#include "kb_lib_class.hpp"
-#include "kb_lib_signal.hpp"
 #include <string>
 #include <functional>
 #include <vector>
