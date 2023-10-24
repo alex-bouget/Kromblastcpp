@@ -24,30 +24,8 @@ namespace Kromblast
                  * @param logger Logger
                  * @return Pointer to the function
                  */
-                T *get_lib(const std::string& lib_name, const std::string& function_name, Kromblast::Api::LoggerInterface *logger);
+                T *get_lib(const std::string& lib_path, const std::string& function_name, Kromblast::Api::LoggerInterface *logger);
         };
-/*
-        namespace Orther
-        {
-            /**
-             * @brief create a link between the javascript and the C++ code
-             * @param function Function to link
-             * @param w Webview instance
-             * @param kromblast Kromblast instance
-             /
-            void create_js_link(KromblastCore::kromblast_callback function,
-                                KromblastCore::WindowInterface *window,
-                                KromblastCore::KromblastInterface *kromblast);
-            /**
-             * @brief Load the libraries
-             * @param lib_name List of the libraries name
-             * @param kromblast Kromblast interface
-             * @param w Webview
-             /
-            void kromblast_load_library(const std::vector<std::string>& lib_name,
-                                        KromblastCore::KromblastInterface *kromblast,
-                                        KromblastCore::WindowInterface *window);
-        }*/
     }
 }
 

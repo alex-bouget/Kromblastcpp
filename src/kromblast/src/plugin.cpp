@@ -50,12 +50,12 @@ namespace Kromblast
     }
 
 
-    std::string Plugin::call_function(const Kromblast::Core::kromblast_callback_called_t& function_called)
+    std::string Plugin::call_function(Core::kromblast_callback_called_t* function_called)
     {
-        if (handle_callback_function.find(function_called.name) != handle_callback_function.end())
+        if (handle_callback_function.find(function_called->name) != handle_callback_function.end())
             {
-                auto func = handle_callback_function[function_called.name];
-                return func->callback(&function_called);
+                auto func = handle_callback_function[function_called->name];
+                return func->callback(function_called);
             }
             kromblast->get_logger()->log("Function", "Function not found");
             return (char *)"{\"Error\": \"Function not found\"}";
@@ -71,7 +71,7 @@ namespace Kromblast
                 kromblast->get_logger()->log("Plugin", "Cannot load plugin: " + plugin);
                 continue;
             }
-            Class::KromLib *lib = callback();
+            Class::KromLib *lib = (&callback)();
             if (lib == nullptr)
             {
                 kromblast->get_logger()->log("Plugin", "Cannot callback the plugin: " + plugin);

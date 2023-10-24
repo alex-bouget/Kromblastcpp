@@ -26,11 +26,10 @@ namespace Kromblast
             Plugin(Api::KromblastInterface *kromblast);
             ~Plugin();
             bool claim_callback(Core::kromblast_callback_t* callback);
-            std::string call_function(const Core::kromblast_callback_called_t& function_called);
+            std::string call_function(Core::kromblast_callback_called_t* function_called);
             void start(std::vector<std::string> plugins);
             void stop();
-
-    }
+    };
 
 }
 

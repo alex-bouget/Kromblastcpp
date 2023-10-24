@@ -3,6 +3,10 @@
 
 #include "kromblast_api.hpp"
 #include "kromblast_lib_config.hpp"
+#include "logger.hpp"
+#include "window.hpp"
+#include "dispatcher.hpp"
+#include "plugin.hpp"
 #include <string>
 #include <regex>
 #include <vector>
@@ -55,6 +59,8 @@ namespace Kromblast
         Api::WindowInterface *get_window() const;
         Api::DispatcherInterface *get_dispatcher() const;
         Api::PluginInterface *get_plugin() const;
+
+        void log(const std::string lib, const std::string message);
 
         /**
          * @brief Get the kromblast version

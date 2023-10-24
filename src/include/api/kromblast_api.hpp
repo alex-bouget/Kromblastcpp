@@ -19,6 +19,9 @@ namespace Kromblast
                 virtual DispatcherInterface *get_dispatcher() const = 0;
                 virtual PluginInterface *get_plugin() const = 0;
 
+
+                virtual void log(const std::string lib, const std::string message) = 0;
+
                 virtual const std::string get_version() = 0;
                 virtual void run() = 0;
         };
