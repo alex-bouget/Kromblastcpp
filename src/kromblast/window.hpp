@@ -1,13 +1,13 @@
 #ifndef KROMBLAST_WINDOW_HPP
 #define KROMBLAST_WINDOW_HPP
 
-#include "load_lib.hpp"
-#include "kb_lib_kromblast.hpp"
+#include "kromblast_api_window.hpp"
+#include "webview/webview.h"
 
 
 namespace Kromblast
 {
-    class Window : public KromblastCore::WindowInterface
+    class Window : public Kromblast::Api::WindowInterface
     {
     private:
         /**
@@ -15,14 +15,14 @@ namespace Kromblast
          */
         webview::webview *kromblast_window;
 
-        const KromblastCore::ConfigKromblast* config;
+        const Kromblast::Core::ConfigKromblast* config;
 
         int width;
 
         int height;
 
     public:
-        Window(const KromblastCore::ConfigKromblast &config);
+        Window(const Kromblast::Core::ConfigKromblast &config);
 
         ~Window();
 

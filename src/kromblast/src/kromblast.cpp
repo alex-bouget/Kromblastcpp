@@ -4,9 +4,7 @@
 #include "load_lib.hpp"
 #include "function_call.hpp"
 #include "dlfcn.h"
-#include <iostream>
 #include <regex>
-#include <ctime>
 #include "X11/Xlib.h"
 
 /**
