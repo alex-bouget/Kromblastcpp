@@ -1,4 +1,4 @@
-name: Make artifact
+name: Release Kromblast
 
 on:
   push:
@@ -9,9 +9,9 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
@@ -26,13 +26,13 @@ jobs:
 
       - run: meson test -C builddir/ -v
 
-      - run: DESTDIR=./dist meson install -C builddir/
-
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: Linux_Meson_Testlog
           path: builddir/meson-logs/testlog.txt
+
+      - run: DESTDIR=./dist meson install -C builddir/
 
       - uses: actions/upload-artifact@v2
         with:
@@ -42,9 +42,9 @@ jobs:
   build-linux-20:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
@@ -59,13 +59,13 @@ jobs:
 
       - run: meson test -C builddir/ -v
 
-      - run: DESTDIR=./dist meson install -C builddir/
-
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: Linux_Meson_Testlog
           path: builddir/meson-logs/testlog.txt
+
+      - run: DESTDIR=./dist meson install -C builddir/
 
       - uses: actions/upload-artifact@v2
         with:
@@ -93,7 +93,7 @@ jobs:
   #     run: |
   #       source ./.github/flow/macports-ci Install
 
-  #   - uses: actions/setup-python@v1
+  #   - uses: actions/setup-python@v4
   #     with:
   #       python-version: '3.x'
 
@@ -127,7 +127,7 @@ jobs:
   #   runs-on: windows-latest
   #   steps:
   #   - uses: actions/checkout@v1
-  #   - uses: actions/setup-python@v1
+  #   - uses: actions/setup-python@v4
   #     with:
   #       python-version: '3.x'
   #   - run: pip install meson ninja
