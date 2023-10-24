@@ -28,7 +28,7 @@ namespace Kromblast
                  * @param logger Logger
                  * @return Pointer to the function
                  */
-                T *get_lib(const std::string& lib_path, const std::string& function_name, Kromblast::Api::LoggerInterface *logger);
+                T get_lib(const std::string& lib_path, const std::string& function_name, Kromblast::Api::LoggerInterface *logger);
         };
 
 
@@ -75,7 +75,7 @@ namespace Kromblast
         }
         
         template <typename T>
-        T *Library<T>::get_lib(const std::string &lib_path, const std::string &function_name, Kromblast::Api::LoggerInterface *logger)
+        T Library<T>::get_lib(const std::string &lib_path, const std::string &function_name, Kromblast::Api::LoggerInterface *logger)
         {
 
             void *handle = open_lib_file(lib_path, logger);
@@ -83,7 +83,7 @@ namespace Kromblast
             {
                 return nullptr;
             }
-            T* function = (T*)get_function(handle, "kromblast_lib_get_class", logger);
+            T function = (T)get_function(handle, function_name, logger);
             if (function == nullptr)
             {
                 dlclose(handle);
