@@ -150,28 +150,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: artifact.yml
-          path: ./dist
-          # search_artifacts: true
-          skip_unpack: true
-      
-      # - name: Download MacOS artifact
+      # Can't use it because it's not possible to download artifacts from in-progress workflows
+      # - name: Download artifact
       #   uses: dawidd6/action-download-artifact@v2
       #   with:
-      #     name: MacOs_Kromblast
-      #     path: dist/macos
-      #     search_artifacts: true
+      #     workflow: artifact.yml
+      #     path: ./dist
+      #     # search_artifacts: true
       #     skip_unpack: true
 
-      # - name: Download Windows artifact
-      #   uses: dawidd6/action-download-artifact@v2
-      #   with:
-      #     name: Windows_Kromblast
-      #     path: dist/windows
-      #     search_artifacts: true
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          path: ./dist
+
+      - name: compress artifact
+        run: for i in $(find ./dist -type d); do zip -r "${i}.zip" "${i}"; done
 
       - name: Overview tree
         run: tree
