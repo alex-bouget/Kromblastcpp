@@ -65,13 +65,13 @@ namespace Kromblast
     {
         for (std::string plugin : plugins)
         {
-            Class::kromblast_lib_get_class_t *callback = library_loader.get_lib(plugin, "kromblast_lib_get_class", kromblast->get_logger());
+            Class::kromblast_lib_get_class_t callback = *library_loader.get_lib(plugin, "kromblast_lib_get_class", kromblast->get_logger());
             if (callback == nullptr)
             {
                 kromblast->get_logger()->log("Plugin", "Cannot load plugin: " + plugin);
                 continue;
             }
-            Class::KromLib *lib = (&callback)();
+            Class::KromLib *lib = callback();
             if (lib == nullptr)
             {
                 kromblast->get_logger()->log("Plugin", "Cannot callback the plugin: " + plugin);

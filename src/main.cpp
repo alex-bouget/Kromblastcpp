@@ -164,10 +164,10 @@ int main()
         std::cout << "kromblast.ini not found" << std::endl;
         return 1;
     }
-    struct KromblastCore::ConfigKromblast config = load_config(cwd + "/kromblast.ini");
+    struct Kromblast::Core::ConfigKromblast config = load_config(cwd + "/kromblast.ini");
 
     Kromblast::Kromblast blast(config);
-    KromblastCore::WindowInterface * window = blast.get_window();
+    Kromblast::Api::WindowInterface * window = blast.get_window();
 
     switch (config.mode)
     {
