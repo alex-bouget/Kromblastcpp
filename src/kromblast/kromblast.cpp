@@ -17,6 +17,7 @@
 Kromblast::Kromblast::Kromblast(const KromblastCore::ConfigKromblast &config)
 {
     kromblast_window = new Window(config);
+    dispatcher = new Dispatcher();
     debug = config.debug;
     webview::webview *webview = kromblast_window->get_webview();
     webview->bind(
@@ -157,7 +158,6 @@ void Kromblast::Kromblast::run()
     kromblast_window->run();
 }
 
-
 KromblastCore::WindowInterface *Kromblast::Kromblast::get_window() const
 {
     return kromblast_window;
@@ -176,4 +176,9 @@ bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callba
     }
     handle_callback_function[callback->name] = *callback;
     return true;
+}
+
+KromblastCore::Signal::Dispatcher *Kromblast::Kromblast::get_dispatcher() const
+{
+    return dispatcher;
 }
