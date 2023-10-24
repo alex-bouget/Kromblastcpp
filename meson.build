@@ -38,7 +38,7 @@ cpp_httplib_dep = subproject('cpp-httplib').get_variable('cpp_httplib_dep')
 
 # Intra Dependencies
 kromblast_api_dep = declare_dependency(
-    include_directories : include_directories('src/include/'),
+    include_directories : include_directories(['src/include/', 'src/include/api']),
 )
 
 utils_lib = library(
