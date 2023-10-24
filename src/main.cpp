@@ -1,4 +1,5 @@
 #include "kromblast.hpp"
+#include "kb_lib_class.hpp"
 #include <iostream>
 #include <experimental/filesystem>
 #include "Mini.h"
@@ -10,7 +11,7 @@
  * @param path Path to the ini file
  * @return Return the config
  */
-struct Kromblast::ConfigKromblast load_config(std::string path)
+struct KromblastCore::ConfigKromblast load_config(std::string path)
 {
     mINI::INIFile file(path);
     mINI::INIStructure ini;
@@ -139,7 +140,7 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
         std::cout << "------------------------------" << std::endl
                   << std::endl;
     }
-    struct Kromblast::ConfigKromblast result = {
+    struct KromblastCore::ConfigKromblast result = {
         title,
         width,
         height,
@@ -154,14 +155,8 @@ struct Kromblast::ConfigKromblast load_config(std::string path)
     return result;
 }
 
-#ifdef _WIN32
-int WINAPI WinMain(HINSTANCE hInt, HINSTANCE hPrevInst, LPSTR lpCmdLine,
-                   int nCmdShow)
-{
-#else
 int main()
 {
-#endif
     std::string cwd = std::string(getcwd(NULL, 0));
     std::cout << cwd << std::endl;
     if (!std::experimental::filesystem::exists(cwd + "/kromblast.ini"))
@@ -169,27 +164,28 @@ int main()
         std::cout << "kromblast.ini not found" << std::endl;
         return 1;
     }
-    struct Kromblast::ConfigKromblast config = load_config(cwd + "/kromblast.ini");
+    struct KromblastCore::ConfigKromblast config = load_config(cwd + "/kromblast.ini");
 
     Kromblast::Kromblast blast(config);
+    KromblastCore::WindowInterface * window = blast.get_window();
 
     switch (config.mode)
     {
     case 0: // Server
         blast.log("MAIN", "Server mode");
         blast.log("MAIN", "Navigating to " + config.host);
-        blast.navigate(config.host.c_str());
+        window->navigate(config.host.c_str());
         break;
     case 1: // Local
         blast.log("MAIN", "Local mode");
         if (std::experimental::filesystem::exists(cwd + "/" + config.host))
         {
-            blast.navigate("file://" + cwd + "/" + config.host);
+            window->navigate("file://" + cwd + "/" + config.host);
             break;
         }
         if (std::experimental::filesystem::exists(config.host))
         {
-            blast.navigate("file://" + config.host);
+            window->navigate("file://" + config.host);
             break;
         }
         std::cout << "Host not found" << std::endl;
@@ -207,7 +203,7 @@ int main()
         blast.log("MAIN", "Listening on port " + std::to_string(port));
         std::thread server_thread([&srv]()
                                   { srv.listen_after_bind(); });
-        blast.navigate("http://localhost:" + std::to_string(port));
+        window->navigate("http://localhost:" + std::to_string(port));
         blast.run();
         srv.stop();
         server_thread.join();

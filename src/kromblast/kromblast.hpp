@@ -1,10 +1,10 @@
 #ifndef KROMBLAST_H
 #define KROMBLAST_H
 
-#include "webview.h"
 #include "kb_lib_core.hpp"
 #include "kb_lib_class.hpp"
 #include "kb_lib_kromblast.hpp"
+#include "window.hpp"
 #include <string>
 #include <regex>
 #include <vector>
@@ -17,35 +17,6 @@
  */
 namespace Kromblast
 {
-    /**
-     * @brief structure to store the config
-     * @param title Window title
-     * @param width Window width
-     * @param height Window height
-     * @param fullscreen Window fullscreen
-     * @param frameless Window frameless
-     * @param debug Debug mode
-     * @param lib_path Path to the libraries
-     * @param lib_name List of the libraries
-     * @param approved_registry List of the approved path
-     * @param mode Mode of the libraries
-     * @param host Host of the libraries
-     * @note The config is loaded from the ini file
-     */
-    struct ConfigKromblast
-    {
-        std::string title;
-        int width;
-        int height;
-        bool fullscreen;
-        bool frameless;
-        bool debug;
-        std::string lib_path;
-        std::vector<std::string> lib_name;
-        std::vector<std::string> approved_registry;
-        int mode;
-        std::string host;
-    };
 
     /**
      * @brief Class of a kromblast application
@@ -65,10 +36,12 @@ namespace Kromblast
          */
         std::map<std::string, KromblastCore::kromblast_callback> handle_callback_function;
 
+        
+
         /**
          * @brief Webview
          */
-        webview::webview *kromblast_window;
+        Window *kromblast_window;
 
         /**
          * @brief Debug mode
@@ -86,7 +59,7 @@ namespace Kromblast
          * @param config Config
          * @return Return a new instance of Kromblast
          */
-        Kromblast(ConfigKromblast config);
+        Kromblast(const KromblastCore::ConfigKromblast& config);
 
         /**
          * @brief Destructor
@@ -99,23 +72,6 @@ namespace Kromblast
          * @return Return the result of the function
          */
         const std::string kromblast_callback(const std::string req);
-
-        /**
-         * @brief Set the html of the webview
-         * @param html Html
-         */
-        void set_html(const std::string html);
-
-        /**
-         * @brief Navigate to a url
-         * @param url Url
-         */
-        void navigate(const std::string url);
-
-        /**
-         * @brief Run the webview
-         */
-        void run();
 
         /**
          * @brief Get the debug mode
@@ -140,6 +96,10 @@ namespace Kromblast
          * @return Return the kromblast version
          */
         const std::string get_version();
+
+        void run();
+
+        KromblastCore::WindowInterface *get_window() const;
 
         /**
          * @brief Claim a function
