@@ -99,5 +99,6 @@ std::string Kromblast::Window::get_current_url()
  */
 void Kromblast::Window::run() { kromblast_window->run(); }
 
-void Kromblast::Window::inject(const std::string js) { kromblast_window->init(js); kromblast_window->eval(js); }
+void Kromblast::Window::init_inject(const std::string js) { kromblast_window->init(js); }
+void Kromblast::Window::inject(const std::string js) { kromblast_window->eval(js); }
 

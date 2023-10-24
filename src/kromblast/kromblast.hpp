@@ -1,12 +1,8 @@
 #ifndef KROMBLAST_H
 #define KROMBLAST_H
 
-#include "kb_lib_core.hpp"
-#include "kb_lib_class.hpp"
-#include "kb_lib_kromblast.hpp"
-#include "kb_lib_signal.hpp"
-#include "listener.hpp"
-#include "window.hpp"
+#include "kromblast_api.hpp"
+#include "kromblast_lib_config.hpp"
 #include <string>
 #include <regex>
 #include <vector>
@@ -30,29 +26,15 @@ namespace Kromblast
      * @property kromblast_lib_nb Number of libraries
      * @property kromblast_window Webview
      */
-    class Kromblast : public KromblastCore::KromblastInterface
+    class Kromblast : public Api::KromblastInterface
     {
     private:
-        /**
-         * @brief List of the callback functions
-         */
-        std::map<std::string, KromblastCore::kromblast_callback> handle_callback_function;
-
-        /**
-         * @brief Webview
-         */
-        Window *kromblast_window;
-
+        Logger *logger;
+        Window *window;
         Dispatcher *dispatcher;
+        Plugin *plugin;
+        const std::string kromblast_callback(const std::string req);
 
-        /**
-         * @brief Debug mode
-         */
-        bool debug;
-
-        /**
-         * @brief List of the regex of the approved registry
-         */
         std::vector<std::regex> approved_registry;
 
     public:
@@ -61,37 +43,18 @@ namespace Kromblast
          * @param config Config
          * @return Return a new instance of Kromblast
          */
-        Kromblast(const KromblastCore::ConfigKromblast& config);
+        Kromblast(const Core::ConfigKromblast& config);
 
         /**
          * @brief Destructor
          */
         ~Kromblast();
 
-        /**
-         * @brief Function called for each function
-         * @param req Request
-         * @return Return the result of the function
-         */
-        const std::string kromblast_callback(const std::string req);
 
-        /**
-         * @brief Get the debug mode
-         */
-        bool is_debug();
-
-        /**
-         * @brief Log a message
-         * @param lib Library name
-         * @param message Message
-         */
-        void log(const std::string lib, const std::string message);
-
-        /**
-         * @brief Get the list of the callback functions
-         * @return Return the list of the callback functions
-         */
-        std::vector<KromblastCore::kromblast_callback> get_functions();
+        Api::LoggerInterface *get_logger() const;
+        Api::WindowInterface *get_window() const;
+        Api::DispatcherInterface *get_dispatcher() const;
+        Api::PluginInterface *get_plugin() const;
 
         /**
          * @brief Get the kromblast version
@@ -100,17 +63,6 @@ namespace Kromblast
         const std::string get_version();
 
         void run();
-
-        KromblastCore::WindowInterface *get_window() const;
-
-        KromblastCore::Signal::Dispatcher *get_dispatcher() const;
-
-        /**
-         * @brief Claim a function
-         * @param callback Callback function
-         * @return Return true if the function is claimed
-         */
-        bool claim_callback(struct KromblastCore::kromblast_callback *callback);
     };
 }
 

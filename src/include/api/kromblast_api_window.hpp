@@ -17,6 +17,7 @@ namespace Kromblast
             virtual void set_html(const std::string html) = 0;
             virtual void navigate(const std::string url) = 0;
             virtual void run() = 0;
+            virtual void init_inject(const std::string js) = 0;
             virtual void inject(const std::string js) = 0;
         };
     }

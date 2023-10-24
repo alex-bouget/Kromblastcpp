@@ -5,22 +5,22 @@
 #include <functional>
 #include <vector>
 #include <map>
-#include "kromblast_api_signal.hpp"
+#include "kromblast_api_dispatcher.hpp"
 
 namespace Kromblast
 {
-    class Dispatcher : public Kromblast::Api::Dispatcher
+    class Dispatcher : public Api::Dispatcher
     {
     private:
-        std::map<std::string, std::vector<Kromblast::Api::SignalHandler *>> listeners;
+        std::map<std::string, std::vector<Api::SignalHandler *>> listeners;
 
     public:
         Dispatcher();
         ~Dispatcher();
 
-        void listen(std::string channel, Kromblast::Api::SignalHandler *handler);
+        void listen(std::string channel, Api::SignalHandler *handler);
 
-        void dispatch(Kromblast::Api::Signal signal);
+        void dispatch(Api::Signal signal);
         void dispatch(std::string channel, std::string message);
     };
 }
