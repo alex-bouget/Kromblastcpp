@@ -3,6 +3,7 @@
 
 #include "kb_lib_core.hpp"
 #include "kb_lib_class.hpp"
+#include "kb_lib_signal.hpp"
 #include <string>
 #include <functional>
 #include <vector>
@@ -13,8 +14,6 @@
  */
 namespace KromblastCore
 {
-
-
     /**
      * @brief structure to store the config
      * @param title Window title
@@ -47,15 +46,15 @@ namespace KromblastCore
 
     class WindowInterface
     {
-        public:
-            virtual ~WindowInterface() {};
-            virtual void set_fullscreen(bool fullscreen) = 0;
-            virtual void set_size(int width, int height) = 0;
-            virtual void set_frameless(bool frameless) = 0;
-            virtual void set_html(const std::string html) = 0;
-            virtual void navigate(const std::string url) = 0;
-            virtual void run() = 0;
-            virtual void inject(const std::string js) = 0;
+    public:
+        virtual ~WindowInterface(){};
+        virtual void set_fullscreen(bool fullscreen) = 0;
+        virtual void set_size(int width, int height) = 0;
+        virtual void set_frameless(bool frameless) = 0;
+        virtual void set_html(const std::string html) = 0;
+        virtual void navigate(const std::string url) = 0;
+        virtual void run() = 0;
+        virtual void inject(const std::string js) = 0;
     };
 
     /**
@@ -109,6 +108,8 @@ namespace KromblastCore
         virtual std::vector<KromblastCore::kromblast_callback> get_functions() = 0;
 
         virtual WindowInterface *get_window() const = 0;
+
+        virtual Signal::Dispatcher *get_dispatcher() const = 0;
     };
 }
 #endif
