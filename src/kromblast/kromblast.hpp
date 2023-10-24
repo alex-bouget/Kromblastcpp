@@ -4,6 +4,8 @@
 #include "kb_lib_core.hpp"
 #include "kb_lib_class.hpp"
 #include "kb_lib_kromblast.hpp"
+#include "kb_lib_signal.hpp"
+#include "listener.hpp"
 #include "window.hpp"
 #include <string>
 #include <regex>
@@ -36,12 +38,12 @@ namespace Kromblast
          */
         std::map<std::string, KromblastCore::kromblast_callback> handle_callback_function;
 
-        
-
         /**
          * @brief Webview
          */
         Window *kromblast_window;
+
+        Dispatcher *dispatcher;
 
         /**
          * @brief Debug mode
@@ -100,6 +102,8 @@ namespace Kromblast
         void run();
 
         KromblastCore::WindowInterface *get_window() const;
+
+        KromblastCore::Signal::Dispatcher *get_dispatcher() const;
 
         /**
          * @brief Claim a function
