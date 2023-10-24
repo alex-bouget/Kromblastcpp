@@ -1,4 +1,4 @@
-#include "listener.hpp"
+#include "signal.hpp"
 
 namespace Kromblast
 {
@@ -10,17 +10,17 @@ namespace Kromblast
     {
     }
 
-    void Dispatcher::listen(std::string channel, KromblastCore::Signal::SignalHandler *handler)
+    void Dispatcher::listen(std::string channel, Kromblast::Api::SignalHandler *handler)
     {
         if (this->listeners.find(channel) == this->listeners.end())
         {
-            this->listeners[channel] = std::vector<KromblastCore::Signal::SignalHandler *>();
+            this->listeners[channel] = std::vector<Kromblast::Api::SignalHandler *>();
         }
 
         this->listeners[channel].push_back(handler);
     }
 
-    void Dispatcher::dispatch(KromblastCore::Signal::Signal signal)
+    void Dispatcher::dispatch(Kromblast::Api::Signal signal)
     {
         if (this->listeners.find(signal.channel) == this->listeners.end())
         {
@@ -35,7 +35,7 @@ namespace Kromblast
 
     void Dispatcher::dispatch(std::string channel, std::string message)
     {
-        KromblastCore::Signal::Signal signal;
+        Kromblast::Api::Signal signal;
         signal.channel = channel;
         signal.message = message;
 

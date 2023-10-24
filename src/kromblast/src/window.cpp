@@ -5,7 +5,7 @@
 #include "X11/Xlib.h"
 #endif
 
-Kromblast::Window::Window(const KromblastCore::ConfigKromblast &config)
+Kromblast::Window::Window(const Kromblast::Core::ConfigKromblast &config)
 {
     this->config = &config;
 
