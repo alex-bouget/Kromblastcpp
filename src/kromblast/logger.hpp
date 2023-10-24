@@ -5,7 +5,7 @@
 
 namespace Kromblast
 {
-    class Logger: Api::LoggerInterface
+    class Logger: public Api::LoggerInterface
     {
         private:
             bool debug;
@@ -14,7 +14,7 @@ namespace Kromblast
             Logger(bool debug);
             ~Logger();
             void log(const std::string& tag, const std::string& message);
-    }
+    };
 }
 
 #endif

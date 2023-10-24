@@ -11,7 +11,7 @@ namespace Kromblast
         {
             public:
                 virtual ~LoggerInterface(){};
-                virtual void log(std::string tag, std::string message) = 0;
+                virtual void log(const std::string& tag, const std::string& message) = 0;
         };
     }
 }

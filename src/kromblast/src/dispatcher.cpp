@@ -10,11 +10,11 @@ namespace Kromblast
     {
     }
 
-    void Dispatcher::listen(std::string channel, Api::SignalHandler *handler)
+    void Dispatcher::listen(std::string channel, Api::SignalHandlerInterface *handler)
     {
         if (this->listeners.find(channel) == this->listeners.end())
         {
-            this->listeners[channel] = std::vector<Api::SignalHandler *>();
+            this->listeners[channel] = std::vector<Api::SignalHandlerInterface *>();
         }
 
         this->listeners[channel].push_back(handler);
@@ -35,7 +35,7 @@ namespace Kromblast
 
     void Dispatcher::dispatch(std::string channel, std::string message)
     {
-        Kromblast::Api::Signal signal;
+        Api::Signal signal;
         signal.channel = channel;
         signal.message = message;
 
