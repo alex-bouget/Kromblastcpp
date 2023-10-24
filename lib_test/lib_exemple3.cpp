@@ -31,7 +31,7 @@ public:
             1,
             std::bind(&Exemple::increment, this, std::placeholders::_1)
         };
-        kromblast->get_plugin()->claim_callback(&callback);
+        kromblast->get_plugin()->claim_callback(callback);
 
     }
 };

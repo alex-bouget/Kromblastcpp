@@ -11,19 +11,21 @@ namespace Kromblast
     {
     }
 
-    bool Plugin::claim_callback(Core::kromblast_callback_t *callback)
+    bool Plugin::claim_callback(Core::kromblast_callback_t callback)
     {
-        if (handle_callback_function.find(callback->name) != handle_callback_function.end())
+        if (handle_callback_function.find(callback.name) != handle_callback_function.end())
         {
             return false;
         }
-        handle_callback_function[callback->name] = callback;
+        
+        handle_callback_function[callback.name] = new Core::kromblast_callback_t(callback);
         return true;
     }
 
     void Plugin::create_js_function(const Core::kromblast_callback_t &function)
     {
-        std::string function_name = std::string(function.name);
+        kromblast->get_logger()->log("LibLinker", "Creating function: " + function.name);
+        std::string function_name = function.name;
         kromblast->get_logger()->log("LibLinker", "Registering function: " + function_name);
         if (function_name.find(".") != std::string::npos)
         {
@@ -85,6 +87,7 @@ namespace Kromblast
         }
         for (auto function : this->handle_callback_function)
         {
+            create_js_function(*function.second);
         }
     }
 
