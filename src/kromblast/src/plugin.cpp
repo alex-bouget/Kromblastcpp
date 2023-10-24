@@ -6,9 +6,11 @@ namespace Kromblast
     {
         this->kromblast = kromblast;
     }
+    
     Plugin::~Plugin()
     {
     }
+
     bool Plugin::claim_callback(Core::kromblast_callback_t *callback)
     {
         if (handle_callback_function.find(callback->name) != handle_callback_function.end())
@@ -16,6 +18,7 @@ namespace Kromblast
             return false;
         }
         handle_callback_function[callback->name] = callback;
+        return true;
     }
 
     void Plugin::create_js_function(const Core::kromblast_callback_t &function)
