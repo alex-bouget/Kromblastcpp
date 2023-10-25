@@ -1,12 +1,11 @@
 #include "kromblast.hpp"
-#include "kb_lib_core.hpp"
-#include "kb_lib_class.hpp"
-#include "load_lib.hpp"
-#include "function_call.hpp"
+#include "kromblast_api.hpp"
+#include "logger.hpp"
+#include "window.hpp"
+#include "dispatcher.hpp"
+#include "plugin.hpp"
 #include "dlfcn.h"
-#include <iostream>
 #include <regex>
-#include <ctime>
 #include "X11/Xlib.h"
 
 /**
@@ -14,17 +13,20 @@
  * @param config Configuration of the Kromblast object
  * @return Return the Kromblast object
  */
-Kromblast::Kromblast::Kromblast(const KromblastCore::ConfigKromblast &config)
+Kromblast::Kromblast::Kromblast(const Core::ConfigKromblast &config)
 {
-    kromblast_window = new Window(config);
+    window = new Window(config);
     dispatcher = new Dispatcher();
-    debug = config.debug;
-    webview::webview *webview = kromblast_window->get_webview();
+    plugin = new Plugin(this);
+    logger = new Logger(config.debug);
+
+    webview::webview *webview = window->get_webview();
     webview->bind(
         "kromblast",
         [&](std::string arg) { // Bind the kromblast function
             return kromblast_callback(arg);
         });
+
     for (int i = 0; i < (int)config.approved_registry.size(); i++)
     {
         std::string path = config.approved_registry[i];
@@ -39,7 +41,7 @@ Kromblast::Kromblast::Kromblast(const KromblastCore::ConfigKromblast &config)
         this->approved_registry.push_back(std::regex(path, std::regex_constants::ECMAScript | std::regex_constants::icase));
         log("Kromblast::Constructor", "approved registry: " + config.approved_registry[i]);
     }
-    Utils::Library::kromblast_load_library(config.lib_name, this, kromblast_window);
+    plugin->start(config.lib_name);
 }
 
 /**
@@ -47,7 +49,10 @@ Kromblast::Kromblast::Kromblast(const KromblastCore::ConfigKromblast &config)
  */
 Kromblast::Kromblast::~Kromblast()
 {
-    delete kromblast_window;
+    delete window;
+    delete dispatcher;
+    delete plugin;
+    delete logger;
 }
 
 /**
@@ -57,7 +62,7 @@ Kromblast::Kromblast::~Kromblast()
  */
 const std::string Kromblast::Kromblast::kromblast_callback(const std::string req)
 {
-    std::string uri = kromblast_window->get_current_url();
+    std::string uri = window->get_current_url();
     bool find = false;
     log("Kromblast::kromblast_callback", "URI: " + uri);
     for (std::regex exp : approved_registry)
@@ -76,7 +81,7 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
 
     log("Kromblast::kromblast_callback", "Request: " + req);
 
-    struct KromblastCore::kromblast_callback_called function_called;
+    Core::kromblast_callback_called_t function_called;
 
     // get the function name
     std::string function_name = req.substr(2, req.find_first_of(",") - 3);
@@ -88,14 +93,21 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
     if (args.length() <= 2)
     {
         function_called.args = {};
-        std::string result = Utils::Function::call_function(function_called, handle_callback_function, this);
+        std::string result = plugin->call_function(&function_called);
         return result;
     }
 
     // get the arguments
     std::vector<std::string> args_data;
     int step = 0;
-    int args_nb = Utils::Function::count_args(args);
+    int args_nb = 1;
+    for (int i = 0; i < (int)args.length(); i++)
+    {
+        if (args[i] == ',')
+        {
+            args_nb++;
+        }
+    }
     for (int i = 0; i < args_nb; i++)
     {
         int start = args.find_first_of("\"", step);
@@ -106,14 +118,9 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
     function_called.args = args_data;
 
     // call the function
-    std::string result = Utils::Function::call_function(function_called, handle_callback_function, this);
+    std::string result = plugin->call_function(&function_called);
     return result;
 }
-
-/**
- * @brief Get the debug mode
- */
-bool Kromblast::Kromblast::is_debug() { return debug; }
 
 /**
  * @brief Log a message
@@ -122,29 +129,7 @@ bool Kromblast::Kromblast::is_debug() { return debug; }
  */
 void Kromblast::Kromblast::log(const std::string lib, const std::string message)
 {
-    if (!debug)
-        return;
-    time_t now = time(nullptr);
-
-    // Convert the time to a tm struct
-    tm *timeinfo = localtime(&now);
-    // Print the hour, minute, and second
-    std::cout << "{" << timeinfo->tm_hour << ":" << timeinfo->tm_min << ":" << timeinfo->tm_sec << "}";
-    std::cout << "[" << lib << "] " << message << std::endl;
-}
-
-/**
- * @brief Get the list of the callback functions
- * @return Return the list of the callback functions
- */
-std::vector<KromblastCore::kromblast_callback> Kromblast::Kromblast::get_functions()
-{
-    std::vector<KromblastCore::kromblast_callback> functions;
-    for (auto it = handle_callback_function.begin(); it != handle_callback_function.end(); ++it)
-    {
-        functions.push_back(it->second);
-    }
-    return functions;
+    logger->log(lib, message);
 }
 
 /**
@@ -155,30 +140,23 @@ const std::string Kromblast::Kromblast::get_version() { return KROMBLAST_VERSION
 
 void Kromblast::Kromblast::run()
 {
-    kromblast_window->run();
+    window->run();
 }
 
-KromblastCore::WindowInterface *Kromblast::Kromblast::get_window() const
+Kromblast::Api::LoggerInterface *Kromblast::Kromblast::get_logger() const
 {
-    return kromblast_window;
+    return logger;
 }
 
-/**
- * @brief Claim a function
- * @param callback Callback function
- * @return Return true if the function is claimed
- */
-bool Kromblast::Kromblast::claim_callback(struct KromblastCore::kromblast_callback *callback)
+Kromblast::Api::WindowInterface *Kromblast::Kromblast::get_window() const
 {
-    if (handle_callback_function.find(callback->name) != handle_callback_function.end())
-    {
-        return false;
-    }
-    handle_callback_function[callback->name] = *callback;
-    return true;
+    return window;
 }
-
-KromblastCore::Signal::Dispatcher *Kromblast::Kromblast::get_dispatcher() const
+Kromblast::Api::DispatcherInterface *Kromblast::Kromblast::get_dispatcher() const
 {
     return dispatcher;
+}
+Kromblast::Api::PluginInterface *Kromblast::Kromblast::get_plugin() const
+{
+    return plugin;
 }

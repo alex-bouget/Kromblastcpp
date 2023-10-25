@@ -1,11 +1,11 @@
-#ifndef KB_LIB_SIGNAL_HPP
-#define KB_LIB_SIGNAL_HPP
+#ifndef KRBLST_API_SIGNAL_H
+#define KRBLST_API_SIGNAL_H
 
 #include <string>
 
-namespace KromblastCore
+namespace Kromblast
 {
-    namespace Signal
+    namespace Api
     {
         typedef struct Signal Signal;
 
@@ -15,16 +15,17 @@ namespace KromblastCore
             std::string message;
         };
 
-        class SignalHandler
+        class SignalHandlerInterface
         {
         public:
             virtual void handle(Signal signal) = 0;
         };
 
-        class Dispatcher
+        class DispatcherInterface
         {
         public:
-            virtual void listen(std::string channel, SignalHandler *handler) = 0;
+            virtual ~DispatcherInterface() {}
+            virtual void listen(std::string channel, SignalHandlerInterface *handler) = 0;
 
             virtual void dispatch(Signal signal) = 0;
             virtual void dispatch(std::string channel, std::string message) = 0;

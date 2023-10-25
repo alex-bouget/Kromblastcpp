@@ -1,13 +1,13 @@
 #ifndef KROMBLAST_WINDOW_HPP
 #define KROMBLAST_WINDOW_HPP
 
-#include "load_lib.hpp"
-#include "kb_lib_kromblast.hpp"
-
+#include "kromblast_api_window.hpp"
+#include "kromblast_lib_config.hpp"
+#include "webview.h"
 
 namespace Kromblast
 {
-    class Window : public KromblastCore::WindowInterface
+    class Window : public Api::WindowInterface
     {
     private:
         /**
@@ -15,14 +15,14 @@ namespace Kromblast
          */
         webview::webview *kromblast_window;
 
-        const KromblastCore::ConfigKromblast* config;
+        const Core::ConfigKromblast *config;
 
         int width;
 
         int height;
 
     public:
-        Window(const KromblastCore::ConfigKromblast &config);
+        Window(const Core::ConfigKromblast &config);
 
         ~Window();
 
@@ -41,6 +41,8 @@ namespace Kromblast
         std::string get_current_url();
 
         void run();
+
+        void init_inject(const std::string js);
 
         void inject(const std::string js);
     };

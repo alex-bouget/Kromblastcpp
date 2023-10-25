@@ -5,7 +5,7 @@
 #include "X11/Xlib.h"
 #endif
 
-Kromblast::Window::Window(const KromblastCore::ConfigKromblast &config)
+Kromblast::Window::Window(const Core::ConfigKromblast &config)
 {
     this->config = &config;
 
@@ -89,9 +89,9 @@ void Kromblast::Window::navigate(const std::string url) { kromblast_window->navi
 
 std::string Kromblast::Window::get_current_url()
 {
-    #if KB_OS_FAMILY == KB_OS_LINUX
-        return webkit_web_view_get_uri(WEBKIT_WEB_VIEW((GtkWidget *)this->kromblast_window->get_webview()));
-    #endif
+#if KB_OS_FAMILY == KB_OS_LINUX
+    return webkit_web_view_get_uri(WEBKIT_WEB_VIEW((GtkWidget *)this->kromblast_window->get_webview()));
+#endif
 }
 
 /**
@@ -99,5 +99,5 @@ std::string Kromblast::Window::get_current_url()
  */
 void Kromblast::Window::run() { kromblast_window->run(); }
 
-void Kromblast::Window::inject(const std::string js) { kromblast_window->init(js); kromblast_window->eval(js); }
-
+void Kromblast::Window::init_inject(const std::string js) { kromblast_window->init(js); }
+void Kromblast::Window::inject(const std::string js) { kromblast_window->eval(js); }

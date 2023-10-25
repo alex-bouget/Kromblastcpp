@@ -38,42 +38,25 @@ cpp_httplib_dep = subproject('cpp-httplib').get_variable('cpp_httplib_dep')
 
 # Intra Dependencies
 kromblast_api_dep = declare_dependency(
-    include_directories : include_directories('src/include/'),
-)
-
-utils_lib = library(
-    'utils',
-    'src/utils/load_lib.cpp',
-    'src/utils/function_call.cpp',
-    include_directories : 'src/utils',
-    dependencies : [
-        kromblast_api_dep,
-        webview_dep,
-        cc.find_library('dl')
-    ],
-    install : true
-)
-
-utils_dep = declare_dependency(
-    include_directories : include_directories('src/utils'),
-    link_with : utils_lib
+    include_directories : include_directories(['src/include/', 'src/include/api']),
 )
 
 kromblast_lib = library(
     'kromblast',
     'src/kromblast/kromblastlib.cpp',
-    include_directories : 'src/kromblast',
+    'src/utils/load_lib.cpp',
+    include_directories : ['src/kromblast', 'src/utils'],
     dependencies : [
         kromblast_api_dep,
-        utils_dep,
         webview_dep,
-        cc.find_library('X11')
+        cc.find_library('X11'),
+        cc.find_library('dl'),
     ],
     install : true
 )
 
 kromblast_dep = declare_dependency(
-    include_directories : include_directories('src/kromblast'),
+    include_directories : include_directories(['src/kromblast', 'src/utils']),
     link_with : kromblast_lib
 )
 
@@ -87,7 +70,6 @@ exe = executable(
     dependencies : [
         kromblast_api_dep,
         kromblast_dep,
-        utils_dep,
         webview_dep,
         mini_dep,
         cc.find_library('stdc++fs'),

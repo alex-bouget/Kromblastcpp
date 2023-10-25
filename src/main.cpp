@@ -1,5 +1,5 @@
 #include "kromblast.hpp"
-#include "kb_lib_class.hpp"
+#include "kromblast_lib_config.hpp"
 #include <iostream>
 #include <experimental/filesystem>
 #include "Mini.h"
@@ -11,7 +11,7 @@
  * @param path Path to the ini file
  * @return Return the config
  */
-struct KromblastCore::ConfigKromblast load_config(std::string path)
+struct Kromblast::Core::ConfigKromblast load_config(std::string path)
 {
     mINI::INIFile file(path);
     mINI::INIStructure ini;
@@ -140,7 +140,7 @@ struct KromblastCore::ConfigKromblast load_config(std::string path)
         std::cout << "------------------------------" << std::endl
                   << std::endl;
     }
-    struct KromblastCore::ConfigKromblast result = {
+    struct Kromblast::Core::ConfigKromblast result = {
         title,
         width,
         height,
@@ -164,10 +164,10 @@ int main()
         std::cout << "kromblast.ini not found" << std::endl;
         return 1;
     }
-    struct KromblastCore::ConfigKromblast config = load_config(cwd + "/kromblast.ini");
+    struct Kromblast::Core::ConfigKromblast config = load_config(cwd + "/kromblast.ini");
 
     Kromblast::Kromblast blast(config);
-    KromblastCore::WindowInterface * window = blast.get_window();
+    Kromblast::Api::WindowInterface * window = blast.get_window();
 
     switch (config.mode)
     {

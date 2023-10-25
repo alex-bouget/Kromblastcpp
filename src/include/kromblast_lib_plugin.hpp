@@ -1,14 +1,11 @@
 #ifndef KB_LIB_CLASS_H
 #define KB_LIB_CLASS_H
 
-#include "kb_lib_kromblast.hpp"
-#include "kb_lib_core.hpp"
-
 /**
  * @brief Namespace of the kromblast library
  * @class KromLib Class of a kromblast library (interface)
  */
-namespace KromblastCore
+namespace Kromblast
 {
 
     namespace Class
