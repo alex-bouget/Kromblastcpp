@@ -17,6 +17,9 @@ jobs:
 
       - run: pip install meson ninja
 
+      - name: install git submodules
+        run: git submodule update --init --recursive
+
       - name: install dependency
         run: sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev
 
@@ -49,6 +52,9 @@ jobs:
           python-version: "3.x"
 
       - run: pip install meson ninja
+
+      - name: install git submodules
+        run: git submodule update --init --recursive
 
       - name: install dependency
         run: sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev

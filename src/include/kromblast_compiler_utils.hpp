@@ -6,22 +6,22 @@
  * @note 0: Linux, 1: Windows, 2: Mac
  */
 
-#define KB_OS_LINUX 0
-#define KB_OS_WINDOWS 1
-#define KB_OS_MAC 2
+#define KROMBLAST_OS_LINUX 0
+#define KROMBLAST_OS_WINDOWS 1
+#define KROMBLAST_OS_MAC 2
 
 #ifdef _WIN32
-#define KB_OS_FAMILY KB_OS_WINDOWS
+#define KROMBLAST_OS_FAMILY KROMBLAST_OS_WINDOWS
 #elif __APPLE__ // Apple OS
-#define KB_OS_FAMILY KB_OS_MAC
+#define KROMBLAST_OS_FAMILY KROMBLAST_OS_MAC
 #elif __linux__
-#define KB_OS_FAMILY KB_OS_LINUX
+#define KROMBLAST_OS_FAMILY KROMBLAST_OS_LINUX
 #endif
 
-#ifdef DEBUG
-#define KB_DEBUG
+#ifdef DEBUG // Debug mode
+#define KROMBLAST_DEBUG
 #else
-#define KB_RELEASE
+#define KROMBLAST_RELEASE
 #endif
 
 #endif
