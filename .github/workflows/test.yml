@@ -34,6 +34,6 @@ jobs:
       - name: Test memory leak
         run: valgrind --leak-check=full --show-leak-kinds=all \
           --track-origins=yes --verbose --log-file=valgrind-out.txt \
-          --suppression=./valgrind ./builddir/kromblast
+          --suppressions=./valgrind ./builddir/Kromblast
         env:
           CC: gcc
