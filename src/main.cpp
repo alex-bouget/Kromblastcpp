@@ -2,7 +2,7 @@
 #include "kromblast_lib_config.hpp"
 #include <iostream>
 #include <experimental/filesystem>
-#include "Mini.h"
+#include "ini.h"
 #include <httplib.h>
 #include <thread>
 
