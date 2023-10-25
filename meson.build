@@ -28,7 +28,7 @@ webview_dep = declare_dependency(
 )
 
 mini_dep = declare_dependency(
-    include_directories : include_directories('src/libs/mini')
+    include_directories : include_directories('src/libs/mini/src/mini')
 )
 
 cpp_httplib_dep = subproject('cpp-httplib').get_variable('cpp_httplib_dep')

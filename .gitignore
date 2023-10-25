@@ -3,5 +3,7 @@ kromlib/
 subprojects/*
 !subprojects/*.wrap
 
+libs/webview
+
 
 valgrind-out.txt
