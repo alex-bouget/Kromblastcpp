@@ -39,6 +39,10 @@ jobs:
         env:
           CC: gcc
       
+      - name: Overview tree
+        if: always()
+        run: tree
+      
       - name: Upload memory leak log
         uses: actions/upload-artifact@v2
         if: always()
