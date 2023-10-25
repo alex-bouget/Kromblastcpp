@@ -1,0 +1,39 @@
+name: "Test Memory leak"
+
+on:
+  push:
+    branches:
+      - "*"
+    paths:
+      - "src/**"
+      - "meson.build"
+
+jobs:
+  test-memory-leak:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - run: pip install meson ninja
+
+      - name: install dependency
+        run: sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev valgrind
+
+      - run: meson setup builddir/
+        env:
+          CC: gcc
+
+      - run: ninja -C builddir/
+        env:
+          CC: gcc
+      
+      - name: Test memory leak
+        run: valgrind --leak-check=full --show-leak-kinds=all \
+          --track-origins=yes --verbose --log-file=valgrind-out.txt \
+          --suppression=./valgrind ./builddir/kromblast
+        env:
+          CC: gcc
