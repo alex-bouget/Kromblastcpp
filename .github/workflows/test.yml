@@ -37,3 +37,10 @@ jobs:
           --suppressions=./valgrind ./builddir/Kromblast
         env:
           CC: gcc
+      
+      - name: Upload memory leak log
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: valgrind-out.txt
+          path: valgrind-out.txt
