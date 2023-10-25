@@ -90,7 +90,9 @@ void Kromblast::Window::navigate(const std::string url) { kromblast_window->navi
 std::string Kromblast::Window::get_current_url()
 {
 #if KB_OS_FAMILY == KB_OS_LINUX
-    return webkit_web_view_get_uri(WEBKIT_WEB_VIEW((GtkWidget *)this->kromblast_window->get_webview()));
+    GtkWidget *widget = (GtkWidget *)kromblast_window->window();
+    GtkWidget * webview = gtk_bin_get_child(GTK_BIN(widget));
+    return webkit_web_view_get_uri(WEBKIT_WEB_VIEW(webview));
 #endif
 }
 
