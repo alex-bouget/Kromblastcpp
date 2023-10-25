@@ -1,5 +1,5 @@
-#ifndef KB_OS_HPP
-#define KB_OS_HPP
+#ifndef KRBLST_COMPILER_UTILS_HPP
+#define KRBLST_COMPILER_UTILS_HPP
 
 /**
  * @brief OS family
@@ -16,6 +16,12 @@
 #define KB_OS_FAMILY KB_OS_MAC
 #elif __linux__
 #define KB_OS_FAMILY KB_OS_LINUX
+#endif
+
+#ifdef DEBUG
+#define KB_DEBUG
+#else
+#define KB_RELEASE
 #endif
 
 #endif
