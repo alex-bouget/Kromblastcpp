@@ -13,7 +13,7 @@ namespace Kromblast
     {
     }
 
-    void Logger::log(const std::string& tag, const std::string& message)
+    void Logger::log(const std::string &tag, const std::string &message)
     {
         if (!debug)
             return;

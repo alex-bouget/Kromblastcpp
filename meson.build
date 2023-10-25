@@ -44,6 +44,7 @@ kromblast_api_dep = declare_dependency(
 kromblast_lib = library(
     'kromblast',
     'src/kromblast/kromblastlib.cpp',
+    'src/utils/load_lib.cpp',
     include_directories : ['src/kromblast', 'src/utils'],
     dependencies : [
         kromblast_api_dep,

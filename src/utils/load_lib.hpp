@@ -34,7 +34,7 @@ namespace Kromblast
         };
         
         template <typename T>
-        T Library::get_lib<T>(const std::string &lib_path, const std::string &function_name, Kromblast::Api::LoggerInterface *logger)
+        T Library::get_lib(const std::string &lib_path, const std::string &function_name, Kromblast::Api::LoggerInterface *logger)
         {
             T function = (T)get_lib(lib_path, function_name, logger);
             return function;
