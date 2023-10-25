@@ -5,7 +5,6 @@
 #include "kromblast_lib_config.hpp"
 #include "webview.h"
 
-
 namespace Kromblast
 {
     class Window : public Api::WindowInterface
@@ -16,7 +15,7 @@ namespace Kromblast
          */
         webview::webview *kromblast_window;
 
-        const Core::ConfigKromblast* config;
+        const Core::ConfigKromblast *config;
 
         int width;
 

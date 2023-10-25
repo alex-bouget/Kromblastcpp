@@ -5,15 +5,15 @@
 
 namespace Kromblast
 {
-    class Logger: public Api::LoggerInterface
+    class Logger : public Api::LoggerInterface
     {
-        private:
-            bool debug;
+    private:
+        bool debug;
 
-        public:
-            Logger(bool debug);
-            ~Logger();
-            void log(const std::string& tag, const std::string& message);
+    public:
+        Logger(bool debug);
+        ~Logger();
+        void log(const std::string &tag, const std::string &message);
     };
 }
 

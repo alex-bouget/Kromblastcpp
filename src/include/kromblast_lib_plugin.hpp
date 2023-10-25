@@ -1,7 +1,6 @@
 #ifndef KB_LIB_CLASS_H
 #define KB_LIB_CLASS_H
 
-
 /**
  * @brief Namespace of the kromblast library
  * @class KromLib Class of a kromblast library (interface)

@@ -47,13 +47,12 @@ namespace Kromblast
          * @param config Config
          * @return Return a new instance of Kromblast
          */
-        Kromblast(const Core::ConfigKromblast& config);
+        Kromblast(const Core::ConfigKromblast &config);
 
         /**
          * @brief Destructor
          */
         ~Kromblast();
-
 
         Api::LoggerInterface *get_logger() const;
         Api::WindowInterface *get_window() const;

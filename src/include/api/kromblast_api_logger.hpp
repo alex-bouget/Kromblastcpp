@@ -9,9 +9,9 @@ namespace Kromblast
     {
         class LoggerInterface
         {
-            public:
-                virtual ~LoggerInterface(){};
-                virtual void log(const std::string& tag, const std::string& message) = 0;
+        public:
+            virtual ~LoggerInterface(){};
+            virtual void log(const std::string &tag, const std::string &message) = 0;
         };
     }
 }
