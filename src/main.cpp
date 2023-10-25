@@ -1,5 +1,6 @@
 #include "kromblast.hpp"
 #include "kromblast_lib_config.hpp"
+#include "kromblast_compiler_utils.hpp"
 #include <iostream>
 #include <experimental/filesystem>
 #include "ini.h"
@@ -107,6 +108,12 @@ struct Kromblast::Core::ConfigKromblast load_config(std::string path)
     {
         mode_id = 2;
     }
+    #ifdef KROMBLAST_DEBUG
+    else if (mode == "debug")
+    {
+        mode_id = 3;
+    }
+    #endif
     else
     {
         std::cout << "Invalid mode" << std::endl;
@@ -190,6 +197,11 @@ int main()
         }
         std::cout << "Host not found" << std::endl;
         return 1;
+    #ifdef KROMBLAST_DEBUG
+    case 3: // Debug
+        blast.log("MAIN", "Debug mode");
+        return 0;
+    #endif
     case 2: // Hosted
         blast.log("MAIN", "Hosted mode");
         std::string host = config.host;
