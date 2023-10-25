@@ -1,5 +1,5 @@
 #include "window.hpp"
-#include "kb_os.hpp"
+#include "kromblast_compiler_utils.hpp"
 
 #if KB_OS_FAMILY == KB_OS_LINUX
 #include "X11/Xlib.h"
