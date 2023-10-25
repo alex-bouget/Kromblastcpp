@@ -1,3 +1,6 @@
 [submodule "src/libs/webview"]
 	path = src/libs/webview
 	url = https://github.com/webview/webview
+[submodule "src/libs/mini"]
+	path = src/libs/mini
+	url = https://github.com/pulzed/mINI/
