@@ -6,7 +6,7 @@ namespace Kromblast
     {
         this->kromblast = kromblast;
     }
-    
+
     Plugin::~Plugin()
     {
     }
@@ -17,7 +17,7 @@ namespace Kromblast
         {
             return false;
         }
-        
+
         handle_callback_function[callback.name] = new Core::kromblast_callback_t(callback);
         return true;
     }
@@ -54,23 +54,22 @@ namespace Kromblast
         kromblast->get_window()->init_inject(js);
     }
 
-
-    std::string Plugin::call_function(Core::kromblast_callback_called_t* function_called)
+    std::string Plugin::call_function(Core::kromblast_callback_called_t *function_called)
     {
         if (handle_callback_function.find(function_called->name) != handle_callback_function.end())
-            {
-                auto func = handle_callback_function[function_called->name];
-                return func->callback(function_called);
-            }
-            kromblast->get_logger()->log("Function", "Function not found");
-            return (char *)"{\"Error\": \"Function not found\"}";
+        {
+            auto func = handle_callback_function[function_called->name];
+            return func->callback(function_called);
+        }
+        kromblast->get_logger()->log("Function", "Function not found");
+        return (char *)"{\"Error\": \"Function not found\"}";
     }
 
     void Plugin::start(std::vector<std::string> plugins)
     {
         for (std::string plugin : plugins)
         {
-            Class::kromblast_lib_get_class_t callback = *library_loader.get_lib(plugin, "kromblast_lib_get_class", kromblast->get_logger());
+            Class::kromblast_lib_get_class_t callback = *library_loader.get_lib<Class::kromblast_lib_get_class_t>(plugin, "kromblast_lib_get_class", kromblast->get_logger());
             if (callback == nullptr)
             {
                 kromblast->get_logger()->log("Plugin", "Cannot load plugin: " + plugin);
