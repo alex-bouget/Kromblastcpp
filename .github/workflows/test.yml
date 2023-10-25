@@ -33,11 +33,9 @@ jobs:
           CC: gcc
       
       - name: Test memory leak
-        run: valgrind --leak-check=full --show-leak-kinds=all \
-          --track-origins=yes --verbose --log-file=valgrind-out.txt \
+        run: valgrind --leak-check=full --show-leak-kinds=all
+          --track-origins=yes --verbose --log-file=valgrind-out.txt
           --suppressions=./valgrind ./builddir/Kromblast
-        env:
-          CC: gcc
       
       - name: Overview tree
         if: always()
