@@ -31,6 +31,8 @@ jobs:
       - run: ninja -C builddir/
         env:
           CC: gcc
+        
+      - run: mkdir kromlib && cp builddir/liblib_exemple.so kromlib/
       
       - name: Test memory leak
         run: valgrind --leak-check=full --show-leak-kinds=all
