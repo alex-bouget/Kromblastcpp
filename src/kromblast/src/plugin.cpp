@@ -67,11 +67,10 @@ namespace Kromblast
         return (char *)"{\"Error\": \"Function not found\"}";
     }
 
-    void Plugin::start(const Core::StringList &plugins)
+    void Plugin::start(const std::vector<std::string> &plugins)
     {
-        for (int i = 0; i < plugins.size; i++)
+        for (const std::string &plugin : plugins)
         {
-            const std::string &plugin = plugins.list[i];
             Class::kromblast_lib_get_class_t callback = *library_loader.get_lib<Class::kromblast_lib_get_class_t>(plugin, "kromblast_lib_get_class", kromblast->get_logger());
             if (callback == nullptr)
             {

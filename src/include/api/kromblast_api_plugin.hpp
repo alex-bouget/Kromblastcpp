@@ -17,7 +17,7 @@ namespace Kromblast
             virtual ~PluginInterface(){};
             virtual bool claim_callback(Kromblast::Core::kromblast_callback_t callback) = 0;
             virtual std::string call_function(Kromblast::Core::kromblast_callback_called_t *function_called) = 0;
-            virtual void start(const Core::StringList &plugins) = 0;
+            virtual void start(const std::vector<std::string> &plugins) = 0;
             virtual void stop() = 0;
         };
     }
