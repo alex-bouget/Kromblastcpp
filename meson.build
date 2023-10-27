@@ -11,31 +11,16 @@ if get_option('buildtype').startswith('debug')
   add_project_arguments('-DDEBUG', language : 'cpp')
 endif
 
-# Extra Dependencies
 
-webview_depends = [
-    dependency('gtk+-3.0'),
-    dependency('webkit2gtk-4.0')
-]
+# mini_dep = declare_dependency(
+#     include_directories : include_directories('src/libs/mini/src/mini')
+# )
 
-webview_lib = library(
-    'webview',
-    'src/libs/webview/webview.h',
-    dependencies : webview_depends,
-    install : true
-)
-
-webview_dep = declare_dependency(
-    include_directories : include_directories('src/libs/webview'),
-    dependencies : webview_depends,
-    link_with : webview_lib
-)
-
-mini_dep = declare_dependency(
-    include_directories : include_directories('src/libs/mini/src/mini')
-)
+nlohmann_json_dep = subproject('nlohmann-json').get_variable('nlohmann_json_dep')
 
 cpp_httplib_dep = subproject('cpp-httplib').get_variable('cpp_httplib_dep')
+# Extra Dependencies
+webview_dep = subproject('webview-meson').get_variable('libwebview_dep')
 
 
 
@@ -75,7 +60,7 @@ exe = executable(
         kromblast_api_dep,
         kromblast_dep,
         webview_dep,
-        mini_dep,
+        nlohmann_json_dep,
         cc.find_library('stdc++fs'),
         cpp_httplib_dep
     ]

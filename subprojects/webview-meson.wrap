@@ -1,0 +1,13 @@
+[wrap-file]
+directory = webview_webview-v0.10.0-1-M1-L
+lead_directory_missing = true
+source_url = https://github.com/alex-bouget/webview-meson/releases/download/v0.10.0-1-M1-L/webview.zip
+source_filename = webview.zip
+source_hash = dca0b50650a02bf4e2f808cd04994c55c45076c0e464a9b6752eb101be1224dd
+patch_url = https://github.com/alex-bouget/webview-meson/releases/download/v0.10.0-1-M1-L/meson.zip
+patch_filename = webview-meson.zip
+patch_hash = 484cfd12899dbd978e953c2589209a80d4799c1686b052f070724071f3ec2edf
+
+
+[provide]
+webview = libwebview_dep
