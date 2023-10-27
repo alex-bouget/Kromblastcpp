@@ -31,9 +31,11 @@ webview_dep = declare_dependency(
     link_with : webview_lib
 )
 
-mini_dep = declare_dependency(
-    include_directories : include_directories('src/libs/mini/src/mini')
-)
+# mini_dep = declare_dependency(
+#     include_directories : include_directories('src/libs/mini/src/mini')
+# )
+
+nlohmann_json_dep = subproject('nlohmann-json').get_variable('nlohmann_json_dep')
 
 cpp_httplib_dep = subproject('cpp-httplib').get_variable('cpp_httplib_dep')
 
@@ -75,7 +77,7 @@ exe = executable(
         kromblast_api_dep,
         kromblast_dep,
         webview_dep,
-        mini_dep,
+        nlohmann_json_dep,
         cc.find_library('stdc++fs'),
         cpp_httplib_dep
     ]

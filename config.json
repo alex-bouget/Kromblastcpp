@@ -1,0 +1,21 @@
+[
+    {
+        "plugin_folder": "kromlib",
+        "debug": true,
+        "mode": "debug",
+        "path": "test",
+        "window": {
+            "size": [800, 600],
+            "title": "Kromblast",
+            "fullscreen": false,
+            "frameless": false
+        },
+        "registry": [
+            "file://*",
+            "*://*",
+            "http://*",
+            "*://*/index.html"
+        ]
+
+    }
+]
