@@ -8,6 +8,7 @@
 #include <list>
 #include "kromblast_lib_plugin_callback.hpp"
 #include "kromblast_lib_plugin.hpp"
+#include "kromblast_lib_config.hpp"
 #include "load_lib.hpp"
 
 namespace Kromblast
@@ -27,7 +28,7 @@ namespace Kromblast
         ~Plugin();
         bool claim_callback(Core::kromblast_callback_t callback);
         std::string call_function(Core::kromblast_callback_called_t *function_called);
-        void start(std::vector<std::string> plugins);
+        void start(const Core::StringList &plugins);
         void stop();
     };
 
