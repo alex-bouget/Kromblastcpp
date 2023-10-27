@@ -3,16 +3,17 @@
 #include "kromblast_compiler_utils.hpp"
 #include <iostream>
 #include <experimental/filesystem>
-#include "ini.h"
 #include <httplib.h>
 #include <thread>
+
+#include "decode_config.cpp"
 
 /**
  * @brief Load the config from the ini file
  * @param path Path to the ini file
  * @return Return the config
  */
-struct Kromblast::Core::ConfigKromblast load_config(std::string path)
+/*struct Kromblast::Core::ConfigKromblast load_config(std::string path)
 {
     mINI::INIFile file(path);
     mINI::INIStructure ini;
@@ -160,7 +161,7 @@ struct Kromblast::Core::ConfigKromblast load_config(std::string path)
         mode_id,
         host};
     return result;
-}
+}*/
 
 int main()
 {

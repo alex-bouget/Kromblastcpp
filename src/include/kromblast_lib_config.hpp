@@ -2,8 +2,7 @@
 #define KB_LIB_KROMBLAST_H
 
 #include <string>
-#include <functional>
-#include <vector>
+#include "kromblast_compiler_utils.hpp"
 
 /**
  * @brief Namespace of the kromblast library
@@ -13,6 +12,18 @@ namespace Kromblast
 {
     namespace Core
     {
+
+        enum Mode
+        {
+            #ifdef KROMBLAST_DEBUG
+            DEBUG,
+            #endif
+            SERVER,
+            LOCAL,
+            HOSTED,
+        };
+
+        typedef struct ConfigKromblast ConfigKromblast;
         /**
          * @brief structure to store the config
          * @param title Window title
@@ -37,9 +48,11 @@ namespace Kromblast
             bool frameless;
             bool debug;
             std::string lib_path;
-            std::vector<std::string> lib_name;
-            std::vector<std::string> approved_registry;
-            int mode;
+            std::string* lib_name;
+            int lib_name_size;
+            std::string* approved_registry;
+            int approved_registry_size;
+            Mode mode;
             std::string host;
         };
     }
