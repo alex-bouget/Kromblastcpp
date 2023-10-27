@@ -16,11 +16,23 @@ namespace Kromblast
         enum Mode
         {
             #ifdef KROMBLAST_DEBUG
-            DEBUG,
+            DBUG,
             #endif
             SERVER,
             LOCAL,
             HOSTED,
+        };
+
+        typedef struct StringList StringList;
+        /**
+         * @brief structure to store a list of string
+         * @param size Size of the list
+         * @param list List of string
+         */
+        struct StringList
+        {
+            int size;
+            std::string *list;
         };
 
         typedef struct ConfigKromblast ConfigKromblast;
@@ -48,10 +60,8 @@ namespace Kromblast
             bool frameless;
             bool debug;
             std::string lib_path;
-            std::string* lib_name;
-            int lib_name_size;
-            std::string* approved_registry;
-            int approved_registry_size;
+            StringList lib_name;
+            StringList approved_registry;
             Mode mode;
             std::string host;
         };

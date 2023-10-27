@@ -1,5 +1,7 @@
 #include "plugin.hpp"
 
+#include "kromblast_lib_config.hpp"
+
 namespace Kromblast
 {
     Plugin::Plugin(Api::KromblastInterface *kromblast)
@@ -65,10 +67,11 @@ namespace Kromblast
         return (char *)"{\"Error\": \"Function not found\"}";
     }
 
-    void Plugin::start(std::vector<std::string> plugins)
+    void Plugin::start(const Core::StringList &plugins)
     {
-        for (std::string plugin : plugins)
+        for (int i = 0; i < plugins.size; i++)
         {
+            const std::string &plugin = plugins.list[i];
             Class::kromblast_lib_get_class_t callback = *library_loader.get_lib<Class::kromblast_lib_get_class_t>(plugin, "kromblast_lib_get_class", kromblast->get_logger());
             if (callback == nullptr)
             {
