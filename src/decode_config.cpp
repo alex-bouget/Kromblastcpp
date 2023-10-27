@@ -53,16 +53,13 @@ namespace Kromblast
         }
         std::string cwd(std::experimental::filesystem::current_path());
         config->lib_path = json_root["plugin_folder"];
-        std::cout << cwd + "/" + config->lib_path + "/" << std::endl;
+        std::cout << cwd << "/" << config->lib_path << std::endl;
         const auto path = std::experimental::filesystem::directory_iterator(cwd + "/" + config->lib_path + "/");
-        config->lib_name.size = std::distance(path, std::experimental::filesystem::directory_iterator{});
-        config->lib_name.list = new std::string[config->lib_name.size];
         int i = 0;
         for (const auto &entry : path)
         {
             std::cout << entry.path() << std::endl;
-            config->lib_name.list[i] = entry.path();
-            std::cout << config->lib_name.list[i] << std::endl;
+            config->lib_name.insert(config->lib_name.begin() + i, entry.path());
             i++;
         }
         config->debug = false;
@@ -114,11 +111,10 @@ namespace Kromblast
             std::cout << "Registry must be an array" << std::endl;
             exit(1);
         }
-        config->approved_registry.size = json_approved.size();
-        config->approved_registry.list = new std::string[config->approved_registry.size];
-        for (int i = 0; i < config->approved_registry.size; i++)
+        config->approved_registry.reserve(json_approved.size());
+        for (size_t i = 0; i < json_approved.size(); i++)
         {
-            config->approved_registry.list[i] = json_approved[i];
+            config->approved_registry.push_back(json_approved[i]);
         }
     }
 
@@ -135,11 +131,6 @@ namespace Kromblast
         if (config_json.contains("registry"))
         {
             config_approved_registry(&config, config_json["registry"]);
-        }
-        else
-        {
-            config.approved_registry.size = 0;
-            config.approved_registry.list = nullptr;
         }
         return config;
     }

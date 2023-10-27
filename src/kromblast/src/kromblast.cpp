@@ -27,10 +27,9 @@ Kromblast::Kromblast::Kromblast(const Core::ConfigKromblast &config)
             return kromblast_callback(arg);
         });
 
-    for (int i = 0; i < (int)config.approved_registry.size; i++)
+    for (std::string path : config.approved_registry)
     {
-        std::string path = config.approved_registry.list[i];
-        std::string old_path = path;
+        const std::string &old_path = path;
 
         path = std::regex_replace(path, std::regex("\\/"), "\\/");
         path = std::regex_replace(path, std::regex("\\."), "\\.");
@@ -39,7 +38,7 @@ Kromblast::Kromblast::Kromblast(const Core::ConfigKromblast &config)
 
         log("Kromblast::Constructor", "regex path: " + old_path + " -> " + path);
         this->approved_registry.push_back(std::regex(path, std::regex_constants::ECMAScript | std::regex_constants::icase));
-        log("Kromblast::Constructor", "approved registry: " + config.approved_registry.list[i]);
+        log("Kromblast::Constructor", "approved registry: " + path);
     }
     plugin->start(config.lib_name);
 }

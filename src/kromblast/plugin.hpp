@@ -28,7 +28,7 @@ namespace Kromblast
         ~Plugin();
         bool claim_callback(Core::kromblast_callback_t callback);
         std::string call_function(Core::kromblast_callback_called_t *function_called);
-        void start(const Core::StringList &plugins);
+        void start(const std::vector<std::string> &plugins);
         void stop();
     };
 

@@ -2,6 +2,7 @@
 #define KB_LIB_KROMBLAST_H
 
 #include <string>
+#include <vector>
 #include "kromblast_compiler_utils.hpp"
 
 /**
@@ -21,18 +22,6 @@ namespace Kromblast
             SERVER,
             LOCAL,
             HOSTED,
-        };
-
-        typedef struct StringList StringList;
-        /**
-         * @brief structure to store a list of string
-         * @param size Size of the list
-         * @param list List of string
-         */
-        struct StringList
-        {
-            int size;
-            std::string *list;
         };
 
         typedef struct ConfigKromblast ConfigKromblast;
@@ -60,8 +49,8 @@ namespace Kromblast
             bool frameless;
             bool debug;
             std::string lib_path;
-            StringList lib_name;
-            StringList approved_registry;
+            std::vector<std::string> lib_name;
+            std::vector<std::string> approved_registry;
             Mode mode;
             std::string host;
         };
