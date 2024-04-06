@@ -19,7 +19,7 @@ namespace Kromblast
         ~Dispatcher();
 
         void listen(std::string channel, Api::SignalHandlerInterface *handler);
-        void listen(Api::SignalHandlerInterface *handler) = 0;
+        void listen(Api::SignalHandlerInterface *handler);
 
         void dispatch(Api::Signal signal);
         void dispatch(std::string channel, std::string message);

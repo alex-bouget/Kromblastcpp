@@ -26,7 +26,7 @@ namespace Kromblast
     }
 
 
-    void dispatch(std::string channel, Api::Signal signal)
+    void Dispatcher::dispatch(std::string channel, Api::Signal signal)
     {
         if (this->listeners.find(channel) == this->listeners.end())
         {
