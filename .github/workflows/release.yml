@@ -202,7 +202,7 @@ jobs:
         run: tree
 
       - name: compress artifact
-        run: for i in *; do [ -d "${i}" ] && cd "${i}" && zip -r "./../${i}.zip" "." && cd ..; done
+        run: cd dist && for i in *; do [ -d "${i}" ] && cd "${i}" && zip -r "./../${i}.zip" "." && cd ..; done
 
       - name: Overview tree
         run: tree
@@ -217,7 +217,7 @@ jobs:
             LICENSE
             dist/Linux_Kromblast.zip
             dist/Linux_Kromblast_20.zip
-            dist/kromblast.zip
-            dist/kromblast.wrap
+            dist/kromblast/kromblast.zip
+            dist/kromblast.wrap/kromblast.wrap
           # dist/macos/MacOs_Kromblast.zip
           # dist/windows/Windows_Kromblast.zip
