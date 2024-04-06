@@ -13,15 +13,17 @@ namespace Kromblast
     {
     private:
         std::map<std::string, std::vector<Api::SignalHandlerInterface *>> listeners;
+        void dispatch(const std::string &channel, const Api::Signal &signal);
 
     public:
         Dispatcher();
         ~Dispatcher();
 
-        void listen(std::string channel, Api::SignalHandlerInterface *handler);
+        void listen(const std::string &channel, Api::SignalHandlerInterface *handler) override;
+        void listen(Api::SignalHandlerInterface *handler) override;
 
-        void dispatch(Api::Signal signal);
-        void dispatch(std::string channel, std::string message);
+        void dispatch(const Api::Signal &signal) override;
+        void dispatch(const std::string &channel, const std::string &message) override;
     };
 }
 

@@ -1,7 +1,7 @@
 #include "kromblast_mode.hpp"
 #include "kromblast_lib_config.hpp"
 #include "experimental/filesystem"
-
+#include "kromblast_compiler_utils.hpp"
 
 void Kromblast::KromblastMode::run_server()
 {
@@ -55,7 +55,7 @@ void Kromblast::KromblastMode::run()
 {
     switch (this->config.mode)
     {
-        #ifndef KROMBLAST_DEBUG
+        #ifdef KROMBLAST_DEBUG
         case ::Kromblast::Core::Mode::DBUG:
             break;
         #endif

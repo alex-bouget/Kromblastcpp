@@ -10,9 +10,9 @@ namespace Kromblast
     {
     }
 
-    void Dispatcher::listen(std::string channel, Api::SignalHandlerInterface *handler)
+    void Dispatcher::listen(const std::string &channel, Api::SignalHandlerInterface *handler)
     {
-        if (this->listeners.find(channel) == this->listeners.end())
+        if (!this->listeners.contains(channel))
         {
             this->listeners[channel] = std::vector<Api::SignalHandlerInterface *>();
         }
@@ -20,24 +20,36 @@ namespace Kromblast
         this->listeners[channel].push_back(handler);
     }
 
-    void Dispatcher::dispatch(Api::Signal signal)
+    void Dispatcher::listen(Api::SignalHandlerInterface *handler)
     {
-        if (this->listeners.find(signal.channel) == this->listeners.end())
+        this->listen("", handler);
+    }
+
+    void Dispatcher::dispatch(const std::string &channel, const Api::Signal &signal)
+    {
+        if (!this->listeners.contains(channel))
         {
             return;
         }
 
-        for (auto handler : this->listeners[signal.channel])
+        for (auto handler : this->listeners[channel])
         {
             handler->handle(signal);
         }
     }
 
-    void Dispatcher::dispatch(std::string channel, std::string message)
+    void Dispatcher::dispatch(const Api::Signal &signal)
     {
-        Api::Signal signal;
-        signal.channel = channel;
-        signal.message = message;
+        dispatch(signal.channel, signal);
+        dispatch("", signal);
+    }
+
+    void Dispatcher::dispatch(const std::string &channel, const std::string &message)
+    {
+        Api::Signal signal = {
+            channel,
+            message,
+        };
 
         this->dispatch(signal);
     }
