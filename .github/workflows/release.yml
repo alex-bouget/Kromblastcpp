@@ -195,8 +195,11 @@ jobs:
         with:
           path: ./dist
 
+      - name: cd dist
+        run: cd dist
+
       - name: compress artifact
-        run: for i in $(find ./dist -type d); do zip -r "${i}.zip" "${i}"; done
+        run: for i in $(find ./dist -type d); do cd "${i}" && zip -r "./../${i}.zip" "." && cd ..; done
 
       - name: Overview tree
         run: tree
