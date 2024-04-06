@@ -24,6 +24,18 @@ namespace Kromblast
             HOSTED,
         };
 
+        typedef struct ConfigKromblastWindow ConfigKromblastWindow;
+
+        struct ConfigKromblastWindow
+        {
+            std::string title;
+            int width;
+            int height;
+            bool fullscreen;
+            bool frameless;
+            bool debug;
+        };
+
         typedef struct ConfigKromblast ConfigKromblast;
         /**
          * @brief structure to store the config
@@ -42,13 +54,8 @@ namespace Kromblast
          */
         struct ConfigKromblast
         {
-            std::string title;
-            int width;
-            int height;
-            bool fullscreen;
-            bool frameless;
+            ConfigKromblastWindow window;
             bool debug;
-            std::string lib_path;
             std::vector<std::string> lib_name;
             std::vector<std::string> approved_registry;
             Mode mode;

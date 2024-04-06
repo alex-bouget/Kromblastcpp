@@ -9,20 +9,20 @@ namespace Kromblast
 {
     class Window : public Api::WindowInterface
     {
-    private:
+    protected:
         /**
          * @brief Webview
          */
         webview::webview *kromblast_window;
 
-        const Core::ConfigKromblast *config;
+        const Core::ConfigKromblastWindow *config;
 
         int width;
 
         int height;
 
     public:
-        Window(const Core::ConfigKromblast &config);
+        Window(const Core::ConfigKromblastWindow &config);
 
         ~Window();
 
