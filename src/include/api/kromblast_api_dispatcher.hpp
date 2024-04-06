@@ -26,6 +26,7 @@ namespace Kromblast
         public:
             virtual ~DispatcherInterface() {}
             virtual void listen(std::string channel, SignalHandlerInterface *handler) = 0;
+            virtual void listen(SignalHandlerInterface *handler) = 0;
 
             virtual void dispatch(Signal signal) = 0;
             virtual void dispatch(std::string channel, std::string message) = 0;
