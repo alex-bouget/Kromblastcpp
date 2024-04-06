@@ -3,6 +3,7 @@
 #include <iostream>
 #include <experimental/filesystem>
 #include "kromblast_lib_config.hpp"
+#include "kromblast_compiler_utils.hpp"
 
 namespace fs = std::experimental::filesystem;
 
