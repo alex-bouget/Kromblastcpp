@@ -198,6 +198,9 @@ jobs:
       - name: cd dist
         run: cd dist
 
+      - name: Overview tree
+        run: tree
+
       - name: compress artifact
         run: for i in *; do [ -d "${i}" ] && cd "${i}" && zip -r "./../${i}.zip" "." && cd ..; done
 
