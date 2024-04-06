@@ -72,9 +72,10 @@
         "concepts": "cpp",
         "numbers": "cpp",
         "semaphore": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "charconv": "cpp"
     },
-    "C_Cpp.default.compileCommands": "build/compile_commands.json",
+    "C_Cpp.default.compileCommands": "/home/bouget/Bureau/git/github/Kromblastcpp/build/compile_commands.json",
     "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
     "C_Cpp.errorSquiggles": "disabled"
 }

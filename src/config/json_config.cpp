@@ -5,6 +5,8 @@
 #include <experimental/filesystem>
 #include <iostream>
 
+#include "utils.hpp"
+
 namespace fs = std::experimental::filesystem;
 
 Kromblast::Core::ConfigKromblastWindow create_config_window_json(const nlohmann::json &json_window, bool debug)
@@ -71,43 +73,6 @@ void decode_libraries(std::vector<std::string>* lib_name, const nlohmann::json &
     }
 }
 
-void decode_plugins_folder(std::vector<std::string>* lib_name, const std::string &plugin_folder)
-{
-    fs::path cwd = fs::current_path();
-    const auto path = fs::directory_iterator(cwd.string() + "/" + plugin_folder + "/");
-    for (const auto &entry : path)
-    {
-        lib_name->push_back(entry.path());
-    }
-}
-
-Kromblast::Core::Mode get_mode(const nlohmann::json &json_mode)
-{
-    if (json_mode == "SERVER")
-    {
-        return Kromblast::Core::Mode::SERVER;
-    }
-    else if (json_mode == "LOCAL")
-    {
-        return Kromblast::Core::Mode::LOCAL;
-    }
-    else if (json_mode == "HOSTED")
-    {
-        return Kromblast::Core::Mode::HOSTED;
-    }
-    #ifdef KROMBLAST_DEBUG
-    else if (json_mode == "DEBUG")
-    {
-        return ::Kromblast::Core::Mode::DBUG;
-    }
-    #endif
-    else
-    {
-        std::cout << "Mode not found" << std::endl;
-        exit(1);
-    }
-}
-
 
 Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &config)
 {
@@ -164,6 +129,11 @@ Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &c
 Kromblast::Core::ConfigKromblast Kromblast::Config::get_from_json(const std::string &path)
 {
     std::ifstream f(path);
+    if (!f.is_open())
+    {
+        std::cout << "File not found" << std::endl;
+        exit(1);
+    }
     nlohmann::json config_json = nlohmann::json::parse(f);
     return create_config_from_json(config_json);
 }

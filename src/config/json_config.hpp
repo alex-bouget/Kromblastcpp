@@ -1,5 +1,5 @@
-#ifndef KROMBLAST_INI_CONFIG_HPP
-#define KROMBLAST_INI_CONFIG_HPP
+#ifndef KROMBLAST_JSON_CONFIG_HPP
+#define KROMBLAST_JSON_CONFIG_HPP
 #include "kromblast_lib_config.hpp"
 
 
