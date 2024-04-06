@@ -41,7 +41,7 @@ jobs:
       - name: Test memory leak
         run: valgrind --leak-check=full --show-leak-kinds=all
           --track-origins=yes --verbose --log-file=valgrind-out.txt
-          --suppressions=./valgrind ./builddir/Kromblast
+          --suppressions=./valgrind ./builddir/Kromblast json kromblast.json
       
       - name: Overview tree
         if: always()
