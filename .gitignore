@@ -5,5 +5,5 @@ subprojects/*
 
 libs/webview
 
-
+.vscode/settings.json
 valgrind-out.txt
