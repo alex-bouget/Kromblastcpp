@@ -23,7 +23,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: kromblast
-          path: kromblast-${{ github.ref_name }}.zip
+          path: kromblast.zip
       
       - uses: actions/upload-artifact@v4
         with:
@@ -54,7 +54,7 @@ jobs:
 
       - run: meson test -C builddir/ -v
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: Linux_Meson_Testlog
@@ -62,7 +62,7 @@ jobs:
 
       - run: DESTDIR=./dist meson install -C builddir/
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Linux_Kromblast
           path: builddir/dist/
@@ -98,7 +98,7 @@ jobs:
 
       - run: DESTDIR=./dist meson install -C builddir/
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Linux_Kromblast_20
           path: builddir/dist/
@@ -191,7 +191,7 @@ jobs:
       #     skip_unpack: true
 
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: ./dist
 
