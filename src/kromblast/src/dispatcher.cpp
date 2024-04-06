@@ -20,17 +20,29 @@ namespace Kromblast
         this->listeners[channel].push_back(handler);
     }
 
-    void Dispatcher::dispatch(Api::Signal signal)
+    void Dispatcher::listen(Api::SignalHandlerInterface *handler)
     {
-        if (this->listeners.find(signal.channel) == this->listeners.end())
+        this->listen("", handler);
+    }
+
+
+    void dispatch(std::string channel, Api::Signal signal)
+    {
+        if (this->listeners.find(channel) == this->listeners.end())
         {
             return;
         }
 
-        for (auto handler : this->listeners[signal.channel])
+        for (auto handler : this->listeners[channel])
         {
             handler->handle(signal);
         }
+    }
+
+    void Dispatcher::dispatch(Api::Signal signal)
+    {
+        dispatch(signal.channel, signal);
+        dispatch("", signal);
     }
 
     void Dispatcher::dispatch(std::string channel, std::string message)
