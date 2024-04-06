@@ -9,6 +9,7 @@
             "request": "launch",
             "name": "Launch(gdb)",
             "program": "${workspaceRoot}/build/Kromblast",
+            "programArgs": "json kromblast.json",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "C/C++: ninja générer l'app",
         }

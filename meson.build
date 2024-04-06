@@ -61,6 +61,8 @@ exe = executable(
     'src/main.cpp',
     'src/config/config_constructor.cpp',
     'src/config/json_config.cpp',
+    'src/config/argsparse_config.cpp',
+    'src/config/utils.cpp',
     'src/mode/mode.cpp',
     install : true,
     dependencies : [
