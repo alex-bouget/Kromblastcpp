@@ -32,7 +32,8 @@ namespace Kromblast
      */
     class Kromblast : public Api::KromblastInterface
     {
-    private:
+    protected:
+        Core::ConfigKromblast config;
         Logger *logger;
         Window *window;
         Dispatcher *dispatcher;

@@ -17,6 +17,7 @@ endif
 # )
 
 nlohmann_json_dep = subproject('nlohmann-json').get_variable('nlohmann_json_dep')
+argparse_dep = subproject('argparse').get_variable('argparse_dep')
 
 cpp_httplib_dep = subproject('cpp-httplib').get_variable('cpp_httplib_dep')
 # Extra Dependencies
@@ -49,20 +50,28 @@ kromblast_dep = declare_dependency(
     link_with : kromblast_lib
 )
 
+kromblast_config_dep = declare_dependency(
+    include_directories : include_directories(['src/config', 'src/mode']),
+)
 
 # Executable
 
 exe = executable(
     'Kromblast',
     'src/main.cpp',
+    'src/config/config_constructor.cpp',
+    'src/config/json_config.cpp',
+    'src/mode/mode.cpp',
     install : true,
     dependencies : [
         kromblast_api_dep,
         kromblast_dep,
+        kromblast_config_dep,
         webview_dep,
         nlohmann_json_dep,
         cc.find_library('stdc++fs'),
-        cpp_httplib_dep
+        cpp_httplib_dep,
+        argparse_dep
     ]
 )
 

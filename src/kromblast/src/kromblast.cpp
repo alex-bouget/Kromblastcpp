@@ -15,7 +15,8 @@
  */
 Kromblast::Kromblast::Kromblast(const Core::ConfigKromblast &config)
 {
-    window = new Window(config);
+    this->config = config;
+    window = new Window(config.window);
     dispatcher = new Dispatcher();
     plugin = new Plugin(this);
     logger = new Logger(config.debug);
