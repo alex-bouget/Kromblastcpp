@@ -1,0 +1,10 @@
+[wrap-file]
+directory = alex-bouget_kromblast
+lead_directory_missing = true
+source_url = https://github.com/alex-bouget/webview-meson/releases/download/_VERSION_/kromblast.zip
+source_filename = kromblast.zip
+source_hash = _KROMBLAST_HASH_
+
+
+[provide]
+kromblast = kromblast_api_dep

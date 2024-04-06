@@ -6,6 +6,31 @@ on:
       - "v*"
 
 jobs:
+  make-meson:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Zip the source code
+        run: zip -r kromblast-${{ github.ref_name }}.zip .
+      
+      - name: wrap meson
+        run: |
+          sed -i "s/_VERSION_/${{ github.ref_name }}/g" kromblast.wrap
+          KROMBLAST_HASH=$(sha256sum kromblast-${{ github.ref_name }}.zip | cut -d ' ' -f 1)
+          sed -i "s/_KROMBLAST_HASH_/$KROMBLAST_HASH/g" kromblast.wrap
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kromblast
+          path: kromblast-${{ github.ref_name }}.zip
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kromblast.wrap
+          path: kromblast.wrap
+
+
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -186,5 +211,7 @@ jobs:
             LICENSE
             dist/Linux_Kromblast.zip
             dist/Linux_Kromblast_20.zip
+            dist/kromblast.zip
+            dist/kromblast.wrap
           # dist/macos/MacOs_Kromblast.zip
           # dist/windows/Windows_Kromblast.zip
