@@ -87,15 +87,6 @@ void Kromblast::Window::set_html(const std::string html) { kromblast_window->set
  */
 void Kromblast::Window::navigate(const std::string url) { kromblast_window->navigate(url); }
 
-std::string Kromblast::Window::get_current_url()
-{
-#if KROMBLAST_OS_FAMILY == KROMBLAST_OS_LINUX
-    GtkWidget *widget = (GtkWidget *)kromblast_window->window();
-    GtkWidget * webview = gtk_bin_get_child(GTK_BIN(widget));
-    return webkit_web_view_get_uri(WEBKIT_WEB_VIEW(webview));
-#endif
-}
-
 /**
  * @brief Run the window
  */
@@ -103,3 +94,20 @@ void Kromblast::Window::run() { kromblast_window->run(); }
 
 void Kromblast::Window::init_inject(const std::string js) { kromblast_window->init(js); }
 void Kromblast::Window::inject(const std::string js) { kromblast_window->eval(js); }
+
+std::string Kromblast::Window::get_current_url()
+{
+#if KROMBLAST_OS_FAMILY == KROMBLAST_OS_LINUX
+    GtkWidget *widget = (GtkWidget *)kromblast_window->window();
+    GtkWidget *webview = gtk_bin_get_child(GTK_BIN(widget));
+    return webkit_web_view_get_uri(WEBKIT_WEB_VIEW(webview));
+#endif
+}
+
+std::string Kromblast::Window::get_title()
+{
+#if KROMBLAST_OS_FAMILY == KROMBLAST_OS_LINUX
+    GtkWidget *widget = (GtkWidget *)kromblast_window->window();
+    return webkit_web_view_get_title(WEBKIT_WEB_VIEW(widget));
+#endif
+}
