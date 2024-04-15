@@ -38,13 +38,15 @@ namespace Kromblast
 
         void navigate(const std::string url);
 
-        std::string get_current_url();
-
         void run();
 
         void init_inject(const std::string js);
 
         void inject(const std::string js);
+
+        std::string get_current_url();
+
+        std::string get_title();
     };
 }
 

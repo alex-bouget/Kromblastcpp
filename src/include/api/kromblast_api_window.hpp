@@ -19,6 +19,16 @@ namespace Kromblast
             virtual void run() = 0;
             virtual void init_inject(const std::string js) = 0;
             virtual void inject(const std::string js) = 0;
+
+            /**
+             * @attention This method is not implemented yet for windows and macos
+             */
+            virtual std::string get_current_url() = 0;
+
+            /**
+             * @attention This method is not implemented yet for windows and macos
+             */
+            virtual std::string get_title() = 0;
         };
     }
 }
