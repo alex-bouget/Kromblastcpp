@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "utils.hpp"
+#include "config_constructor.hpp"
 
 void argparser(argparse::ArgumentParser *parser)
 {
@@ -94,7 +95,7 @@ Kromblast::Core::ConfigKromblast Kromblast::Config::argsparse(int argc, const ch
         config.window.fullscreen = conf.get<bool>("fullscreen");
         config.window.frameless = conf.get<bool>("frameless");
         config.debug = conf.get<bool>("debug");
-        config.lib_name = conf.get<std::vector<std::string>>("lib");
+        config.plugins = Kromblast::Config::create_config_plugins(conf.get<std::vector<std::string>>("lib"), {});
         config.approved_registry = conf.get<std::vector<std::string>>("approved");
         config.mode = get_mode(conf.get<std::string>("mode"));
         config.host = conf.get<std::string>("host");

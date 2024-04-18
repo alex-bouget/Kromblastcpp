@@ -12,8 +12,8 @@ public:
         return "0.1.0";
     }
 
-    void set_kromblast(void *kromblast) {
-        this->kromblast = (Kromblast::Api::KromblastInterface *)kromblast;
+    void set_kromblast(::Kromblast::Api::KromblastInterface *kromblast) {
+        this->kromblast = kromblast;
     }
 
     std::string increment(Kromblast::Core::kromblast_callback_called_t *parameters) {

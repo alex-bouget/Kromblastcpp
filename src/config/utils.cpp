@@ -17,6 +17,9 @@ void decode_plugins_folder(std::vector<std::string>* lib_name, const std::string
     }
 }
 
+// template<typename T>
+// void decode_libraries(std::vector<std::string> *decoded_libraries, const T &libraries)
+
 Kromblast::Core::Mode get_mode(const std::string &json_mode)
 {
     if (json_mode == "SERVER")

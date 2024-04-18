@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "kromblast_lib_config.hpp"
+#include <map>
 
 namespace Kromblast
 {
@@ -10,7 +11,7 @@ namespace Kromblast
         ::Kromblast::Core::ConfigKromblast create_config(
             ::Kromblast::Core::ConfigKromblastWindow window,
             bool debug,
-            std::vector<std::string> lib_name,
+            std::vector<Kromblast::Core::ConfigKromblastPlugin> plugins,
             std::vector<std::string> approved_registry,
             ::Kromblast::Core::Mode mode,
             std::string host);
@@ -22,6 +23,10 @@ namespace Kromblast
             bool fullscreen,
             bool frameless,
             bool debug);
+
+        std::vector<::Kromblast::Core::ConfigKromblastPlugin> create_config_plugins(
+            std::vector<std::string> libraries,
+            std::map<std::string, std::map<std::string, std::string>> plugins_config);
     }
 }
 

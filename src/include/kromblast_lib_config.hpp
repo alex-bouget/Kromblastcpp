@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "kromblast_compiler_utils.hpp"
 
 /**
@@ -36,6 +37,15 @@ namespace Kromblast
             bool debug;
         };
 
+        typedef struct ConfigKromblastPlugin ConfigKromblastPlugin;
+
+        struct ConfigKromblastPlugin
+        {
+            std::string lib_path;
+            std::map<std::string, std::string> config;
+            int priority; // 0 is the highest priority, -1 is the lowest, 10 is the default
+        };
+
         typedef struct ConfigKromblast ConfigKromblast;
         /**
          * @brief structure to store the config
@@ -56,7 +66,7 @@ namespace Kromblast
         {
             ConfigKromblastWindow window;
             bool debug;
-            std::vector<std::string> lib_name;
+            std::vector<ConfigKromblastPlugin> plugins;
             std::vector<std::string> approved_registry;
             Mode mode;
             std::string host;

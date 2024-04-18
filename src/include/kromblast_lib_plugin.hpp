@@ -2,6 +2,8 @@
 #define KB_LIB_CLASS_H
 
 #include <string>
+#include "kromblast_api.hpp"
+
 /**
  * @brief Namespace of the kromblast library
  * @class KromLib Class of a kromblast library (interface)
@@ -21,7 +23,7 @@ namespace Kromblast
         {
         public:
             virtual std::string get_version() = 0;
-            virtual void set_kromblast(void *kromblast) = 0;
+            virtual void set_kromblast(::Kromblast::Api::KromblastInterface *kromblast) = 0;
             virtual void load_functions() = 0;
         };
 

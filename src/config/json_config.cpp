@@ -43,37 +43,6 @@ Kromblast::Core::ConfigKromblastWindow create_config_window_json(const nlohmann:
     return Kromblast::Config::create_config_window(title, width, height, fullscreen, frameless, debug);
 }
 
-
-void decode_libraries(std::vector<std::string>* lib_name, const nlohmann::json &json_libraries)
-{
-    fs::path cwd = fs::current_path();
-    for (const auto &lib : json_libraries)
-    {
-        std::string lib_string = lib;
-        fs::path lib_path(lib_string);
-        if (lib_path.is_absolute())
-        {
-            if (!fs::exists(lib_string))
-            {
-                std::cout << "Library not found" << std::endl;
-                exit(1);
-            }
-            lib_name->push_back(lib);
-        }
-        else
-        {
-            fs::path lib_path(cwd.string() + "/" + lib_string);
-            if (!fs::exists(lib_path))
-            {
-                std::cout << "Library not found" << std::endl;
-                exit(1);
-            }
-            lib_name->push_back(lib_path);
-        }
-    }
-}
-
-
 Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &config)
 {
     bool debug = false;
@@ -88,19 +57,28 @@ Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &c
     }
     Kromblast::Core::ConfigKromblastWindow window = create_config_window_json(config["window"], debug);
     std::string cwd(std::experimental::filesystem::current_path());
-    if (!config.contains("plugin_folder") && !config.contains("libraries"))
-    {
-        std::cout << "Plugin folder or libraries not found" << std::endl;
-        exit(1);
-    }
-    std::vector<std::string> lib_name;
-    if (config.contains("libraries"))
-    {
-        decode_libraries(&lib_name, config["libraries"]);
-    }
+
+    std::vector<std::string> libraries;
     if (config.contains("plugin_folder"))
     {
-        decode_plugins_folder(&lib_name, config["plugin_folder"]);   
+        decode_plugins_folder(&libraries, config["plugin_folder"]);
+    }
+    if (config.contains("libraries"))
+    {
+        decode_libraries<nlohmann::json>(&libraries, config["libraries"]);
+    }
+    std::map<std::string, std::map<std::string, std::string>> plugins_config;
+    if (config.contains("plugin_config"))
+    {
+        for (const auto &conf : config["plugin_config"].items())
+        {
+            std::map<std::string, std::string> conf_vector;
+            for (const auto &conf_value : conf.value().items())
+            {
+                conf_vector[conf_value.key()] = conf_value.value();
+            }
+            plugins_config[conf.key()] = conf_vector;
+        }
     }
     std::vector<std::string> approved_registry;
     if (config.contains("registry"))
@@ -122,9 +100,14 @@ Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &c
         exit(1);
     }
     std::string host = config["path"];
-    return Kromblast::Config::create_config(window, debug, lib_name, approved_registry, mode, host);
+    return Kromblast::Config::create_config(
+        window,
+        debug,
+        Kromblast::Config::create_config_plugins(libraries, plugins_config),
+        approved_registry,
+        mode,
+        host);
 }
-
 
 Kromblast::Core::ConfigKromblast Kromblast::Config::get_from_json(const std::string &path)
 {
