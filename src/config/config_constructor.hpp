@@ -12,8 +12,8 @@ namespace Kromblast
         ::Kromblast::Core::ConfigKromblast create_config(
             ::Kromblast::Core::ConfigKromblastWindow window,
             bool debug,
-            std::vector<Kromblast::Core::ConfigKromblastPlugin> plugins,
-            std::vector<std::string> approved_registry,
+            const std::vector<Kromblast::Core::ConfigKromblastPlugin> &plugins,
+            const std::vector<std::string> &approved_registry,
             ::Kromblast::Core::Mode mode,
             std::string host);
 

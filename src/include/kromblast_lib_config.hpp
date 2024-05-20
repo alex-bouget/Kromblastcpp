@@ -5,7 +5,6 @@
 #include <vector>
 #include <map>
 #include "kromblast_compiler_utils.hpp"
-// #include "kromblast_lib_plugin.hpp"
 
 /**
  * @brief Namespace of the kromblast library

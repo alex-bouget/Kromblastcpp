@@ -29,10 +29,10 @@ namespace Kromblast
             ::Kromblast::Api::KromblastInterface *var_kromblast;
             const kromlib_config_t* var_config;
         protected:
-            const ::Kromblast::Api::KromblastInterface &kromblast() {
+            const ::Kromblast::Api::KromblastInterface &kromblast() const {
                 return *var_kromblast;
             }
-            const kromlib_config_t &config() {
+            const kromlib_config_t &config() const {
                 return *var_config;
             }
 

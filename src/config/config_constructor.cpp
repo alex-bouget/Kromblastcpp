@@ -7,8 +7,8 @@
 Kromblast::Core::ConfigKromblast Kromblast::Config::create_config(
     Kromblast::Core::ConfigKromblastWindow window,
     bool debug,
-    std::vector<Kromblast::Core::ConfigKromblastPlugin> plugins,
-    std::vector<std::string> approved_registry,
+    const std::vector<Kromblast::Core::ConfigKromblastPlugin> &plugins,
+    const std::vector<std::string> &approved_registry,
     Kromblast::Core::Mode mode,
     std::string host)
 {
@@ -56,10 +56,10 @@ std::vector<::Kromblast::Core::ConfigKromblastPlugin> Kromblast::Config::create_
         if (plugins_config.contains(filename))
         {
             int priority = (plugins_config.at(filename).contains("priority") ? std::stoi(plugins_config.at(filename).at("priority")) : 10);
-            plugins.emplace_back(Kromblast::Core::ConfigKromblastPlugin{
+            plugins.emplace_back(
                 lib,
                 plugins_config.at(filename),
-                priority});
+                priority);
         }
         else
         {
