@@ -6,14 +6,15 @@
 class Exemple : public Kromblast::Class::KromLib
 {
 public:
-    Kromblast::Api::KromblastInterface *kromblast;
-
     std::string get_version() {
         return "0.1.0";
     }
 
-    void set_kromblast(::Kromblast::Api::KromblastInterface *kromblast) {
-        this->kromblast = kromblast;
+    void atStart() {
+        kromblast->get_logger()->log("Exemple", "Start");
+        if (config->contains("joke")) {
+            kromblast->get_logger()->log("Exemple", "Joke: " + config->at("joke"));
+        }
     }
 
     std::string increment(Kromblast::Core::kromblast_callback_called_t *parameters) {

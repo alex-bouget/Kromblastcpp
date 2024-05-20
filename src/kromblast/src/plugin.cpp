@@ -83,7 +83,7 @@ namespace Kromblast
                 kromblast->get_logger()->log("Plugin", "Cannot callback the plugin: " + plugin.lib_path);
                 continue;
             }
-            lib->set_kromblast(kromblast);
+            lib->set_kromblast(kromblast, plugin.config);
             lib->load_functions();
         }
         for (auto function : this->handle_callback_function)

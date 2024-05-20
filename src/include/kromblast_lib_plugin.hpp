@@ -3,6 +3,7 @@
 
 #include <string>
 #include "kromblast_api.hpp"
+#include <map>
 
 /**
  * @brief Namespace of the kromblast library
@@ -13,6 +14,9 @@ namespace Kromblast
 
     namespace Class
     {
+
+        typedef std::map<std::string, std::string> kromlib_config_t;
+
         /**
          * @brief Class of a kromblast library (interface)
          * @property get_version Get the version of the library
@@ -21,10 +25,19 @@ namespace Kromblast
          */
         class KromLib
         {
+        protected:
+            Kromblast::Api::KromblastInterface *kromblast;
+            const kromlib_config_t* config;
+
         public:
             virtual std::string get_version() = 0;
-            virtual void set_kromblast(::Kromblast::Api::KromblastInterface *kromblast) = 0;
+            virtual void set_kromblast(::Kromblast::Api::KromblastInterface *kromblast, const kromlib_config_t &config) {
+                this->kromblast = kromblast;
+                this->config = &config;
+                atStart();
+            }
             virtual void load_functions() = 0;
+            virtual void atStart() = 0;
         };
 
         /**
