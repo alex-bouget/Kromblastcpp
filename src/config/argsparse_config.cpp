@@ -53,9 +53,9 @@ void argparser(argparse::ArgumentParser *parser)
         .help("add config like libname:key=value");
 }
 
-std::map<std::string, ::Kromblast::Class::kromlib_config_t> get_configs(const std::vector<std::string> &configs)
+std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> get_configs(const std::vector<std::string> &configs)
 {
-    std::map<std::string, ::Kromblast::Class::kromlib_config_t> plugins_config;
+    std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> plugins_config;
     for (const auto &config : configs)
     {
         std::string libname = config.substr(0, config.find(":"));

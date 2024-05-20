@@ -40,7 +40,7 @@ Kromblast::Core::ConfigKromblastWindow Kromblast::Config::create_config_window(
 
 std::vector<::Kromblast::Core::ConfigKromblastPlugin> Kromblast::Config::create_config_plugins(
     std::vector<std::string> libraries,
-    std::map<std::string, ::Kromblast::Class::kromlib_config_t> plugins_config)
+    const std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> &plugins_config)
 {
     std::vector<Kromblast::Core::ConfigKromblastPlugin> plugins;
     for (const auto &lib : libraries)
@@ -55,15 +55,15 @@ std::vector<::Kromblast::Core::ConfigKromblastPlugin> Kromblast::Config::create_
         }
         if (plugins_config.contains(filename))
         {
-            int priority = (plugins_config[filename].contains("priority") ? std::stoi(plugins_config[filename]["priority"]) : 10);
-            plugins.push_back(Kromblast::Core::ConfigKromblastPlugin{
+            int priority = (plugins_config.at(filename).contains("priority") ? std::stoi(plugins_config.at(filename).at("priority")) : 10);
+            plugins.emplace_back(Kromblast::Core::ConfigKromblastPlugin{
                 lib,
-                plugins_config[filename],
+                plugins_config.at(filename),
                 priority});
         }
         else
         {
-            plugins.push_back(Kromblast::Core::ConfigKromblastPlugin{
+            plugins.emplace_back(Kromblast::Core::ConfigKromblastPlugin{
                 lib,
                 {},
                 10});

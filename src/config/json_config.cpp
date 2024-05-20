@@ -67,12 +67,12 @@ Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &c
     {
         decode_libraries<nlohmann::json>(&libraries, config["libraries"]);
     }
-    std::map<std::string, std::map<std::string, std::string>> plugins_config;
+    std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> plugins_config;
     if (config.contains("plugin_config"))
     {
         for (const auto &conf : config["plugin_config"].items())
         {
-            std::map<std::string, std::string> conf_vector;
+            ::Kromblast::Class::kromlib_config_t conf_vector;
             for (const auto &conf_value : conf.value().items())
             {
                 conf_vector[conf_value.key()] = conf_value.value();

@@ -27,7 +27,7 @@ namespace Kromblast
 
         std::vector<::Kromblast::Core::ConfigKromblastPlugin> create_config_plugins(
             std::vector<std::string> libraries,
-            std::map<std::string, ::Kromblast::Class::kromlib_config_t> plugins_config);
+            const std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> &plugins_config);
     }
 }
 

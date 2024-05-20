@@ -12,7 +12,7 @@
             "programArgs": "json kromblast.json",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "C/C++: ninja générer l'app",
-        }
+        },
         {
             "type": "by-gdb",
             "request": "launch",

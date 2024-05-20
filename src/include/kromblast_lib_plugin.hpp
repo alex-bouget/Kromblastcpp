@@ -15,7 +15,7 @@ namespace Kromblast
     namespace Class
     {
 
-        typedef std::map<std::string, std::string> kromlib_config_t;
+        using kromlib_config_t = std::map<std::string, std::string, std::less<>>;
 
         /**
          * @brief Class of a kromblast library (interface)
@@ -25,19 +25,26 @@ namespace Kromblast
          */
         class KromLib
         {
+        private:
+            ::Kromblast::Api::KromblastInterface *var_kromblast;
+            const kromlib_config_t* var_config;
         protected:
-            Kromblast::Api::KromblastInterface *kromblast;
-            const kromlib_config_t* config;
+            const ::Kromblast::Api::KromblastInterface &kromblast() {
+                return *var_kromblast;
+            }
+            const kromlib_config_t &config() {
+                return *var_config;
+            }
 
         public:
             virtual std::string get_version() = 0;
             virtual void set_kromblast(::Kromblast::Api::KromblastInterface *kromblast, const kromlib_config_t &config) {
-                this->kromblast = kromblast;
-                this->config = &config;
-                atStart();
+                this->var_kromblast = kromblast;
+                this->var_config = &config;
+                at_start();
             }
             virtual void load_functions() = 0;
-            virtual void atStart() = 0;
+            virtual void at_start() = 0;
         };
 
         /**

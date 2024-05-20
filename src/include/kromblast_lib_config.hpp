@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include "kromblast_compiler_utils.hpp"
+// #include "kromblast_lib_plugin.hpp"
 
 /**
  * @brief Namespace of the kromblast library
@@ -25,7 +26,7 @@ namespace Kromblast
             HOSTED,
         };
 
-        typedef struct ConfigKromblastWindow ConfigKromblastWindow;
+        using ConfigKromblastWindow = struct ConfigKromblastWindow;
 
         struct ConfigKromblastWindow
         {
@@ -37,16 +38,16 @@ namespace Kromblast
             bool debug;
         };
 
-        typedef struct ConfigKromblastPlugin ConfigKromblastPlugin;
+        using ConfigKromblastPlugin = struct ConfigKromblastPlugin;
 
         struct ConfigKromblastPlugin
         {
             std::string lib_path;
-            std::map<std::string, std::string> config;
+            std::map<std::string, std::string, std::less<>> config;
             int priority; // 0 is the highest priority, -1 is the lowest, 10 is the default
         };
 
-        typedef struct ConfigKromblast ConfigKromblast;
+        using ConfigKromblast = struct ConfigKromblast;
         /**
          * @brief structure to store the config
          * @param title Window title

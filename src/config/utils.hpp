@@ -31,13 +31,13 @@ void decode_libraries(std::vector<std::string> *decoded_libraries, const T &libr
         }
         else
         {
-            fs::path lib_path(cwd.string() + "/" + lib_string);
-            if (!fs::exists(lib_path))
+            fs::path lib_path2(cwd.string() + "/" + lib_string);
+            if (!fs::exists(lib_path2))
             {
                 std::cout << "Library not found" << std::endl;
                 exit(1);
             }
-            decoded_libraries->push_back(lib_path);
+            decoded_libraries->push_back(lib_path2);
         }
     }
 }
