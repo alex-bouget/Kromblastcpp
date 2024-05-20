@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "kromblast_lib_config.hpp"
+#include "kromblast_lib_plugin.hpp"
 #include <map>
 
 namespace Kromblast
@@ -26,7 +27,7 @@ namespace Kromblast
 
         std::vector<::Kromblast::Core::ConfigKromblastPlugin> create_config_plugins(
             std::vector<std::string> libraries,
-            std::map<std::string, std::map<std::string, std::string>> plugins_config);
+            std::map<std::string, ::Kromblast::Class::kromlib_config_t> plugins_config);
     }
 }
 

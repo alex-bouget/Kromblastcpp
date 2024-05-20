@@ -13,5 +13,14 @@
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "C/C++: ninja générer l'app",
         }
+        {
+            "type": "by-gdb",
+            "request": "launch",
+            "name": "Launch with shell",
+            "program": "${workspaceRoot}/build/Kromblast",
+            "programArgs": "conf -t Kromblast -w 800 -h 600 -m LOCAL --host test -d -a \"file://*\" -a \"*://*\" -a \"http://*\" -a \"*://*/index.html\" -p \"kromlib\" -c \"liblib_exemple:joke=I'm a joke\"",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "C/C++: ninja générer l'app",
+        }
     ]
 }

@@ -1,10 +1,8 @@
 #include <string>
 #include <vector>
 #include "config_constructor.hpp"
-#include "kromblast_lib_plugin.hpp"
 #include <experimental/filesystem>
 #include <regex>
-#include <iostream>
 
 Kromblast::Core::ConfigKromblast Kromblast::Config::create_config(
     Kromblast::Core::ConfigKromblastWindow window,
@@ -55,7 +53,6 @@ std::vector<::Kromblast::Core::ConfigKromblastPlugin> Kromblast::Config::create_
         {
             filename = filename.substr(0, filename.find_last_of("."));
         }
-        std::cout << "Filename: " << filename << std::endl;
         if (plugins_config.contains(filename))
         {
             int priority = (plugins_config[filename].contains("priority") ? std::stoi(plugins_config[filename]["priority"]) : 10);
