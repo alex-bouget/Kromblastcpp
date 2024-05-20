@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "utils.hpp"
+#include "config_constructor.hpp"
 
 void argparser(argparse::ArgumentParser *parser)
 {
@@ -27,6 +28,7 @@ void argparser(argparse::ArgumentParser *parser)
         .default_value(false);
     parser->add_argument("-d", "--debug")
         .help("Debug mode")
+        .implicit_value(true)
         .default_value(false);
     parser->add_argument("-a", "--approved")
         .default_value<std::vector<std::string>>({})
@@ -45,6 +47,30 @@ void argparser(argparse::ArgumentParser *parser)
         .default_value<std::vector<std::string>>({})
         .append()
         .help("Path to the libraries");
+    parser->add_argument("-c", "--config")
+        .default_value<std::vector<std::string>>({})
+        .append()
+        .help("add config like libname:key=value");
+}
+
+std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> get_configs(const std::vector<std::string> &configs)
+{
+    std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> plugins_config;
+    for (const auto &config : configs)
+    {
+        std::string libname = config.substr(0, config.find(":"));
+        std::string key = config.substr(config.find(":") + 1, config.find("=") - config.find(":") - 1);
+        std::string value = config.substr(config.find("=") + 1);
+        if (plugins_config.contains(libname))
+        {
+            plugins_config[libname][key] = value;
+        }
+        else
+        {
+            plugins_config[libname] = {{key, value}};
+        }
+    }
+    return plugins_config;
 }
 
 Kromblast::Core::ConfigKromblast Kromblast::Config::argsparse(int argc, const char *argv[])
@@ -94,7 +120,14 @@ Kromblast::Core::ConfigKromblast Kromblast::Config::argsparse(int argc, const ch
         config.window.fullscreen = conf.get<bool>("fullscreen");
         config.window.frameless = conf.get<bool>("frameless");
         config.debug = conf.get<bool>("debug");
-        config.lib_name = conf.get<std::vector<std::string>>("lib");
+        std::vector<std::string> lib(conf.get<std::vector<std::string>>("lib"));
+        if (lib.empty())
+        {
+            decode_plugins_folder(&lib, conf.get<std::string>("path"));
+        }
+        config.plugins = Kromblast::Config::create_config_plugins(
+            lib,
+            get_configs(conf.get<std::vector<std::string>>("config")));
         config.approved_registry = conf.get<std::vector<std::string>>("approved");
         config.mode = get_mode(conf.get<std::string>("mode"));
         config.host = conf.get<std::string>("host");

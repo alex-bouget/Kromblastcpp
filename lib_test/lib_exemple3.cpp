@@ -6,32 +6,33 @@
 class Exemple : public Kromblast::Class::KromLib
 {
 public:
-    Kromblast::Api::KromblastInterface *kromblast;
-
     std::string get_version() {
         return "0.1.0";
     }
 
-    void set_kromblast(void *kromblast) {
-        this->kromblast = (Kromblast::Api::KromblastInterface *)kromblast;
+    void at_start() override {
+        kromblast().get_logger()->log("Exemple", "Start");
+        if (config().contains("joke")) {
+            kromblast().get_logger()->log("Exemple", "Joke: " + config().at("joke"));
+        }
     }
 
     std::string increment(Kromblast::Core::kromblast_callback_called_t *parameters) {
-        kromblast->get_logger()->log("Exemple", "Increment function called");
-        kromblast->get_logger()->log("Exemple", "Parameters: " + parameters->args.at(0));
+        kromblast().get_logger()->log("Exemple", "Increment function called");
+        kromblast().get_logger()->log("Exemple", "Parameters: " + parameters->args.at(0));
         int nb = std::stoi(parameters->args.at(0));
         std::string result_str = "{\"count\": " + std::to_string(++nb) + "}";
         return result_str;
     }
 
-    void load_functions() {
-        kromblast->get_logger()->log("Exemple", "Load functions");
+    void load_functions() override {
+        kromblast().get_logger()->log("Exemple", "Load functions");
         Kromblast::Core::kromblast_callback_t callback = {
             "libtest.secondexemple.increment",
             1,
             std::bind(&Exemple::increment, this, std::placeholders::_1)
         };
-        kromblast->get_plugin()->claim_callback(callback);
+        kromblast().get_plugin()->claim_callback(callback);
 
     }
 };

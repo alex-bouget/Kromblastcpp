@@ -41,7 +41,7 @@ Kromblast::Kromblast::Kromblast(const Core::ConfigKromblast &config)
         this->approved_registry.push_back(std::regex(path, std::regex_constants::ECMAScript | std::regex_constants::icase));
         log("Kromblast::Constructor", "approved registry: " + path);
     }
-    plugin->start(config.lib_name);
+    plugin->start(config.plugins);
 }
 
 /**

@@ -1,5 +1,10 @@
 {
     "plugin_folder": "kromlib",
+    "plugin_config": {
+        "liblib_exemple": {
+            "joke": "I'm a joke"
+        }
+    },
     "debug": true,
     "mode": "LOCAL",
     "path": "test",

@@ -67,23 +67,23 @@ namespace Kromblast
         return (char *)"{\"Error\": \"Function not found\"}";
     }
 
-    void Plugin::start(const std::vector<std::string> &plugins)
+    void Plugin::start(const std::vector<Core::ConfigKromblastPlugin> &plugins)
     {
-        for (const std::string &plugin : plugins)
+        for (const Core::ConfigKromblastPlugin &plugin : plugins)
         {
-            Class::kromblast_lib_get_class_t callback = *library_loader.get_lib<Class::kromblast_lib_get_class_t>(plugin, "kromblast_lib_get_class", kromblast->get_logger());
+            Class::kromblast_lib_get_class_t callback = *library_loader.get_lib<Class::kromblast_lib_get_class_t>(plugin.lib_path, "kromblast_lib_get_class", kromblast->get_logger());
             if (callback == nullptr)
             {
-                kromblast->get_logger()->log("Plugin", "Cannot load plugin: " + plugin);
+                kromblast->get_logger()->log("Plugin", "Cannot load plugin: " + plugin.lib_path);
                 continue;
             }
             Class::KromLib *lib = callback();
             if (lib == nullptr)
             {
-                kromblast->get_logger()->log("Plugin", "Cannot callback the plugin: " + plugin);
+                kromblast->get_logger()->log("Plugin", "Cannot callback the plugin: " + plugin.lib_path);
                 continue;
             }
-            lib->set_kromblast(kromblast);
+            lib->set_kromblast(kromblast, plugin.config);
             lib->load_functions();
         }
         for (auto function : this->handle_callback_function)
