@@ -11,6 +11,35 @@ namespace Kromblast
 
     Plugin::~Plugin()
     {
+        // TODO FIX VALGRIND MEMORY LEAK - DELETE approved_registry in handle_callback_function
+    }
+
+    
+    const Core::kromblast_callback_t *Plugin::get_callback(const std::string &name)
+    {
+        if (handle_callback_function.find(name) != handle_callback_function.end())
+        {
+            return handle_callback_function[name];
+        }
+        return nullptr;
+    }
+
+    bool Plugin::is_approved_registry(const std::string &name, const std::string &url)
+    {
+        const Core::kromblast_callback_t *callback = get_callback(name);
+        if (callback == nullptr || callback->approved_registry == nullptr)
+        {
+            return false;
+        }
+        for (std::regex exp : *callback->approved_registry)
+        {
+            if (std::regex_match(url, exp))
+            {
+                return true;
+            }
+        }
+        return false;
+        
     }
 
     bool Plugin::claim_callback(Core::kromblast_callback_t callback)
@@ -26,7 +55,12 @@ namespace Kromblast
 
     bool Plugin::claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback)
     {
-        return claim_callback({name, nb_args, callback});
+        return claim_callback({name, nb_args, callback, nullptr});
+    }
+
+    bool Plugin::claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback, std::vector<std::regex> *approved_registry)
+    {
+        return claim_callback({name, nb_args, callback, approved_registry});
     }
 
     void Plugin::create_js_function(const Core::kromblast_callback_t &function)
@@ -63,13 +97,18 @@ namespace Kromblast
 
     std::string Plugin::call_function(Core::kromblast_callback_called_t *function_called)
     {
-        if (handle_callback_function.find(function_called->name) != handle_callback_function.end())
+        const Core::kromblast_callback_t *function = get_callback(function_called->name);
+        if (function != nullptr)
         {
-            auto func = handle_callback_function[function_called->name];
-            return func->callback(function_called);
+            if ((std::size_t)function->args_nb != function_called->args.size())
+            {
+                kromblast->get_logger()->log("Function", "Invalid number of arguments");
+                return "{\"Error\": \"Invalid number of arguments\"}";
+            }
+            return function->callback(function_called);
         }
         kromblast->get_logger()->log("Function", "Function not found");
-        return (char *)"{\"Error\": \"Function not found\"}";
+        return "{\"Error\": \"Function not found\"}";
     }
 
     void Plugin::start(const std::vector<Core::ConfigKromblastPlugin> &plugins)

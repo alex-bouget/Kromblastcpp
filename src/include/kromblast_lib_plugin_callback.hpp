@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <regex>
 
 /**
  * @brief Namespace of the kromblast library
@@ -43,6 +44,7 @@ namespace Kromblast
             std::string name;
             int args_nb;
             kromblast_callback_f callback;
+            std::vector<std::regex> *approved_registry;
         };
     }
 }

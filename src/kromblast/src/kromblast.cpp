@@ -78,11 +78,6 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
     std::string uri = window->get_current_url();
     log("Kromblast::kromblast_callback", "URI: " + uri);
     log("Kromblast::kromblast_callback", "Request: " + req);
-    if (!url_is_approved(uri))
-    {
-        log("Kromblast::kromblast_callback", "Request not approved: " + req);
-        return "[\"Request not approved\"]";
-    }
 
     // req = "function_name",["arg1","arg2",...]
     std::regex request_regex("\\[\"(.*)\",\\[(.*)\\]\\]");
@@ -96,6 +91,12 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
 
     Core::kromblast_callback_called_t function_called;
     function_called.name = match[1];
+
+    if (!(url_is_approved(uri) || plugin->is_approved_registry(function_called.name, uri)))
+    {
+        log("Kromblast::kromblast_callback", "Request not approved: " + req);
+        return "[\"Request not approved\"]";
+    }
 
     std::string args = match[2];
 
