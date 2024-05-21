@@ -1,7 +1,9 @@
 #include "kromblast_api.hpp"
 #include "kromblast_lib_plugin.hpp"
 #include "kromblast_lib_plugin_callback.hpp"
+#include "kromblast_api_plugin_utils.hpp"
 #include <functional>
+#include <string>
 
 class Exemple : public Kromblast::Class::KromLib
 {
@@ -27,12 +29,11 @@ public:
 
     void load_functions() override {
         kromblast().get_logger()->log("Exemple", "Load functions");
-        Kromblast::Core::kromblast_callback_t callback = {
+        kromblast().get_plugin()->claim_callback({
             "libtest.secondexemple.increment",
             1,
-            std::bind(&Exemple::increment, this, std::placeholders::_1)
-        };
-        kromblast().get_plugin()->claim_callback(callback);
+            BIND_CALLBACK(Exemple::increment)
+        });
 
     }
 };

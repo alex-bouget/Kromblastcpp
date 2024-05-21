@@ -27,6 +27,7 @@ namespace Kromblast
         Plugin(Api::KromblastInterface *kromblast);
         ~Plugin();
         bool claim_callback(Core::kromblast_callback_t callback);
+        bool claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback);
         std::string call_function(Core::kromblast_callback_called_t *function_called);
         void start(const std::vector<Core::ConfigKromblastPlugin> &plugins);
         void stop();
