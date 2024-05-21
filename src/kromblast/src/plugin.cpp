@@ -24,6 +24,11 @@ namespace Kromblast
         return true;
     }
 
+    bool Plugin::claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback)
+    {
+        return claim_callback({name, nb_args, callback});
+    }
+
     void Plugin::create_js_function(const Core::kromblast_callback_t &function)
     {
         kromblast->get_logger()->log("LibLinker", "Creating function: " + function.name);
