@@ -38,6 +38,7 @@ namespace Kromblast
         Window *window;
         Dispatcher *dispatcher;
         Plugin *plugin;
+        bool url_is_approved(const std::string &url);
         const std::string kromblast_callback(const std::string req);
 
         std::vector<std::regex> approved_registry;

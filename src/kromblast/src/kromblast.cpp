@@ -7,6 +7,7 @@
 #include "dlfcn.h"
 #include <regex>
 #include "X11/Xlib.h"
+#include <algorithm>
 
 /**
  * @brief Construct a new Kromblast::Kromblast object
@@ -55,6 +56,14 @@ Kromblast::Kromblast::~Kromblast()
     delete logger;
 }
 
+
+bool Kromblast::Kromblast::url_is_approved(const std::string &url)
+{
+    return std::ranges::any_of(approved_registry, [&url](const std::regex &exp) {
+        return std::regex_match(url, exp);
+    });
+}
+
 /**
  * @brief Callback of the kromblast function
  * @param req Request
@@ -63,58 +72,43 @@ Kromblast::Kromblast::~Kromblast()
 const std::string Kromblast::Kromblast::kromblast_callback(const std::string req)
 {
     std::string uri = window->get_current_url();
-    bool find = false;
     log("Kromblast::kromblast_callback", "URI: " + uri);
-    for (std::regex exp : approved_registry)
+    log("Kromblast::kromblast_callback", "Request: " + req);
+
+    // req = "function_name",["arg1","arg2",...]
+    std::regex request_regex(R"_(\["(.*)",\[(.*)\]\])_");
+    std::smatch match;
+
+    if (!std::regex_search(req, match, request_regex))
     {
-        if (std::regex_match(uri, exp))
-        {
-            find = true;
-            break;
-        }
+        log("Kromblast::kromblast_callback", "Request not valid: " + req);
+        return "[\"Request not valid\"]";
     }
-    if (!find)
+
+    Core::kromblast_callback_called_t function_called;
+    function_called.name = match[1];
+
+    if (!(url_is_approved(uri) || plugin->is_approved_registry(function_called.name, uri)))
     {
         log("Kromblast::kromblast_callback", "Request not approved: " + req);
         return "[\"Request not approved\"]";
     }
 
-    log("Kromblast::kromblast_callback", "Request: " + req);
-
-    Core::kromblast_callback_called_t function_called;
-
-    // get the function name
-    std::string function_name = req.substr(2, req.find_first_of(",") - 3);
-    function_called.name = function_name;
-
-    std::string args = req.substr(req.find_first_of(",") + 1, req.length() - req.find_first_of(",") - 2);
-
-    // if there is no arguments
-    if (args.length() <= 2)
-    {
-        function_called.args = {};
-        std::string result = plugin->call_function(&function_called);
-        return result;
-    }
+    std::string args = match[2];
 
     // get the arguments
     std::vector<std::string> args_data;
-    int step = 0;
-    int args_nb = 1;
-    for (int i = 0; i < (int)args.length(); i++)
+    while (args.length() > 0)
     {
-        if (args[i] == ',')
-        {
-            args_nb++;
-        }
-    }
-    for (int i = 0; i < args_nb; i++)
-    {
-        int start = args.find_first_of("\"", step);
-        int end = args.find_first_of("\"", start + 1);
+        int start = args.find_first_of("\"", 0);
+        int end = start;
+        do {
+            end = args.find_first_of("\"", end + 1);
+        } while (args.at(end - 1) == '\\');
         args_data.push_back(args.substr(start + 1, end - start - 1));
-        step = end + 1;
+        args = args.substr(end + 1);
     }
+
     function_called.args = args_data;
 
     // call the function
