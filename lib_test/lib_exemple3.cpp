@@ -33,7 +33,6 @@ public:
             "libtest.secondexemple.increment",
             1,
             BIND_CALLBACK(Exemple::increment),
-            // new std::vector<std::regex>({std::regex(".*")}),
             std::vector<std::regex>({std::regex(".*")})
         );
 

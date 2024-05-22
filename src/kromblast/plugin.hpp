@@ -18,7 +18,9 @@ namespace Kromblast
     class Plugin : public Api::PluginInterface
     {
     private:
-        std::map<std::string, std::unique_ptr<Core::kromblast_callback_t>, std::less<>> handle_callback_function;
+        // use pointer because it cause a segfault when the destructor is called
+        // why ? I don't know
+        std::map<std::string, Core::kromblast_callback_t*, std::less<>> handle_callback_function;
         Utils::Library library_loader;
         Api::KromblastInterface *kromblast;
 

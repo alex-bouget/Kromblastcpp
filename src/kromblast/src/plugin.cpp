@@ -12,6 +12,10 @@ namespace Kromblast
 
     Plugin::~Plugin()
     {
+        for (const auto &[key, callback]: handle_callback_function)
+        {
+            delete callback;
+        }
     }
 
     
@@ -19,7 +23,7 @@ namespace Kromblast
     {
         if (handle_callback_function.contains(name))
         {
-            return handle_callback_function[name].get();
+            return handle_callback_function[name];
         }
         return nullptr;
     }
@@ -47,12 +51,12 @@ namespace Kromblast
         {
             return false;
         }
-        handle_callback_function[name] = std::make_unique<Core::kromblast_callback_t>(
+        handle_callback_function.insert({name, new Core::kromblast_callback_t{
             name,
             nb_args,
             callback,
             std::make_unique<std::vector<std::regex>>(approved_registry)
-        );
+        }});
         return true;
     }
 
@@ -126,7 +130,7 @@ namespace Kromblast
         for (const auto &[key, callback]: handle_callback_function)
         {
             kromblast->get_logger()->log("Plugin", "Function: " + key);
-            create_js_function(*callback.get());
+            create_js_function(*callback);
         }
     }
 
