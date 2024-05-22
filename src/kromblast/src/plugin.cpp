@@ -1,6 +1,7 @@
 #include "plugin.hpp"
 #include "kromblast_lib_config.hpp"
 #include <algorithm>
+#include <memory>
 
 namespace Kromblast
 {
@@ -36,25 +37,24 @@ namespace Kromblast
         });
     }
 
-    bool Plugin::claim_callback(Core::kromblast_callback_t callback)
+    bool Plugin::claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback)
     {
-        if (handle_callback_function.find(callback.name) != handle_callback_function.end())
+        return claim_callback(name, nb_args, callback, std::vector<std::regex>());
+    }
+
+    bool Plugin::claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback, const std::vector<std::regex> &approved_registry)
+    {
+        if (handle_callback_function.contains(name))
         {
             return false;
         }
-
-        handle_callback_function[callback.name] = new Core::kromblast_callback_t(callback);
-        return true;
-    }
-
-    bool Plugin::claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback)
-    {
-        return claim_callback({name, nb_args, callback, nullptr});
-    }
-
-    bool Plugin::claim_callback(const std::string &name, int nb_args, const Core::kromblast_callback_f &callback, std::vector<std::regex> *approved_registry)
-    {
-        return claim_callback({name, nb_args, callback, approved_registry});
+        handle_callback_function[name] = new Core::kromblast_callback_t({
+            name,
+            nb_args,
+            callback,
+            std::make_unique<std::vector<std::regex>>(approved_registry)
+        });
+        create_js_function(*handle_callback_function[name]);
     }
 
     void Plugin::create_js_function(const Core::kromblast_callback_t &function)

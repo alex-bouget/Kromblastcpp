@@ -29,12 +29,13 @@ public:
 
     void load_functions() override {
         kromblast().get_logger()->log("Exemple", "Load functions");
-        kromblast().get_plugin()->claim_callback({
+        kromblast().get_plugin()->claim_callback(
             "libtest.secondexemple.increment",
             1,
             BIND_CALLBACK(Exemple::increment),
-            new std::vector<std::regex>({std::regex(".*")}),
-        });
+            // new std::vector<std::regex>({std::regex(".*")}),
+            std::vector<std::regex>({std::regex(".*")})
+        );
 
     }
 };

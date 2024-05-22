@@ -44,7 +44,7 @@ namespace Kromblast
             std::string name;
             int args_nb;
             kromblast_callback_f callback;
-            std::vector<std::regex> *approved_registry;
+            std::unique_ptr<std::vector<std::regex>> approved_registry;
         };
     }
 }
