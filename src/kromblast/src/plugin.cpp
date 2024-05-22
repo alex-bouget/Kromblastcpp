@@ -51,12 +51,12 @@ namespace Kromblast
         {
             return false;
         }
-        handle_callback_function.insert({name, new Core::kromblast_callback_t{
+        handle_callback_function.try_emplace(name, new Core::kromblast_callback_t{
             name,
             nb_args,
             callback,
             std::make_unique<std::vector<std::regex>>(approved_registry)
-        }});
+        });
         return true;
     }
 
