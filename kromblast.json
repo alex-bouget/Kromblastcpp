@@ -1,5 +1,7 @@
 {
-    "plugin_folder": "kromlib",
+    "libraries": [
+        "build/liblib_exemple.so"
+    ],
     "plugin_config": {
         "liblib_exemple": {
             "joke": "I'm a joke"

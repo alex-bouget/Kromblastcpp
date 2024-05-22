@@ -123,10 +123,10 @@ namespace Kromblast
             lib->set_kromblast(kromblast, plugin.config);
             lib->load_functions();
         }
-        for (auto i = handle_callback_function.begin(); i != handle_callback_function.end(); i++)
+        for (const auto &callback: handle_callback_function)
         {
-            kromblast->get_logger()->log("Plugin", "Function: " + i->first);
-            create_js_function(*i->second.get());
+            kromblast->get_logger()->log("Plugin", "Function: " + callback.first);
+            create_js_function(*callback.second.get());
         }
     }
 
