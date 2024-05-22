@@ -12,7 +12,6 @@ namespace Kromblast
 
     Plugin::~Plugin()
     {
-        // TODO FIX VALGRIND MEMORY LEAK - DELETE approved_registry in handle_callback_function
     }
 
     
@@ -20,7 +19,7 @@ namespace Kromblast
     {
         if (handle_callback_function.contains(name))
         {
-            return handle_callback_function[name];
+            return handle_callback_function[name].get();
         }
         return nullptr;
     }
@@ -48,13 +47,13 @@ namespace Kromblast
         {
             return false;
         }
-        handle_callback_function[name] = new Core::kromblast_callback_t({
+        handle_callback_function[name] = std::make_unique<Core::kromblast_callback_t>(
             name,
             nb_args,
             callback,
             std::make_unique<std::vector<std::regex>>(approved_registry)
-        });
-        create_js_function(*handle_callback_function[name]);
+        );
+        return true;
     }
 
     void Plugin::create_js_function(const Core::kromblast_callback_t &function)
@@ -124,9 +123,10 @@ namespace Kromblast
             lib->set_kromblast(kromblast, plugin.config);
             lib->load_functions();
         }
-        for (auto function : this->handle_callback_function)
+        for (auto i = handle_callback_function.begin(); i != handle_callback_function.end(); i++)
         {
-            create_js_function(*function.second);
+            kromblast->get_logger()->log("Plugin", "Function: " + i->first);
+            create_js_function(*i->second.get());
         }
     }
 

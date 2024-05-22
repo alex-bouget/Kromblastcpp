@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <list>
+#include <memory>
 #include "kromblast_lib_plugin_callback.hpp"
 #include "kromblast_lib_plugin.hpp"
 #include "kromblast_lib_config.hpp"
@@ -17,7 +18,7 @@ namespace Kromblast
     class Plugin : public Api::PluginInterface
     {
     private:
-        std::map<std::string, Core::kromblast_callback_t *> handle_callback_function;
+        std::map<std::string, std::unique_ptr<Core::kromblast_callback_t>> handle_callback_function;
         Utils::Library library_loader;
         Api::KromblastInterface *kromblast;
 
