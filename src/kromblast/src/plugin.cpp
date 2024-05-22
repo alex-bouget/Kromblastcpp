@@ -1,6 +1,6 @@
 #include "plugin.hpp"
-
 #include "kromblast_lib_config.hpp"
+#include <algorithm>
 
 namespace Kromblast
 {
@@ -17,7 +17,7 @@ namespace Kromblast
     
     const Core::kromblast_callback_t *Plugin::get_callback(const std::string &name)
     {
-        if (handle_callback_function.find(name) != handle_callback_function.end())
+        if (handle_callback_function.contains(name))
         {
             return handle_callback_function[name];
         }
@@ -31,15 +31,9 @@ namespace Kromblast
         {
             return false;
         }
-        for (std::regex exp : *callback->approved_registry)
-        {
-            if (std::regex_match(url, exp))
-            {
-                return true;
-            }
-        }
-        return false;
-        
+        return std::ranges::any_of(*callback->approved_registry, [&url](const std::regex &exp) {
+            return std::regex_match(url, exp);
+        });
     }
 
     bool Plugin::claim_callback(Core::kromblast_callback_t callback)
@@ -98,17 +92,17 @@ namespace Kromblast
     std::string Plugin::call_function(Core::kromblast_callback_called_t *function_called)
     {
         const Core::kromblast_callback_t *function = get_callback(function_called->name);
-        if (function != nullptr)
+        if (function == nullptr)
         {
-            if ((std::size_t)function->args_nb != function_called->args.size())
-            {
-                kromblast->get_logger()->log("Function", "Invalid number of arguments");
-                return "{\"Error\": \"Invalid number of arguments\"}";
-            }
-            return function->callback(function_called);
+            kromblast->get_logger()->log("Function", "Function not found");
+            return R"({"Error": "Function not found"})";
         }
-        kromblast->get_logger()->log("Function", "Function not found");
-        return "{\"Error\": \"Function not found\"}";
+        if ((std::size_t)function->args_nb != function_called->args.size())
+        {
+            kromblast->get_logger()->log("Function", "Invalid number of arguments");
+            return R"({"Error": "Invalid number of arguments"})";
+        }
+        return function->callback(function_called);
     }
 
     void Plugin::start(const std::vector<Core::ConfigKromblastPlugin> &plugins)

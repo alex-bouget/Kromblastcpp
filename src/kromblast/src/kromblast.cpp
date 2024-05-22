@@ -7,6 +7,7 @@
 #include "dlfcn.h"
 #include <regex>
 #include "X11/Xlib.h"
+#include <algorithm>
 
 /**
  * @brief Construct a new Kromblast::Kromblast object
@@ -58,14 +59,9 @@ Kromblast::Kromblast::~Kromblast()
 
 bool Kromblast::Kromblast::url_is_approved(const std::string &url)
 {
-    for (std::regex exp : approved_registry)
-    {
-        if (std::regex_match(url, exp))
-        {
-            return true;
-        }
-    }
-    return false;
+    return std::ranges::any_of(approved_registry, [&url](const std::regex &exp) {
+        return std::regex_match(url, exp);
+    });
 }
 
 /**
@@ -80,7 +76,7 @@ const std::string Kromblast::Kromblast::kromblast_callback(const std::string req
     log("Kromblast::kromblast_callback", "Request: " + req);
 
     // req = "function_name",["arg1","arg2",...]
-    std::regex request_regex("\\[\"(.*)\",\\[(.*)\\]\\]");
+    std::regex request_regex(R"_(\["(.*)",\[(.*)\]\])_");
     std::smatch match;
 
     if (!std::regex_search(req, match, request_regex))
