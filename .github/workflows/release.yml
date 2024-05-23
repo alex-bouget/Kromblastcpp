@@ -67,42 +67,6 @@ jobs:
           name: Linux_Kromblast
           path: builddir/dist/
 
-  build-linux-20:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
-      - run: pip install meson ninja
-
-      - name: install git submodules
-        run: git submodule update --init --recursive
-
-      - name: install dependency
-        run: sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev
-
-      - run: meson setup builddir/
-        env:
-          CC: gcc
-
-      - run: meson test -C builddir/ -v
-
-      - uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: Linux_Meson_Testlog
-          path: builddir/meson-logs/testlog.txt
-
-      - run: DESTDIR=./dist meson install -C builddir/
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Linux_Kromblast_20
-          path: builddir/dist/
-
   # macos:
   #   strategy:
   #     fail-fast: false
@@ -175,7 +139,7 @@ jobs:
 
   make-releases:
     runs-on: ubuntu-latest
-    needs: [build-linux, build-linux-20, make-meson] #, macos, windows]
+    needs: [build-linux, make-meson] #, macos, windows]
     permissions:
       contents: write
     steps:
@@ -216,7 +180,6 @@ jobs:
           files: |
             LICENSE
             dist/Linux_Kromblast.zip
-            dist/Linux_Kromblast_20.zip
             dist/kromblast/kromblast.zip
             dist/kromblast.wrap/kromblast.wrap
           # dist/macos/MacOs_Kromblast.zip
