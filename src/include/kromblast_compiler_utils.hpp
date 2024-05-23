@@ -24,4 +24,6 @@
 #define KROMBLAST_RELEASE
 #endif
 
+#define __KROMBLAST_VERSION__ "0.3.0"
+
 #endif

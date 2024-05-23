@@ -59,18 +59,18 @@ Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &c
     std::string cwd(std::experimental::filesystem::current_path());
 
     std::vector<std::string> libraries;
-    if (config.contains("plugin_folder"))
+    if (config.contains("lib_folder"))
     {
-        decode_plugins_folder(&libraries, config["plugin_folder"]);
+        decode_plugins_folder(&libraries, config["lib_folder"]);
     }
     if (config.contains("libraries"))
     {
         decode_libraries<nlohmann::json>(&libraries, config["libraries"]);
     }
     std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> plugins_config;
-    if (config.contains("plugin_config"))
+    if (config.contains("lib_config"))
     {
-        for (const auto &conf : config["plugin_config"].items())
+        for (const auto &conf : config["lib_config"].items())
         {
             ::Kromblast::Class::kromlib_config_t conf_vector;
             for (const auto &conf_value : conf.value().items())
@@ -94,12 +94,12 @@ Kromblast::Core::ConfigKromblast create_config_from_json(const nlohmann::json &c
         exit(1);
     }
     Kromblast::Core::Mode mode = get_mode(config["mode"]);
-    if (!config.contains("path"))
+    if (!config.contains("host"))
     {
-        std::cout << "Path not found" << std::endl;
+        std::cout << "Host not found" << std::endl;
         exit(1);
     }
-    std::string host = config["path"];
+    std::string host = config["host"];
     return Kromblast::Config::create_config(
         window,
         debug,
