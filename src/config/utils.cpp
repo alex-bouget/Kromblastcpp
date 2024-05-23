@@ -10,6 +10,10 @@ namespace fs = std::experimental::filesystem;
 void decode_plugins_folder(std::vector<std::string>* lib_name, const std::string &plugin_folder)
 {
     fs::path cwd = fs::current_path();
+    if (!fs::exists(cwd.string() + "/" + plugin_folder))
+    {
+        return;
+    }
     const auto path = fs::directory_iterator(cwd.string() + "/" + plugin_folder + "/");
     for (const auto &entry : path)
     {

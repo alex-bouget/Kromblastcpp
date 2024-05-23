@@ -2,14 +2,14 @@
     "libraries": [
         "build/liblib_exemple.so"
     ],
-    "plugin_config": {
+    "lib_config": {
         "liblib_exemple": {
             "joke": "I'm a joke"
         }
     },
     "debug": true,
     "mode": "LOCAL",
-    "path": "test/index.html",
+    "host": "test/index.html",
     "window": {
         "size": [
             800,

@@ -29,10 +29,10 @@
 
 ./build/Kromblast conf \
     -t "Kromblast" \
-    -w 800 -h 600 \
+    -sw 800 -sh 600 \
     -m LOCAL \
-    --host "test" \
+    -hs LOCAL \
     -d \
-    -a "file://*" -a "*://*" -a "http://*" -a "*://*/index.html" \
-    -p "kromlib" \
-    -c "liblib_exemple:joke=I'm a joke"
+    -r "file://*" -r "*://*" -r "http://*" -r "*://*/index.html" \
+    -l "build/liblib_exemple.so" \
+    -lc "liblib_exemple:joke=I'm a joke"

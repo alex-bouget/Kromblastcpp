@@ -1,8 +1,8 @@
 {
-    "plugin_folder": "kromlib",
+    "lib_folder": "kromlib",
     "debug": true,
     "mode": "DEBUG",
-    "path": "test",
+    "host": "test",
     "window": {
         "size": [
             800,

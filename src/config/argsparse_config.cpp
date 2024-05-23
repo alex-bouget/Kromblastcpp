@@ -6,17 +6,18 @@
 
 #include "utils.hpp"
 #include "config_constructor.hpp"
+#include "kromblast_compiler_utils.hpp"
 
 void argparser(argparse::ArgumentParser *parser)
 {
     parser->add_argument("-t", "--title")
         .help("Title of the project")
         .required();
-    parser->add_argument("-w", "--width")
+    parser->add_argument("-sw", "--width")
         .scan<'i', int>()
         .help("Width of the window")
         .required();
-    parser->add_argument("-h", "--height")
+    parser->add_argument("-sh", "--height")
         .scan<'i', int>()
         .help("Height of the window")
         .required();
@@ -30,27 +31,26 @@ void argparser(argparse::ArgumentParser *parser)
         .help("Debug mode")
         .implicit_value(true)
         .default_value(false);
-    parser->add_argument("-a", "--approved")
+    parser->add_argument("-r", "--registry")
         .default_value<std::vector<std::string>>({})
         .append()
-        .help("List of the approved path");
+        .help("List of the approved registry");
     parser->add_argument("-m", "--mode")
-        .help("Mode of the libraries")
+        .help("Mode of the host")
         .required();
-    parser->add_argument("-host", "--host")
-        .help("Host of the libraries")
+    parser->add_argument("-hs", "--host")
+        .help("url of the server or path")
         .required();
-    auto &group = parser->add_mutually_exclusive_group();
-    group.add_argument("-p", "--path")
-        .help("Path to the libraries");
-    group.add_argument("-l", "--lib")
+    parser->add_argument("-lp", "--lib-path")
+        .help("Folder with the libraries");
+    parser->add_argument("-l", "--lib")
         .default_value<std::vector<std::string>>({})
         .append()
-        .help("Path to the libraries");
-    parser->add_argument("-c", "--config")
+        .help("List of the libraries");
+    parser->add_argument("-lc", "--lib-config")
         .default_value<std::vector<std::string>>({})
         .append()
-        .help("add config like libname:key=value");
+        .help("Config of all libraries: libname:key=value");
 }
 
 std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> get_configs(const std::vector<std::string> &configs)
@@ -75,9 +75,9 @@ std::map<std::string, ::Kromblast::Class::kromlib_config_t, std::less<>> get_con
 
 Kromblast::Core::ConfigKromblast Kromblast::Config::argsparse(int argc, const char *argv[])
 {
-    argparse::ArgumentParser program("kromblast");
-    argparse::ArgumentParser json("json");
-    argparse::ArgumentParser conf("conf");
+    argparse::ArgumentParser program("kromblast", __KROMBLAST_VERSION__);
+    argparse::ArgumentParser json("json", __KROMBLAST_VERSION__);
+    argparse::ArgumentParser conf("conf", __KROMBLAST_VERSION__);
     argparser(&conf);
     json.add_argument("json_file")
         .help("Path to the json file")
@@ -92,6 +92,7 @@ Kromblast::Core::ConfigKromblast Kromblast::Config::argsparse(int argc, const ch
     }
     catch (const std::exception &err)
     {
+        std::cerr << err.what() << std::endl;
         if (program.is_subcommand_used("json"))
         {
             std::cerr << json;
@@ -121,14 +122,11 @@ Kromblast::Core::ConfigKromblast Kromblast::Config::argsparse(int argc, const ch
         config.window.frameless = conf.get<bool>("frameless");
         config.debug = conf.get<bool>("debug");
         std::vector<std::string> lib(conf.get<std::vector<std::string>>("lib"));
-        if (lib.empty())
-        {
-            decode_plugins_folder(&lib, conf.get<std::string>("path"));
-        }
+        decode_plugins_folder(&lib, conf.get<std::string>("lib-path"));
         config.plugins = Kromblast::Config::create_config_plugins(
             lib,
-            get_configs(conf.get<std::vector<std::string>>("config")));
-        config.approved_registry = conf.get<std::vector<std::string>>("approved");
+            get_configs(conf.get<std::vector<std::string>>("lib-config")));
+        config.approved_registry = conf.get<std::vector<std::string>>("registry");
         config.mode = get_mode(conf.get<std::string>("mode"));
         config.host = conf.get<std::string>("host");
         return config;
